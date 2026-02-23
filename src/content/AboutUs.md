@@ -19,7 +19,7 @@ All personnel of the organization are volunteers. Raised funds will be 100% for 
 
 <ul>
     <li><b> Badminton Competition Scholarshp </b> An MA State Team may be nominated for some national tournaments (eg, Junior National Championship, Open Regional Championship) and international tournaments (eg, Pan America Championship). The team may consist of a boy and a girl in each age group (eg, U11, U13). The selection committee and qualification for the scholarship will be detailed. </li>
-    <li><b> Badminton tournament sponsorship </b> The fund may be used to spondor local badminton tournament or competitions, including college (eg, MIT, Harvard) organized events.</li>
+    <li><b> Badminton tournament sponsorship </b> The fund may be used to sponsor local badminton tournament or competitions, including college (eg, MIT, Harvard) organized events.</li>
     <li> <b> Badminton Workshop. </b> The fund may be used to sponsor nationally or internationally renowned coaches or professional players to visit MA badmintion clubs. This will provide opportunities for students/players to learn from, interact with, and play against top professionals. </li>
     <li> <b> Badminton promotional events. </b> The fund may be used to sponsor badminton events in local high schools, colleges, an dcommunites to cultivate badminton outreach in a grassroots approach. </li> 
 
