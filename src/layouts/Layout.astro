@@ -1,5 +1,7 @@
 ---
 import "./global.css";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 interface Props {
   title?: string;
@@ -8,12 +10,18 @@ interface Props {
 const { title = "Massachusetts Badminton Foundation" } = Astro.props;
 const path = Astro.url.pathname;
 
+let customPages: { label: string; slug: string }[] = [];
+try {
+  customPages = JSON.parse(await readFile(join(process.cwd(), "src/data/pages.json"), "utf-8"));
+} catch {}
+
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Events", href: "/events" },
   { label: "PCA", href: "/pca" },
   { label: "Sponsors", href: "/sponsors" },
+  ...customPages.map((p) => ({ label: p.label, href: `/${p.slug}` })),
 ];
 
 function isActive(href: string) {
@@ -122,7 +130,11 @@ function isActive(href: string) {
         <!-- Logged-In View -->
         <div id="admin-loggedin-view" style="display:none;">
           <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Admin Panel</h2>
-          <p style="font-size:0.9rem;color:#4B5563;margin:0 0 1.25rem;">You are logged in as administrator.</p>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0 0 1rem;">You are logged in as administrator.</p>
+          <button
+            onclick="document.getElementById('admin-modal').style.display='none'; openPagesManager();"
+            style="width:100%;background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.75rem;text-align:left;"
+          >📄 Manage Custom Pages</button>
           <div style="display:flex;gap:0.75rem;">
             <button
               onclick="window.adminLogout()"
@@ -156,6 +168,61 @@ function isActive(href: string) {
         <div style="display:flex;gap:0.75rem;">
           <button id="mbf-confirm-cancel" style="flex:1;padding:0.65rem;border:1px solid #D1D5DB;background:white;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:600;color:#374151;">Cancel</button>
           <button id="mbf-confirm-ok" style="flex:1;background:#CC2222;color:white;border:none;padding:0.65rem;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pages Manager Modal -->
+    <div id="pages-manager-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+      <div style="background:white;border-radius:12px;max-width:580px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;overflow:hidden;">
+
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,#1B3A8F,#122970);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+          <h2 style="font-size:1.1rem;font-weight:700;color:white;margin:0;">📄 Manage Custom Pages</h2>
+          <button onclick="closePagesManager()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+
+        <div style="padding:1.5rem;">
+          <!-- Existing pages list -->
+          <div id="pm-pages-list" style="margin-bottom:1.25rem;"></div>
+
+          <!-- Add / Edit form -->
+          <div id="pm-form" style="background:#F8FAFF;border:1px solid #E0E7FF;border-radius:8px;padding:1.25rem;">
+            <h3 id="pm-form-title" style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 1rem;">+ Add New Page</h3>
+            <input type="hidden" id="pm-id" />
+            <div style="display:flex;flex-direction:column;gap:0.85rem;">
+
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.35rem;">Tab Label *</label>
+                <input type="text" id="pm-label" placeholder="e.g., Resources"
+                  oninput="pmAutoSlug()"
+                  style="width:100%;padding:0.55rem 0.75rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+              </div>
+
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.35rem;">
+                  URL Path *
+                  <span style="font-weight:400;color:#9CA3AF;font-size:0.75rem;"> — appears as massbf.org/<span id="pm-slug-preview" style="color:#1B3A8F;font-weight:600;">…</span></span>
+                </label>
+                <input type="text" id="pm-slug" placeholder="resources"
+                  oninput="pmUpdateSlugPreview()"
+                  style="width:100%;padding:0.55rem 0.75rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;font-family:monospace;" />
+              </div>
+
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.35rem;">Page Content</label>
+                <textarea id="pm-content" rows="6" placeholder="Enter the text content for this page. Use a blank line between paragraphs."
+                  style="width:100%;padding:0.55rem 0.75rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.88rem;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.6;"></textarea>
+                <div style="font-size:0.72rem;color:#9CA3AF;margin-top:0.25rem;">Tip: Leave a blank line between paragraphs to split them on the page.</div>
+              </div>
+
+              <div id="pm-error" style="color:#CC2222;font-size:0.82rem;display:none;"></div>
+              <div style="display:flex;gap:0.65rem;">
+                <button onclick="savePage()" style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;">Save Page</button>
+                <button onclick="pmResetForm()" style="padding:0.6rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.88rem;">Clear</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -339,6 +406,119 @@ function isActive(href: string) {
       });
 
       checkAdminStatus();
+
+      // ── Pages Manager ──────────────────────────────────────────────
+      let pmSlugLocked = false; // stop auto-slug once user manually edits it
+
+      function pmToSlug(s: string): string {
+        return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      }
+      window.pmAutoSlug = function() {
+        if (pmSlugLocked) return;
+        const label = (document.getElementById('pm-label') as HTMLInputElement).value;
+        const slug = pmToSlug(label);
+        (document.getElementById('pm-slug') as HTMLInputElement).value = slug;
+        document.getElementById('pm-slug-preview')!.textContent = slug || '…';
+      };
+      window.pmUpdateSlugPreview = function() {
+        pmSlugLocked = true;
+        const slug = (document.getElementById('pm-slug') as HTMLInputElement).value;
+        document.getElementById('pm-slug-preview')!.textContent = slug || '…';
+      };
+
+      function pmResetForm() {
+        (document.getElementById('pm-id') as HTMLInputElement).value = '';
+        (document.getElementById('pm-label') as HTMLInputElement).value = '';
+        (document.getElementById('pm-slug') as HTMLInputElement).value = '';
+        (document.getElementById('pm-content') as HTMLTextAreaElement).value = '';
+        document.getElementById('pm-slug-preview')!.textContent = '…';
+        document.getElementById('pm-form-title')!.textContent = '+ Add New Page';
+        document.getElementById('pm-error')!.style.display = 'none';
+        pmSlugLocked = false;
+      }
+      window.pmResetForm = pmResetForm;
+
+      async function pmLoadPages() {
+        const listEl = document.getElementById('pm-pages-list')!;
+        const res = await fetch('/api/pages');
+        const pages: any[] = await res.json();
+        if (!pages.length) {
+          listEl.innerHTML = '<p style="font-size:0.85rem;color:#9CA3AF;text-align:center;padding:0.5rem 0 0.75rem;">No custom pages yet. Add one below.</p>';
+          return;
+        }
+        listEl.innerHTML = `<div style="font-size:0.78rem;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">Current Pages</div>` +
+          pages.map(p => `
+          <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:#F8FAFF;border:1px solid #E0E7FF;border-radius:7px;margin-bottom:0.4rem;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:0.88rem;font-weight:700;color:#1B3A8F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.label}</div>
+              <div style="font-size:0.75rem;color:#9CA3AF;font-family:monospace;">/${p.slug}</div>
+            </div>
+            <a href="/${p.slug}" target="_blank" style="font-size:0.72rem;color:#1B3A8F;text-decoration:none;background:#EEF2FF;border:1px solid #C7D2FE;padding:0.25rem 0.5rem;border-radius:4px;flex-shrink:0;">View ↗</a>
+            <button onclick='pmEditPage(${JSON.stringify(p).replace(/'/g,"&#39;")})'
+              style="background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.25rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;cursor:pointer;flex-shrink:0;">Edit</button>
+            <button onclick="pmDeletePage('${p.id}')"
+              style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.25rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;cursor:pointer;flex-shrink:0;">Delete</button>
+          </div>`).join('');
+      }
+
+      window.pmEditPage = function(p: any) {
+        (document.getElementById('pm-id') as HTMLInputElement).value = p.id;
+        (document.getElementById('pm-label') as HTMLInputElement).value = p.label;
+        (document.getElementById('pm-slug') as HTMLInputElement).value = p.slug;
+        (document.getElementById('pm-content') as HTMLTextAreaElement).value = p.content || '';
+        document.getElementById('pm-slug-preview')!.textContent = p.slug;
+        document.getElementById('pm-form-title')!.textContent = `Edit: ${p.label}`;
+        document.getElementById('pm-error')!.style.display = 'none';
+        pmSlugLocked = true;
+        document.getElementById('pm-label')!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      window.savePage = async function() {
+        const id      = (document.getElementById('pm-id') as HTMLInputElement).value;
+        const label   = (document.getElementById('pm-label') as HTMLInputElement).value.trim();
+        const slug    = (document.getElementById('pm-slug') as HTMLInputElement).value.trim();
+        const content = (document.getElementById('pm-content') as HTMLTextAreaElement).value.trim();
+        const errEl   = document.getElementById('pm-error')!;
+        errEl.style.display = 'none';
+        if (!label || !slug) { errEl.textContent = 'Tab label and URL path are required.'; errEl.style.display = 'block'; return; }
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const res = await fetch('/api/pages', {
+          method: id ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+          body: JSON.stringify(id ? { id, label, slug, content } : { label, slug, content }),
+        });
+        if (res.ok) {
+          pmResetForm();
+          await pmLoadPages();
+        } else {
+          const err = await res.json();
+          errEl.textContent = err.error || 'Save failed. Please try again.';
+          errEl.style.display = 'block';
+        }
+      };
+
+      window.pmDeletePage = async function(id: string) {
+        const confirmed = await window.mbfConfirm(
+          'This page and its content will be permanently removed. The tab will disappear from the navigation.',
+          'Delete Page?', 'Delete', '📄'
+        );
+        if (!confirmed) return;
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const res = await fetch(`/api/pages?id=${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': token } });
+        if (res.ok) { pmResetForm(); await pmLoadPages(); }
+      };
+
+      window.openPagesManager = async function() {
+        pmResetForm();
+        document.getElementById('pages-manager-modal')!.style.display = 'flex';
+        await pmLoadPages();
+      };
+      window.closePagesManager = function() {
+        document.getElementById('pages-manager-modal')!.style.display = 'none';
+      };
+      document.getElementById('pages-manager-modal')!.addEventListener('click', function(e) {
+        if (e.target === this) closePagesManager();
+      });
 
       // ── Social Links ───────────────────────────────────────────────
       async function loadSocialLinks() {
