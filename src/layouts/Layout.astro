@@ -89,8 +89,19 @@ function isActive(href: string) {
                 id="pw-toggle"
                 onclick="window.toggleAdminPw()"
                 aria-label="Show or hide password"
-                style="position:absolute;right:0;top:0;bottom:0;width:2.75rem;background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:0.72rem;font-weight:600;letter-spacing:0.03em;padding:0;display:flex;align-items:center;justify-content:center;"
-              >Show</button>
+                style="position:absolute;right:0;top:0;bottom:0;width:2.75rem;background:none;border:none;cursor:pointer;color:#9CA3AF;padding:0;display:flex;align-items:center;justify-content:center;"
+              >
+                <!-- eye-open (default) -->
+                <svg id="pw-eye-open" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <!-- eye-off (hidden by default) -->
+                <svg id="pw-eye-off" style="display:none" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              </button>
             </div>
           </div>
           <div id="admin-login-error" style="color:#CC2222;font-size:0.82rem;margin-bottom:0.75rem;display:none;">
@@ -259,17 +270,24 @@ function isActive(href: string) {
       window.toggleAdminPw = function() {
         const input = document.getElementById('admin-password') as HTMLInputElement;
         const btn = document.getElementById('pw-toggle')!;
+        const eyeOpen = document.getElementById('pw-eye-open')!;
+        const eyeOff  = document.getElementById('pw-eye-off')!;
         const showing = input.type === 'text';
         input.type = showing ? 'password' : 'text';
-        btn.textContent = showing ? 'Show' : 'Hide';
+        eyeOpen.style.display = showing ? '' : 'none';
+        eyeOff.style.display  = showing ? 'none' : '';
         btn.style.color = showing ? '#9CA3AF' : '#1B3A8F';
       };
       // Reset password field when admin modal closes
       function resetAdminModal() {
-        const input = document.getElementById('admin-password') as HTMLInputElement;
-        const btn = document.getElementById('pw-toggle')!;
+        const input   = document.getElementById('admin-password') as HTMLInputElement;
+        const btn     = document.getElementById('pw-toggle')!;
+        const eyeOpen = document.getElementById('pw-eye-open')!;
+        const eyeOff  = document.getElementById('pw-eye-off')!;
         if (input) { input.value = ''; input.type = 'password'; }
-        if (btn) { btn.textContent = 'Show'; btn.style.color = '#9CA3AF'; }
+        if (eyeOpen) eyeOpen.style.display = '';
+        if (eyeOff)  eyeOff.style.display  = 'none';
+        if (btn) btn.style.color = '#9CA3AF';
         const err = document.getElementById('admin-login-error');
         if (err) err.style.display = 'none';
       }

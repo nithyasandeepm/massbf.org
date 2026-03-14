@@ -46,7 +46,7 @@ import Layout from "../layouts/Layout.astro";
             onclick="openDatePicker()"
             style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;cursor:pointer;background:white;display:flex;align-items:center;justify-content:space-between;user-select:none;"
           >
-            <span id="date-display-text" style="color:#9CA3AF;">Select tournament date(s)</span>
+            <span id="date-display-text" style="color:#9CA3AF;">Click to set From and To dates</span>
             <span style="color:#9CA3AF;font-size:0.85rem;">📅</span>
           </div>
           <input type="hidden" id="t-dates" />
@@ -68,7 +68,7 @@ import Layout from "../layouts/Layout.astro";
           </select>
         </div>
 
-        <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name and select a date.</div>
+        <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name, and set both From and To dates.</div>
       </div>
 
       <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
@@ -96,8 +96,8 @@ import Layout from "../layouts/Layout.astro";
     function isBetween(d: Date, s: Date, e: Date) { return d > s && d < e; }
 
     function fmtRange(s: Date | null, e: Date | null): string {
-      if (!s) return '';
-      if (!e || sameDay(s, e)) return `${MONTHS[s.getMonth()]} ${s.getDate()}, ${s.getFullYear()}`;
+      if (!s || !e) return ''; // both required
+      if (sameDay(s, e)) return `${MONTHS[s.getMonth()]} ${s.getDate()}, ${s.getFullYear()}`;
       if (s.getFullYear()===e.getFullYear() && s.getMonth()===e.getMonth())
         return `${MONTHS[s.getMonth()]} ${s.getDate()}–${e.getDate()}, ${s.getFullYear()}`;
       if (s.getFullYear()===e.getFullYear())
@@ -112,11 +112,11 @@ import Layout from "../layouts/Layout.astro";
         const mi = MONTHS.indexOf(m[1]);
         if (mi >= 0) return { start: new Date(+m[4], mi, +m[2]), end: new Date(+m[4], mi, +m[3]) };
       }
-      // "Month D, YYYY"
+      // "Month D, YYYY" — single day: end = start
       m = str.match(/^(\w+)\s+(\d+),\s*(\d+)$/);
       if (m) {
         const mi = MONTHS.indexOf(m[1]);
-        if (mi >= 0) return { start: new Date(+m[3], mi, +m[2]), end: null };
+        if (mi >= 0) { const d = new Date(+m[3], mi, +m[2]); return { start: d, end: d }; }
       }
       // "Month D – Month D, YYYY"
       m = str.match(/^(\w+)\s+(\d+)\s*[–\-]\s*(\w+)\s+(\d+),\s*(\d+)$/);
@@ -139,7 +139,7 @@ import Layout from "../layouts/Layout.astro";
         txt.textContent = fmt; txt.style.color = '#374151';
         inp.value = fmt;
       } else {
-        txt.textContent = 'Select tournament date(s)'; txt.style.color = '#9CA3AF';
+        txt.textContent = 'Click to set From and To dates'; txt.style.color = '#9CA3AF';
         inp.value = '';
       }
     }
@@ -162,9 +162,11 @@ import Layout from "../layouts/Layout.astro";
       const fromLabelColor = pStart ? '#059669' : selectingTo ? '#9CA3AF' : '#F37021';
       const toLabelColor   = selectingTo ? '#F37021' : pEnd ? '#059669' : '#9CA3AF';
 
-      const hint = !pStart ? 'Click a day to set From date'
-        : !pEnd ? 'Now click an end date — or skip to save single day'
-        : 'Both dates set. Click any day to restart.';
+      const hint = !pStart
+        ? 'Step 1: Click a day to set the From date'
+        : !pEnd
+        ? 'Step 2: Click a later day for a range, or the same day for a 1-day event'
+        : 'Done! Click any day to choose new dates.';
 
       let html = `
         <!-- From / To summary strip -->
@@ -214,10 +216,15 @@ import Layout from "../layouts/Layout.astro";
       }
 
       html += `</div>
+        <!-- Quick single-day button (only when From is set but To isn't) -->
+        ${pStart && !pEnd ? `<button onclick="pickerSameDay()"
+          style="width:100%;margin-top:0.55rem;padding:0.45rem;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:6px;font-size:0.78rem;font-weight:600;color:#1B3A8F;cursor:pointer;text-align:center;">
+          ↩ 1-day event (same date for From &amp; To)
+        </button>` : ''}
         <!-- Footer hint + clear -->
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid #F3F4F6;">
-          <span style="font-size:0.68rem;color:#9CA3AF;line-height:1.4;">${hint}</span>
-          <button onclick="pickerClear()" style="font-size:0.72rem;color:#CC2222;border:none;background:none;cursor:pointer;flex-shrink:0;margin-left:0.5rem;">Clear</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.55rem;padding-top:0.5rem;border-top:1px solid #F3F4F6;">
+          <span style="font-size:0.67rem;color:#9CA3AF;line-height:1.4;flex:1;">${hint}</span>
+          <button onclick="pickerClear()" style="font-size:0.72rem;color:#CC2222;border:none;background:none;cursor:pointer;flex-shrink:0;margin-left:0.5rem;white-space:nowrap;">Clear</button>
         </div>`;
 
       popup.innerHTML = html;
@@ -270,6 +277,15 @@ import Layout from "../layouts/Layout.astro";
     window.pickerClear = function() {
       pStart = null; pEnd = null;
       updateDateDisplay(); renderCalendar();
+    };
+
+    window.pickerSameDay = function() {
+      if (pStart) {
+        pEnd = new Date(pStart.getFullYear(), pStart.getMonth(), pStart.getDate());
+        document.getElementById('date-picker-popup')!.style.display = 'none';
+        pOpen = false;
+        updateDateDisplay();
+      }
     };
 
     // Close picker on outside click
