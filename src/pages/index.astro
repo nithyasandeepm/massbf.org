@@ -4,10 +4,10 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Home">
 
-  <!-- Hero Section with blended background photo -->
+  <!-- Hero Section -->
   <section style="position:relative;padding:5rem 1.5rem 4.5rem;overflow:hidden;min-height:420px;display:flex;align-items:center;">
-    <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=80');background-size:cover;background-position:center 20%;z-index:0;"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(18,41,112,0.97) 0%,rgba(18,41,112,0.90) 35%,rgba(18,41,112,0.60) 60%,rgba(10,20,60,0.30) 100%);z-index:1;"></div>
+    <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=80');background-size:cover;background-position:center 20%;z-index:0;filter:blur(3px) brightness(0.55);transform:scale(1.04);"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(18,41,112,0.98) 0%,rgba(18,41,112,0.93) 40%,rgba(18,41,112,0.80) 65%,rgba(10,20,60,0.70) 100%);z-index:1;"></div>
     <div style="max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:2;">
       <div style="max-width:600px;">
         <div style="display:inline-block;background:rgba(243,112,33,0.25);border:1px solid rgba(243,112,33,0.5);color:#F37021;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.8rem;border-radius:999px;margin-bottom:1rem;">
@@ -28,21 +28,24 @@ import Layout from "../layouts/Layout.astro";
   </section>
 
   <!-- Stats Bar -->
-  <section style="background:#fff;border-bottom:1px solid #E8EDF5;padding:1.5rem;">
-    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;text-align:center;">
-      <div>
-        <div style="font-size:1.75rem;font-weight:800;color:#1B3A8F;">501(c)(3)</div>
-        <div style="font-size:0.85rem;color:#6B7280;">Tax-Exempt Organization</div>
-      </div>
-      <div style="width:1px;background:#E8EDF5;"></div>
-      <div>
-        <div style="font-size:1.75rem;font-weight:800;color:#F37021;">100%</div>
-        <div style="font-size:0.85rem;color:#6B7280;">Funds Go to the Cause</div>
-      </div>
-      <div style="width:1px;background:#E8EDF5;"></div>
-      <div>
-        <div style="font-size:1.75rem;font-weight:800;color:#CC2222;">All Volunteers</div>
-        <div style="font-size:0.85rem;color:#6B7280;">Personnel are Volunteers</div>
+  <section style="background:#fff;border-bottom:1px solid #E8EDF5;padding:1.25rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <p style="text-align:center;font-size:0.82rem;font-weight:600;color:#1B3A8F;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 1rem;opacity:0.7;">Massachusetts Badminton Foundation (MBF)</p>
+      <div style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;text-align:center;">
+        <div>
+          <div style="font-size:1.75rem;font-weight:800;color:#1B3A8F;">501(c)(3)</div>
+          <div style="font-size:0.85rem;color:#6B7280;">Tax-Exempt Organization</div>
+        </div>
+        <div style="width:1px;background:#E8EDF5;"></div>
+        <div>
+          <div style="font-size:1.75rem;font-weight:800;color:#F37021;">100%</div>
+          <div style="font-size:0.85rem;color:#6B7280;">Funds Go to the Cause</div>
+        </div>
+        <div style="width:1px;background:#E8EDF5;"></div>
+        <div>
+          <div style="font-size:1.75rem;font-weight:800;color:#CC2222;">All Volunteers</div>
+          <div style="font-size:0.85rem;color:#6B7280;">Personnel are Volunteers</div>
+        </div>
       </div>
     </div>
   </section>
@@ -79,7 +82,7 @@ import Layout from "../layouts/Layout.astro";
   <!-- Donate CTA -->
   <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:4rem 1.5rem;text-align:center;">
     <div style="max-width:700px;margin:0 auto;">
-      <h2 style="font-size:2rem;font-weight:800;color:#fff;margin:0 0 1rem;">Support Massachusetts Badminton</h2>
+      <h2 style="font-size:2rem;font-weight:800;color:#fff;margin:0 0 1rem;">Support Massachusetts Badminton Foundation (MBF)</h2>
       <p style="font-size:1rem;color:rgba(255,255,255,0.85);margin:0 0 2rem;line-height:1.7;">MBF is a 501(c)(3) tax-exempt organization. All donations go directly to the cause — 100% for badminton programs in Massachusetts.</p>
       <a href="/donate" class="mbf-donate-btn" style="font-size:1.05rem;padding:0.85rem 2.5rem;">Donate via Zeffy →</a>
       <p style="font-size:0.8rem;color:rgba(255,255,255,0.55);margin-top:1rem;">EIN: 39-4717851 | Contributions are tax-deductible</p>

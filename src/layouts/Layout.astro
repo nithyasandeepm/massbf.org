@@ -44,17 +44,75 @@ function isActive(href: string) {
             </div>
           </a>
           <div style="flex:1;"></div>
-          <nav style="display:flex;align-items:center;gap:0.25rem;">
+          <nav style="display:flex;align-items:center;gap:0.25rem;flex-wrap:wrap;">
             {navLinks.map(link => (
               <a href={link.href} class={`mbf-nav-link ${isActive(link.href) ? "active" : ""}`}>
                 {link.label}
               </a>
             ))}
             <a href="/donate" class="mbf-donate-btn" style="margin-left:0.75rem;">Donate</a>
+            <button
+              id="admin-btn"
+              onclick="document.getElementById('admin-modal').style.display='flex'"
+              style="margin-left:0.5rem;background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.5);font-size:0.72rem;padding:0.28rem 0.65rem;border-radius:4px;cursor:pointer;font-weight:500;transition:all 0.2s;"
+            >
+              Admin
+            </button>
           </nav>
         </div>
       </div>
     </header>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);">
+      <div style="background:white;border-radius:12px;padding:2rem;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);margin:1rem;box-sizing:border-box;">
+
+        <!-- Login View -->
+        <div id="admin-login-view">
+          <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Admin Login</h2>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Password</label>
+            <input
+              type="password"
+              id="admin-password"
+              placeholder="Enter admin password"
+              style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;outline:none;"
+              onkeydown="if(event.key==='Enter')window.adminLogin();"
+            />
+          </div>
+          <div id="admin-login-error" style="color:#CC2222;font-size:0.82rem;margin-bottom:0.75rem;display:none;">
+            Incorrect password. Please try again.
+          </div>
+          <div style="display:flex;gap:0.75rem;">
+            <button
+              onclick="window.adminLogin()"
+              style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;"
+            >Log In</button>
+            <button
+              onclick="document.getElementById('admin-modal').style.display='none'"
+              style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;"
+            >Cancel</button>
+          </div>
+        </div>
+
+        <!-- Logged-In View -->
+        <div id="admin-loggedin-view" style="display:none;">
+          <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Admin Panel</h2>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0 0 1.25rem;">You are logged in as administrator.</p>
+          <div style="display:flex;gap:0.75rem;">
+            <button
+              onclick="window.adminLogout()"
+              style="flex:1;background:#CC2222;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;"
+            >Log Out</button>
+            <button
+              onclick="document.getElementById('admin-modal').style.display='none'"
+              style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;"
+            >Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <main style="flex:1;">
       <slot />
@@ -65,7 +123,7 @@ function isActive(href: string) {
         <div style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start;">
           <div>
             <img src="/logo.png" alt="MBF Logo" style="height:44px;width:auto;margin-bottom:0.75rem;opacity:0.9;" />
-            <p style="font-size:0.85rem;margin:0.25rem 0;">Massachusetts Badminton Foundation</p>
+            <p style="font-size:0.85rem;margin:0.25rem 0;">Massachusetts Badminton Foundation (MBF)</p>
             <p style="font-size:0.8rem;margin:0.25rem 0;opacity:0.7;">EIN: 39-4717851 | 501(c)(3) Tax-Exempt Organization</p>
           </div>
           <div style="font-size:0.85rem;">
@@ -85,6 +143,75 @@ function isActive(href: string) {
         </div>
       </div>
     </footer>
+
+    <script>
+      async function checkAdminStatus() {
+        const token = sessionStorage.getItem('mbf_admin_token');
+        const adminBtn = document.getElementById('admin-btn');
+        const loginView = document.getElementById('admin-login-view');
+        const loggedinView = document.getElementById('admin-loggedin-view');
+
+        if (!token) {
+          document.body.dataset.admin = 'false';
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/auth', { headers: { 'X-Admin-Token': token } });
+          const data = await res.json();
+          if (data.valid) {
+            if (adminBtn) {
+              adminBtn.textContent = '⚙ Admin';
+              adminBtn.style.borderColor = '#F37021';
+              adminBtn.style.color = '#F37021';
+            }
+            document.body.dataset.admin = 'true';
+            if (loginView) loginView.style.display = 'none';
+            if (loggedinView) loggedinView.style.display = 'block';
+            document.dispatchEvent(new CustomEvent('mbf:admin-ready'));
+          } else {
+            sessionStorage.removeItem('mbf_admin_token');
+            document.body.dataset.admin = 'false';
+          }
+        } catch {
+          document.body.dataset.admin = 'false';
+        }
+      }
+
+      window.adminLogin = async function() {
+        const pwEl = document.getElementById('admin-password') as HTMLInputElement;
+        const errorEl = document.getElementById('admin-login-error');
+        const password = pwEl ? pwEl.value : '';
+        try {
+          const res = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+          });
+          const data = await res.json();
+          if (data.success && data.token) {
+            sessionStorage.setItem('mbf_admin_token', data.token);
+            document.getElementById('admin-modal')!.style.display = 'none';
+            location.reload();
+          } else {
+            if (errorEl) errorEl.style.display = 'block';
+          }
+        } catch {
+          if (errorEl) errorEl.style.display = 'block';
+        }
+      };
+
+      window.adminLogout = async function() {
+        sessionStorage.removeItem('mbf_admin_token');
+        location.reload();
+      };
+
+      document.getElementById('admin-modal')!.addEventListener('click', function(e) {
+        if (e.target === this) this.style.display = 'none';
+      });
+
+      checkAdminStatus();
+    </script>
 
   </body>
 </html>

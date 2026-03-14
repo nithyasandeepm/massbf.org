@@ -1,49 +1,157 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-const tournaments = [
-  {
-    name: "2026 YONEX U.S. SELECTION EVENT for Pan Am Junior Championships & World Junior Championships (PAJC & WJC)",
-    status: "upcoming",
-    dates: "April 3–6, 2026",
-  },
-  {
-    name: "Wayside Closed Regional Championships 2026",
-    status: "past",
-    dates: "January 3–4, 2026",
-  },
-];
 ---
 
 <Layout title="Events">
   <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:3rem 1.5rem 2.5rem;color:white;">
     <div style="max-width:1200px;margin:0 auto;">
-      <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem;">Events & Tournaments</h1>
-      <p style="font-size:1rem;color:rgba(255,255,255,0.8);margin:0;">Official MBF-sanctioned tournaments and badminton events.</p>
+      <h1 style="font-size:2.2rem;font-weight:800;margin:0;">Events & Tournaments</h1>
     </div>
   </section>
 
   <section style="padding:3.5rem 1.5rem;">
     <div style="max-width:1200px;margin:0 auto;">
-      <h2 class="mbf-section-title">Tournaments</h2>
-      <div style="display:flex;flex-direction:column;gap:1.25rem;margin-top:1.5rem;">
-        {tournaments.map(t => (
-          <div class="mbf-card" style="padding:0;overflow:hidden;">
-            <div style="display:flex;flex-wrap:wrap;">
-              <div style={`width:8px;background:${t.status === 'upcoming' ? 'linear-gradient(180deg,#F37021,#CC2222)' : 'linear-gradient(180deg,#94A3B8,#64748B)'};flex-shrink:0;`}></div>
-              <div style="padding:1.5rem 1.75rem;flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
-                <div style="flex:1;min-width:200px;">
-                  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-                    <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0;">{t.name}</h3>
-                    <span class={`mbf-badge mbf-badge-${t.status}`}>{t.status === "upcoming" ? "Upcoming" : "Past"}</span>
-                  </div>
-                  <span style="font-size:0.88rem;color:#6B7280;display:flex;align-items:center;gap:0.3rem;">📅 {t.dates}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+
+      <!-- Heading row with optional Admin Add button -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;">
+        <h2 class="mbf-section-title" style="margin:0;">Tournaments</h2>
+        <button
+          id="add-tournament-btn"
+          style="display:none;background:#1B3A8F;color:white;border:none;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
+          onclick="document.getElementById('add-tournament-modal').style.display='flex'"
+        >+ Add</button>
       </div>
+
+      <!-- Tournament list — populated by JS -->
+      <div id="tournaments-list" style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div style="text-align:center;padding:3rem;color:#94A3B8;font-size:0.9rem;">Loading tournaments…</div>
+      </div>
+
     </div>
   </section>
+
+  <!-- Add Tournament Modal -->
+  <div id="add-tournament-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);">
+    <div style="background:white;border-radius:12px;padding:2rem;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);margin:1rem;box-sizing:border-box;">
+      <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Add Tournament</h2>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Tournament Name *</label>
+          <input type="text" id="t-name" placeholder="e.g., Massachusetts Open 2027"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Date *</label>
+          <input type="text" id="t-dates" placeholder="e.g., June 15–16, 2027"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Link (optional)</label>
+          <input type="url" id="t-link" placeholder="https://..."
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Status</label>
+          <select id="t-status" style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;background:white;">
+            <option value="upcoming">Upcoming</option>
+            <option value="past">Past</option>
+          </select>
+        </div>
+        <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name and date.</div>
+      </div>
+      <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+        <button
+          onclick="saveTournament()"
+          style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;"
+        >Save Tournament</button>
+        <button
+          onclick="document.getElementById('add-tournament-modal').style.display='none'"
+          style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;"
+        >Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function renderTournament(t: any) {
+      const bar = t.status === 'upcoming'
+        ? 'linear-gradient(180deg,#F37021,#CC2222)'
+        : 'linear-gradient(180deg,#94A3B8,#64748B)';
+      const badge = t.status === 'upcoming'
+        ? '<span class="mbf-badge mbf-badge-upcoming">Upcoming</span>'
+        : '<span class="mbf-badge mbf-badge-past">Past</span>';
+      const linkHtml = t.link
+        ? `<a href="${t.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:#1B3A8F;text-decoration:underline;">View Details →</a>`
+        : '';
+      return `
+        <div class="mbf-card" style="padding:0;overflow:hidden;">
+          <div style="display:flex;flex-wrap:wrap;">
+            <div style="width:8px;background:${bar};flex-shrink:0;"></div>
+            <div style="padding:1.5rem 1.75rem;flex:1;">
+              <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+                <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0;">${t.name}</h3>
+                ${badge}
+              </div>
+              <span style="font-size:0.88rem;color:#6B7280;">📅 ${t.dates}</span>
+              ${linkHtml}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function loadTournaments() {
+      const list = document.getElementById('tournaments-list')!;
+      try {
+        const res = await fetch('/api/tournaments');
+        const tournaments = await res.json();
+        if (tournaments.length === 0) {
+          list.innerHTML = '<p style="color:#94A3B8;font-size:0.9rem;text-align:center;padding:2rem;">No tournaments yet.</p>';
+        } else {
+          list.innerHTML = tournaments.map(renderTournament).join('');
+        }
+      } catch {
+        list.innerHTML = '<p style="color:#94A3B8;font-size:0.9rem;text-align:center;padding:2rem;">Could not load tournaments.</p>';
+      }
+    }
+
+    function showAdminControls() {
+      const btn = document.getElementById('add-tournament-btn')!;
+      btn.style.display = 'block';
+    }
+
+    document.addEventListener('mbf:admin-ready', showAdminControls);
+    if (document.body.dataset.admin === 'true') showAdminControls();
+
+    async function saveTournament() {
+      const name = (document.getElementById('t-name') as HTMLInputElement).value.trim();
+      const dates = (document.getElementById('t-dates') as HTMLInputElement).value.trim();
+      const link = (document.getElementById('t-link') as HTMLInputElement).value.trim();
+      const status = (document.getElementById('t-status') as HTMLSelectElement).value;
+      const errorEl = document.getElementById('t-error')!;
+
+      if (!name || !dates) { errorEl.style.display = 'block'; return; }
+      errorEl.style.display = 'none';
+
+      const token = sessionStorage.getItem('mbf_admin_token');
+      const res = await fetch('/api/tournaments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token || '' },
+        body: JSON.stringify({ name, dates, link, status })
+      });
+
+      if (res.ok) {
+        document.getElementById('add-tournament-modal')!.style.display = 'none';
+        (document.getElementById('t-name') as HTMLInputElement).value = '';
+        (document.getElementById('t-dates') as HTMLInputElement).value = '';
+        (document.getElementById('t-link') as HTMLInputElement).value = '';
+        await loadTournaments();
+      }
+    }
+
+    document.getElementById('add-tournament-modal')!.addEventListener('click', function(e) {
+      if (e.target === this) this.style.display = 'none';
+    });
+
+    loadTournaments();
+  </script>
 </Layout>
