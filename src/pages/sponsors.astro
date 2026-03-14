@@ -13,13 +13,17 @@ import Layout from "../layouts/Layout.astro";
   <section style="padding:3.5rem 1.5rem;">
     <div style="max-width:1200px;margin:0 auto;">
 
-      <h2 class="mbf-section-title">Supporting Organizations</h2>
-      <div style="margin-top:1.5rem;">
-        <div class="placeholder-box" style="padding:3.5rem 2rem;text-align:center;">
-          <div style="font-size:2.5rem;margin-bottom:1rem;">🏢</div>
-          <p style="font-size:1rem;font-weight:600;color:#64748B;margin:0 0 0.4rem;">Coming Soon</p>
-          <p style="font-size:0.85rem;color:#94A3B8;margin:0;">Sponsor logos will be displayed here.</p>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:0.75rem;">
+        <h2 class="mbf-section-title" style="margin:0;">Supporting Organizations</h2>
+        <button
+          id="add-sponsor-btn"
+          style="display:none;background:#1B3A8F;color:white;border:none;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
+          onclick="openSponsorModal(null)"
+        >+ Add Sponsor</button>
+      </div>
+
+      <div id="sponsors-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;">
+        <div style="text-align:center;padding:3rem;color:#94A3B8;font-size:0.9rem;grid-column:1/-1;">Loading…</div>
       </div>
 
       <div style="margin-top:3rem;text-align:center;">
@@ -30,4 +34,250 @@ import Layout from "../layouts/Layout.astro";
 
     </div>
   </section>
+
+  <!-- Add / Edit Sponsor Modal -->
+  <div id="sponsor-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+    <div style="background:white;border-radius:12px;padding:2rem;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;">
+      <h2 id="sp-modal-title" style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Add Sponsor</h2>
+      <input type="hidden" id="sp-id" />
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Sponsor Name *</label>
+          <input type="text" id="sp-name" placeholder="e.g., Acme Corporation"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Website (optional)</label>
+          <input type="url" id="sp-website" placeholder="https://..."
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Logo Image</label>
+          <!-- Current logo preview (shown when editing) -->
+          <div id="sp-logo-preview" style="display:none;margin-bottom:0.6rem;text-align:center;">
+            <img id="sp-logo-img" src="" alt="Current logo"
+              style="max-height:80px;max-width:100%;object-fit:contain;border:1px solid #E5E7EB;border-radius:6px;padding:0.5rem;background:#F9FAFB;" />
+            <div style="font-size:0.75rem;color:#9CA3AF;margin-top:0.3rem;">Current logo — upload a new file to replace</div>
+          </div>
+          <!-- File input -->
+          <label id="sp-logo-drop"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;border:2px dashed #D1D5DB;border-radius:8px;padding:1.25rem;cursor:pointer;background:#F9FAFB;transition:border-color 0.15s;"
+            onmouseover="this.style.borderColor='#1B3A8F'" onmouseout="this.style.borderColor='#D1D5DB'">
+            <span style="font-size:1.5rem;">🖼️</span>
+            <span style="font-size:0.83rem;color:#6B7280;text-align:center;">Click to choose a logo image<br><span style="font-size:0.75rem;color:#9CA3AF;">PNG, JPG, SVG, WebP — max 5 MB</span></span>
+            <input type="file" id="sp-logo-file" accept="image/*" style="display:none;" onchange="previewLogoFile(this)" />
+          </label>
+          <!-- New file preview -->
+          <div id="sp-new-preview" style="display:none;margin-top:0.5rem;text-align:center;">
+            <img id="sp-new-img" src="" alt="New logo preview"
+              style="max-height:80px;max-width:100%;object-fit:contain;border:1px solid #C7D2FE;border-radius:6px;padding:0.5rem;background:#EEF2FF;" />
+            <div style="font-size:0.75rem;color:#1B3A8F;margin-top:0.3rem;" id="sp-new-filename"></div>
+          </div>
+        </div>
+
+        <div id="sp-error" style="color:#CC2222;font-size:0.82rem;display:none;"></div>
+        <div id="sp-progress" style="color:#1B3A8F;font-size:0.82rem;display:none;">Uploading logo…</div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+        <button onclick="saveSponsor()" style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;">Save Sponsor</button>
+        <button onclick="closeSponsorModal()" style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isAdmin = false;
+
+    // ── Render ─────────────────────────────────────────────────────────
+    function renderSponsors(sponsors: any[]) {
+      const grid = document.getElementById('sponsors-grid')!;
+      if (!sponsors.length) {
+        grid.innerHTML = `<div style="text-align:center;padding:3.5rem 2rem;grid-column:1/-1;" class="placeholder-box">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">🏢</div>
+          <p style="font-size:1rem;font-weight:600;color:#64748B;margin:0 0 0.4rem;">No sponsors yet</p>
+          <p style="font-size:0.85rem;color:#94A3B8;margin:0;">Sponsor logos will appear here once added.</p>
+        </div>`;
+        return;
+      }
+      grid.innerHTML = sponsors.map(s => {
+        const adminBtns = isAdmin ? `
+          <div style="display:flex;gap:0.4rem;justify-content:center;margin-top:0.6rem;">
+            <button onclick='openSponsorModal(${JSON.stringify(s).replace(/'/g,"&#39;")})'
+              style="background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.3rem 0.65rem;border-radius:5px;font-size:0.75rem;font-weight:600;cursor:pointer;">Edit</button>
+            <button onclick="deleteSponsor('${s.id}')"
+              style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.3rem 0.65rem;border-radius:5px;font-size:0.75rem;font-weight:600;cursor:pointer;">Delete</button>
+          </div>` : '';
+        const logoHtml = s.logo
+          ? `<img src="${s.logo}" alt="${s.name} logo"
+               style="max-height:90px;max-width:100%;object-fit:contain;display:block;margin:0 auto 0.75rem;" />`
+          : `<div style="height:90px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:0.75rem;">🏢</div>`;
+        const nameEl = s.website
+          ? `<a href="${s.website}" target="_blank" rel="noopener"
+               style="font-size:0.9rem;font-weight:700;color:#1B3A8F;text-decoration:none;">${s.name} <span style="font-size:0.7rem;opacity:0.6;">↗</span></a>`
+          : `<span style="font-size:0.9rem;font-weight:700;color:#374151;">${s.name}</span>`;
+        return `
+          <div class="mbf-card" style="padding:1.25rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            ${logoHtml}
+            ${nameEl}
+            ${adminBtns}
+          </div>`;
+      }).join('');
+    }
+
+    async function loadSponsors() {
+      const grid = document.getElementById('sponsors-grid')!;
+      try {
+        const res = await fetch('/api/sponsors');
+        renderSponsors(await res.json());
+      } catch {
+        grid.innerHTML = '<p style="color:#94A3B8;font-size:0.9rem;text-align:center;padding:2rem;grid-column:1/-1;">Could not load sponsors.</p>';
+      }
+    }
+
+    function showAdminControls() {
+      isAdmin = true;
+      document.getElementById('add-sponsor-btn')!.style.display = 'block';
+      loadSponsors();
+    }
+    document.addEventListener('mbf:admin-ready', showAdminControls);
+    if (document.body.dataset.admin === 'true') showAdminControls();
+
+    // ── Logo file preview ──────────────────────────────────────────────
+    window.previewLogoFile = function(input: HTMLInputElement) {
+      const file = input.files?.[0];
+      if (!file) return;
+      const newPreview = document.getElementById('sp-new-preview')!;
+      const newImg    = document.getElementById('sp-new-img') as HTMLImageElement;
+      const newName   = document.getElementById('sp-new-filename')!;
+      newImg.src = URL.createObjectURL(file);
+      newName.textContent = file.name;
+      newPreview.style.display = 'block';
+    };
+
+    // Make the drop zone label clickable
+    document.getElementById('sp-logo-drop')!.addEventListener('click', () => {
+      document.getElementById('sp-logo-file')!.click();
+    });
+
+    // ── Modal open/close ───────────────────────────────────────────────
+    window.openSponsorModal = function(s: any) {
+      const titleEl  = document.getElementById('sp-modal-title')!;
+      const idEl     = document.getElementById('sp-id') as HTMLInputElement;
+      const nameEl   = document.getElementById('sp-name') as HTMLInputElement;
+      const websiteEl= document.getElementById('sp-website') as HTMLInputElement;
+      const preview  = document.getElementById('sp-logo-preview')!;
+      const logoImg  = document.getElementById('sp-logo-img') as HTMLImageElement;
+      const fileEl   = document.getElementById('sp-logo-file') as HTMLInputElement;
+      const newPrev  = document.getElementById('sp-new-preview')!;
+      const errEl    = document.getElementById('sp-error')!;
+      const progEl   = document.getElementById('sp-progress')!;
+
+      errEl.style.display = 'none';
+      progEl.style.display = 'none';
+      newPrev.style.display = 'none';
+      fileEl.value = '';
+
+      if (s) {
+        titleEl.textContent = 'Edit Sponsor';
+        idEl.value = s.id; nameEl.value = s.name; websiteEl.value = s.website || '';
+        if (s.logo) { logoImg.src = s.logo; preview.style.display = 'block'; }
+        else preview.style.display = 'none';
+      } else {
+        titleEl.textContent = 'Add Sponsor';
+        idEl.value = ''; nameEl.value = ''; websiteEl.value = '';
+        preview.style.display = 'none';
+      }
+      document.getElementById('sponsor-modal')!.style.display = 'flex';
+      nameEl.focus();
+    };
+
+    window.closeSponsorModal = function() {
+      document.getElementById('sponsor-modal')!.style.display = 'none';
+    };
+    document.getElementById('sponsor-modal')!.addEventListener('click', function(e) {
+      if (e.target === this) closeSponsorModal();
+    });
+
+    // ── Save / Delete ──────────────────────────────────────────────────
+    window.saveSponsor = async function() {
+      const id      = (document.getElementById('sp-id')      as HTMLInputElement).value;
+      const name    = (document.getElementById('sp-name')    as HTMLInputElement).value.trim();
+      const website = (document.getElementById('sp-website') as HTMLInputElement).value.trim();
+      const fileEl  = document.getElementById('sp-logo-file') as HTMLInputElement;
+      const errEl   = document.getElementById('sp-error')!;
+      const progEl  = document.getElementById('sp-progress')!;
+
+      errEl.style.display = 'none';
+      if (!name) { errEl.textContent = 'Please enter a sponsor name.'; errEl.style.display = 'block'; return; }
+
+      const token = sessionStorage.getItem('mbf_admin_token') || '';
+      let logoUrl = '';
+
+      // Upload logo if a new file was chosen
+      const file = fileEl.files?.[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          errEl.textContent = 'Logo file is too large (max 5 MB).';
+          errEl.style.display = 'block';
+          return;
+        }
+        progEl.style.display = 'block';
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('type', 'sponsors');
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'X-Admin-Token': token },
+          body: fd,
+        });
+        progEl.style.display = 'none';
+        if (!uploadRes.ok) {
+          errEl.textContent = 'Logo upload failed. Please try again.';
+          errEl.style.display = 'block';
+          return;
+        }
+        logoUrl = (await uploadRes.json()).url;
+      }
+
+      // Build payload — only include logo if a new one was uploaded
+      const payload: any = { name, website };
+      if (id) payload.id = id;
+      if (logoUrl) payload.logo = logoUrl;
+      // Keep existing logo if no new file and editing
+      if (!logoUrl && id) {
+        const logoImg = document.getElementById('sp-logo-img') as HTMLImageElement;
+        payload.logo = logoImg.src.replace(window.location.origin, '');
+      }
+
+      const res = await fetch('/api/sponsors', {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) { closeSponsorModal(); await loadSponsors(); }
+      else { errEl.textContent = 'Save failed. Please try again.'; errEl.style.display = 'block'; }
+    };
+
+    window.deleteSponsor = async function(id: string) {
+      const confirmed = await window.mbfConfirm(
+        'This sponsor and their logo will be permanently removed.',
+        'Delete Sponsor?', 'Delete', '🏢'
+      );
+      if (!confirmed) return;
+      const token = sessionStorage.getItem('mbf_admin_token') || '';
+      const res = await fetch(`/api/sponsors?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Token': token },
+      });
+      if (res.ok) await loadSponsors();
+    };
+
+    loadSponsors();
+  </script>
 </Layout>

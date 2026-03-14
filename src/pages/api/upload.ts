@@ -16,7 +16,7 @@ export const POST: APIRoute = async ({ request }) => {
   const type = formData.get("type") as string;
   const file = formData.get("file") as File;
 
-  if (!file || !["birthday", "gallery"].includes(type)) {
+  if (!file || !["birthday", "gallery", "sponsors"].includes(type)) {
     return new Response(JSON.stringify({ error: "Invalid request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
