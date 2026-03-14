@@ -1,13 +1,59 @@
 ---
-import { Content } from "../content/events.md";
 import Layout from "../layouts/Layout.astro";
+
+const tournaments = [
+  {
+    name: "2026 YONEX U.S. SELECTION EVENT for Pan Am Junior Championships & World Junior Championships (PAJC & WJC)",
+    status: "upcoming",
+    dates: "April 3–6, 2026",
+  },
+  {
+    name: "Wayside Closed Regional Championships 2026",
+    status: "past",
+    dates: "January 3–4, 2026",
+  },
+];
 ---
 
-<Layout>
-    <div class="">
-        <div class="container mx-auto">
-            <div class="prose">
-                <Content>
+<Layout title="Events">
+
+  <!-- Page Header -->
+  <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:3rem 1.5rem 2.5rem;color:white;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem;">Events & Tournaments</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.8);margin:0;">Official MBF-sanctioned tournaments and badminton events.</p>
+    </div>
+  </section>
+
+  <section style="padding:3.5rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+      <h2 class="mbf-section-title">Tournaments</h2>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem;margin-top:1.5rem;">
+        {tournaments.map(t => (
+          <div class="mbf-card" style="padding:0;overflow:hidden;">
+            <div style="display:flex;flex-wrap:wrap;">
+              <div style={`width:8px;background:${t.status === 'upcoming' ? 'linear-gradient(180deg,#F37021,#CC2222)' : 'linear-gradient(180deg,#94A3B8,#64748B)'};flex-shrink:0;`}></div>
+              <div style="padding:1.5rem 1.75rem;flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
+                <div style="flex:1;min-width:200px;">
+                  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+                    <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0;">{t.name}</h3>
+                    <span class={`mbf-badge mbf-badge-${t.status}`}>
+                      {t.status === "upcoming" ? "Upcoming" : "Past"}
+                    </span>
+                  </div>
+                  <span style="font-size:0.88rem;color:#6B7280;display:flex;align-items:center;gap:0.3rem;">
+                    📅 {t.dates}
+                  </span>
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
 </Layout>
