@@ -194,10 +194,16 @@ import Layout from "../layouts/Layout.astro";
       const popup = document.getElementById('date-picker-popup')!;
       if (pOpen) { popup.style.display = 'none'; pOpen = false; return; }
       const rect = display.getBoundingClientRect();
-      popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
-      popup.style.left = rect.left + 'px';
+      const vw = window.innerWidth;
+      const popupW = Math.min(300, vw - 16);
+      // Clamp left so popup doesn't overflow the right edge
+      let left = rect.left;
+      if (left + popupW > vw - 8) left = vw - popupW - 8;
+      if (left < 8) left = 8;
       popup.style.position = 'fixed';
       popup.style.top = (rect.bottom + 6) + 'px';
+      popup.style.left = left + 'px';
+      popup.style.width = popupW + 'px';
       popup.style.display = 'block';
       pOpen = true;
       renderCalendar();

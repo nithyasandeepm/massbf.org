@@ -34,23 +34,34 @@ function isActive(href: string) {
   <body style="display:flex;flex-direction:column;min-height:100vh;">
 
     <header class="mbf-header">
-      <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;">
-        <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;flex-wrap:wrap;">
+      <div class="mbf-header-inner">
+        <div class="mbf-header-row">
           <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none;flex-shrink:0;">
-            <img src="/logo.png" alt="MBF Logo" style="height:104px;width:auto;object-fit:contain;" />
-            <div style="line-height:1.2;">
-              <div style="font-size:1.1rem;font-weight:800;color:#fff;letter-spacing:0.02em;">Massachusetts</div>
-              <div style="font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.08em;text-transform:uppercase;">Badminton Foundation</div>
+            <img src="/logo.png" alt="MBF Logo" class="mbf-logo" />
+            <div class="mbf-logo-text">
+              <div class="mbf-logo-text-main">Massachusetts</div>
+              <div class="mbf-logo-text-sub">Badminton Foundation</div>
             </div>
           </a>
           <div style="flex:1;"></div>
-          <nav style="display:flex;align-items:center;gap:0.25rem;flex-wrap:wrap;">
+          <!-- Hamburger (mobile only) -->
+          <button
+            id="nav-toggle"
+            class="mbf-hamburger"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            onclick="toggleMobileNav()"
+          >
+            <span></span><span></span><span></span>
+          </button>
+          <!-- Nav -->
+          <nav id="main-nav" class="mbf-nav">
             {navLinks.map(link => (
               <a href={link.href} class={`mbf-nav-link ${isActive(link.href) ? "active" : ""}`}>
                 {link.label}
               </a>
             ))}
-            <a href="/donate" class="mbf-donate-btn" style="margin-left:0.75rem;">Donate</a>
+            <a href="/donate" class="mbf-donate-btn" style="margin-left:0.5rem;">Donate</a>
           </nav>
         </div>
       </div>
@@ -111,7 +122,7 @@ function isActive(href: string) {
     <button
       id="admin-btn"
       onclick="document.getElementById('admin-modal').style.display='flex'"
-      style="position:fixed;top:10px;right:12px;z-index:9998;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:0.2rem 0.55rem;font-size:0.68rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;backdrop-filter:blur(6px);transition:all 0.15s;"
+      style="position:fixed;top:10px;right:12px;z-index:9998;background:#1a3070;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:0.2rem 0.55rem;font-size:0.68rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all 0.15s;min-height:28px;"
       onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.color='white'"
       onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.65)'"
     >Admin</button>
@@ -227,6 +238,25 @@ function isActive(href: string) {
       });
 
       checkAdminStatus();
+
+      // Mobile nav toggle
+      window.toggleMobileNav = function() {
+        const nav = document.getElementById('main-nav')!;
+        const btn = document.getElementById('nav-toggle')!;
+        const isOpen = nav.classList.toggle('open');
+        btn.classList.toggle('open', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+      };
+      // Close nav when any link is tapped on mobile
+      document.getElementById('main-nav')!.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          const nav = document.getElementById('main-nav')!;
+          const btn = document.getElementById('nav-toggle')!;
+          nav.classList.remove('open');
+          btn.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
 
       // Shared confirm dialog
       window.mbfConfirm = function(message: string, title?: string, confirmText?: string, icon?: string): Promise<boolean> {

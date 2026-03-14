@@ -1,15 +1,28 @@
 /* tailwindcss */
 
+/* ── Base reset ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100%;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
   background-color: #F4F7FB;
   color: #1a1a1a;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Header & logo ───────────────────────────────────────────────── */
 .mbf-header {
   background: linear-gradient(135deg, #122970 0%, #1B3A8F 60%, #1e4499 100%);
   color: white;
@@ -19,6 +32,78 @@ html, body {
   box-shadow: 0 2px 12px rgba(18,41,112,0.4);
 }
 
+.mbf-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+}
+
+.mbf-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+
+.mbf-logo {
+  height: 104px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mbf-logo-text { line-height: 1.2; }
+.mbf-logo-text-main {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.mbf-logo-text-sub {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Hamburger button (hidden on desktop) ─────────────────────────── */
+.mbf-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0.45rem 0.55rem;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+}
+.mbf-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.mbf-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.mbf-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.mbf-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Main nav ────────────────────────────────────────────────────── */
+.mbf-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
 .mbf-nav-link {
   color: rgba(255,255,255,0.85);
   font-weight: 600;
@@ -26,33 +111,24 @@ html, body {
   letter-spacing: 0.04em;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: color 0.15s, background 0.15s;
   text-decoration: none;
   white-space: nowrap;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
-
-.mbf-nav-link:hover {
-  color: #ffffff;
-  background: rgba(255,255,255,0.1);
-}
-
-.mbf-nav-link.active {
-  color: #ffffff;
-  background: rgba(255,255,255,0.15);
-}
-
+.mbf-nav-link:hover  { color: #fff; background: rgba(255,255,255,0.1); }
+.mbf-nav-link.active { color: #fff; background: rgba(255,255,255,0.15); }
 .mbf-nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
+  bottom: -2px; left: 0; right: 0;
   height: 3px;
   background: #F37021;
   border-radius: 2px 2px 0 0;
 }
 
+/* ── Cards ───────────────────────────────────────────────────────── */
 .mbf-card {
   background: white;
   border-radius: 12px;
@@ -60,15 +136,14 @@ html, body {
   border-left: 4px solid #1B3A8F;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-
 .mbf-card:hover {
   box-shadow: 0 4px 24px rgba(27,58,143,0.15);
   transform: translateY(-2px);
 }
-
 .mbf-card-orange { border-left-color: #F37021; }
-.mbf-card-red { border-left-color: #CC2222; }
+.mbf-card-red    { border-left-color: #CC2222; }
 
+/* ── Section title ───────────────────────────────────────────────── */
 .mbf-section-title {
   color: #1B3A8F;
   font-size: 1.75rem;
@@ -77,18 +152,16 @@ html, body {
   position: relative;
   padding-bottom: 0.75rem;
 }
-
 .mbf-section-title::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 48px;
-  height: 4px;
+  bottom: 0; left: 0;
+  width: 48px; height: 4px;
   background: linear-gradient(90deg, #F37021, #CC2222);
   border-radius: 2px;
 }
 
+/* ── Badge ───────────────────────────────────────────────────────── */
 .mbf-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -98,10 +171,10 @@ html, body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-
 .mbf-badge-upcoming { background: #FEF3C7; color: #92400E; }
-.mbf-badge-past { background: #DBEAFE; color: #1e40af; }
+.mbf-badge-past     { background: #DBEAFE; color: #1e40af; }
 
+/* ── Donate button ───────────────────────────────────────────────── */
 .mbf-donate-btn {
   background: linear-gradient(135deg, #F37021, #e05a10);
   color: white;
@@ -109,22 +182,25 @@ html, body {
   padding: 0.6rem 1.5rem;
   border-radius: 6px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
   box-shadow: 0 2px 8px rgba(243,112,33,0.35);
   white-space: nowrap;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
 }
-
 .mbf-donate-btn:hover {
   background: linear-gradient(135deg, #e05a10, #cc4a00);
   box-shadow: 0 4px 12px rgba(243,112,33,0.45);
   transform: translateY(-1px);
 }
 
+/* ── Footer ──────────────────────────────────────────────────────── */
 .mbf-footer {
   background: #122970;
   color: rgba(255,255,255,0.8);
 }
 
+/* ── Placeholder box ─────────────────────────────────────────────── */
 .placeholder-box {
   border: 2px dashed #CBD5E1;
   border-radius: 12px;
@@ -135,4 +211,70 @@ html, body {
   flex-direction: column;
   color: #94A3B8;
   text-align: center;
+}
+
+/* ── Hero text helpers (used by home page) ───────────────────────── */
+.mbf-hero-h1 { font-size: 2.75rem; }
+.mbf-hero-p  { font-size: 1.1rem; }
+
+/* ── Responsive: tablet / landscape phone ─────────────────────────── */
+@media (max-width: 900px) {
+  .mbf-logo { height: 80px; }
+  .mbf-hero-h1 { font-size: 2.1rem; }
+}
+
+/* ── Responsive: mobile ─────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* Header */
+  .mbf-logo { height: 60px; }
+  .mbf-logo-text-sub { display: none; }
+  .mbf-hamburger { display: flex; }
+
+  /* Nav becomes a full-width drawer */
+  .mbf-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, #122970 0%, #0e1f5a 100%);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.4rem 0 1rem;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    z-index: 900;
+  }
+  .mbf-nav.open { display: flex; }
+  .mbf-nav .mbf-nav-link {
+    padding: 0.85rem 1.5rem;
+    border-radius: 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    white-space: normal;
+  }
+  .mbf-nav .mbf-nav-link.active::after { display: none; }
+  .mbf-nav .mbf-donate-btn {
+    margin: 0.85rem 1.5rem 0;
+    text-align: center;
+  }
+
+  /* Section titles */
+  .mbf-section-title { font-size: 1.35rem; }
+
+  /* Hero text */
+  .mbf-hero-h1 { font-size: 1.7rem; }
+  .mbf-hero-p  { font-size: 0.95rem; }
+
+  /* Footer stack */
+  .mbf-footer .mbf-footer-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .mbf-hero-h1 { font-size: 1.45rem; }
+  .mbf-logo-text { display: none; }
+  .mbf-header-row { gap: 0.5rem; }
 }
