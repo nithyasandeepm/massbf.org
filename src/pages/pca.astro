@@ -21,7 +21,7 @@ import Layout from "../layouts/Layout.astro";
           <h2 class="mbf-section-title" style="margin:0;">🎂 Birthday Celebrations</h2>
           <label
             id="birthday-upload-label"
-            style="display:none;background:#1B3A8F;color:white;border:none;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
+            style="display:none;background:#1B3A8F;color:white;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
           >
             ⬆ Upload Photo
             <input type="file" id="birthday-file" accept="image/*" style="display:none;" onchange="uploadPhoto('birthday',this)" />
@@ -72,7 +72,7 @@ import Layout from "../layouts/Layout.astro";
           <h2 class="mbf-section-title" style="margin:0;">📸 Photo Gallery</h2>
           <label
             id="gallery-upload-label"
-            style="display:none;background:#1B3A8F;color:white;border:none;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
+            style="display:none;background:#1B3A8F;color:white;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.85rem;"
           >
             ⬆ Upload Photo
             <input type="file" id="gallery-file" accept="image/*" style="display:none;" onchange="uploadPhoto('gallery',this)" />
@@ -92,11 +92,16 @@ import Layout from "../layouts/Layout.astro";
   </section>
 
   <script>
+    let isAdmin = false;
+
     function showAdminControls() {
+      isAdmin = true;
       const bdLabel = document.getElementById('birthday-upload-label')!;
       const galLabel = document.getElementById('gallery-upload-label')!;
       if (bdLabel) bdLabel.style.display = 'inline-block';
       if (galLabel) galLabel.style.display = 'inline-block';
+      loadPhotos('birthday');
+      loadPhotos('gallery');
     }
 
     document.addEventListener('mbf:admin-ready', showAdminControls);
@@ -114,11 +119,21 @@ import Layout from "../layouts/Layout.astro";
               <div style="font-size:0.75rem;margin-top:0.5rem;">Photos coming soon</div>
             </div>`;
         } else {
-          container.innerHTML = photos.map(url =>
-            `<div style="aspect-ratio:4/3;overflow:hidden;border-radius:8px;background:#f8fafc;">
-               <img src="${url}" alt="Photo" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
-             </div>`
-          ).join('');
+          container.innerHTML = photos.map(url => {
+            const filename = url.split('/').pop() || '';
+            const deleteBtn = isAdmin
+              ? `<button
+                  onclick="deletePhoto('${type}','${filename}')"
+                  style="position:absolute;top:6px;right:6px;background:rgba(204,34,34,0.85);color:white;border:none;border-radius:4px;padding:0.25rem 0.5rem;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1;">
+                  ✕
+                </button>`
+              : '';
+            return `
+              <div style="position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:8px;background:#f8fafc;">
+                <img src="${url}" alt="Photo" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+                ${deleteBtn}
+              </div>`;
+          }).join('');
         }
       } catch {}
     }
@@ -128,6 +143,7 @@ import Layout from "../layouts/Layout.astro";
       if (!file) return;
       const statusEl = document.getElementById(`${type}-upload-status`)!;
       statusEl.style.display = 'block';
+      statusEl.style.color = '#1B3A8F';
       statusEl.textContent = 'Uploading…';
 
       const token = sessionStorage.getItem('mbf_admin_token');
@@ -154,6 +170,16 @@ import Layout from "../layouts/Layout.astro";
         statusEl.style.color = '#CC2222';
       }
       input.value = '';
+    };
+
+    window.deletePhoto = async function(type: string, filename: string) {
+      if (!confirm('Delete this photo? This cannot be undone.')) return;
+      const token = sessionStorage.getItem('mbf_admin_token');
+      const res = await fetch(`/api/photos?type=${type}&file=${filename}`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Token': token || '' }
+      });
+      if (res.ok) await loadPhotos(type);
     };
 
     loadPhotos('birthday');
