@@ -51,14 +51,6 @@ function isActive(href: string) {
               </a>
             ))}
             <a href="/donate" class="mbf-donate-btn" style="margin-left:0.75rem;">Donate</a>
-            <button
-              id="admin-btn"
-              onclick="document.getElementById('admin-modal').style.display='flex'"
-              class="mbf-nav-link"
-              style="background:transparent;border:none;cursor:pointer;"
-            >
-              Admin
-            </button>
           </nav>
         </div>
       </div>
@@ -114,6 +106,15 @@ function isActive(href: string) {
 
       </div>
     </div>
+
+    <!-- Admin corner button -->
+    <button
+      id="admin-btn"
+      onclick="document.getElementById('admin-modal').style.display='flex'"
+      style="position:fixed;top:10px;right:12px;z-index:9998;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:0.2rem 0.55rem;font-size:0.68rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;backdrop-filter:blur(6px);transition:all 0.15s;"
+      onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.color='white'"
+      onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.65)'"
+    >Admin</button>
 
     <!-- Confirm Dialog Modal -->
     <div id="mbf-confirm-modal" style="display:none;position:fixed;inset:0;z-index:10001;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);">
@@ -176,8 +177,9 @@ function isActive(href: string) {
           if (data.valid) {
             if (adminBtn) {
               adminBtn.textContent = '⚙ Admin';
-              adminBtn.style.borderColor = '#F37021';
-              adminBtn.style.color = '#F37021';
+              adminBtn.style.background = 'rgba(243,112,33,0.25)';
+              adminBtn.style.borderColor = 'rgba(243,112,33,0.6)';
+              adminBtn.style.color = '#FDBA74';
             }
             document.body.dataset.admin = 'true';
             if (loginView) loginView.style.display = 'none';
