@@ -129,8 +129,11 @@ import Layout from "../layouts/Layout.astro";
           ? `<a href="${s.website}" target="_blank" rel="noopener"
                style="font-size:0.9rem;font-weight:700;color:#1B3A8F;text-decoration:none;">${s.name} <span style="font-size:0.7rem;opacity:0.6;">↗</span></a>`
           : `<span style="font-size:0.9rem;font-weight:700;color:#374151;">${s.name}</span>`;
+        const isEventUrl = s.event && /^https?:\/\//i.test(s.event.trim());
         const eventTag = s.event
-          ? `<div style="font-size:0.72rem;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:0.2rem 0.5rem;margin-top:0.4rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${s.event}">🏆 ${s.event}</div>`
+          ? isEventUrl
+            ? `<a href="${s.event.trim()}" target="_blank" rel="noopener" style="display:block;font-size:0.72rem;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:0.2rem 0.5rem;margin-top:0.4rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none;" title="${s.event}">🏆 View Event ↗</a>`
+            : `<div style="font-size:0.72rem;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:0.2rem 0.5rem;margin-top:0.4rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${s.event}">🏆 ${s.event}</div>`
           : '';
         return `
           <div class="mbf-card" style="padding:1.25rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
