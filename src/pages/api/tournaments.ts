@@ -38,6 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
     dates: body.dates,
     link: body.link || "",
     status: body.status || "upcoming",
+    helpfulLinks: body.helpfulLinks || { hotels: [], carRentals: [], restaurants: [] },
   };
 
   tournaments.unshift(newTournament);
@@ -75,6 +76,7 @@ export const PUT: APIRoute = async ({ request }) => {
     dates: body.dates,
     link: body.link || "",
     status: body.status || tournaments[idx].status,
+    helpfulLinks: body.helpfulLinks || tournaments[idx].helpfulLinks || { hotels: [], carRentals: [], restaurants: [] },
   };
 
   await writeFile(DATA_FILE, JSON.stringify(tournaments, null, 2));

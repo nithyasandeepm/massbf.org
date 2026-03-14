@@ -68,6 +68,36 @@ import Layout from "../layouts/Layout.astro";
           </select>
         </div>
 
+        <!-- Helpful Links -->
+        <div style="border-top:1px solid #E5E7EB;padding-top:0.75rem;">
+          <button type="button" onclick="toggleHlModal()"
+            style="display:flex;align-items:center;gap:0.5rem;background:none;border:none;cursor:pointer;padding:0;font-size:0.85rem;font-weight:700;color:#374151;width:100%;text-align:left;">
+            <span id="hl-modal-icon" style="font-size:0.65rem;">▶</span>
+            <span>Helpful Links</span>
+            <span style="margin-left:auto;font-size:0.72rem;color:#9CA3AF;font-weight:400;">Hotels · Car Rentals · Dining</span>
+          </button>
+          <div id="hl-modal-body" style="display:none;flex-direction:column;gap:0.75rem;margin-top:0.75rem;">
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🏨 Hotels</div>
+              <div id="hl-hotels"></div>
+              <button type="button" onclick="hlAddEntry('hotels')"
+                style="font-size:0.78rem;color:#1B3A8F;background:none;border:1px dashed #C7D2FE;border-radius:5px;padding:0.3rem 0.75rem;cursor:pointer;margin-top:0.2rem;width:100%;">+ Add Hotel</button>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🚗 Car Rentals</div>
+              <div id="hl-carRentals"></div>
+              <button type="button" onclick="hlAddEntry('carRentals')"
+                style="font-size:0.78rem;color:#1B3A8F;background:none;border:1px dashed #C7D2FE;border-radius:5px;padding:0.3rem 0.75rem;cursor:pointer;margin-top:0.2rem;width:100%;">+ Add Car Rental</button>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🍽️ Places to Eat</div>
+              <div id="hl-restaurants"></div>
+              <button type="button" onclick="hlAddEntry('restaurants')"
+                style="font-size:0.78rem;color:#1B3A8F;background:none;border:1px dashed #C7D2FE;border-radius:5px;padding:0.3rem 0.75rem;cursor:pointer;margin-top:0.2rem;width:100%;">+ Add Restaurant</button>
+            </div>
+          </div>
+        </div>
+
         <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name, and set both From and To dates.</div>
       </div>
 
@@ -94,6 +124,70 @@ import Layout from "../layouts/Layout.astro";
       return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
     }
     function isBetween(d: Date, s: Date, e: Date) { return d > s && d < e; }
+
+    // ── Helpful Links helpers ──────────────────────────────────────────
+    let hlCounter = 0;
+    function escapeAttr(s: string): string {
+      return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
+    function renderHlCategory(cat: string, entries: {name:string,url:string}[]) {
+      const container = document.getElementById(`hl-${cat}`);
+      if (!container) return;
+      container.innerHTML = entries.map(entry => {
+        const rowId = `hl-r-${cat}-${hlCounter++}`;
+        return `<div id="${rowId}" class="hl-row" style="display:flex;gap:0.35rem;margin-bottom:0.3rem;align-items:center;">
+          <input class="hl-name" type="text" value="${escapeAttr(entry.name)}" placeholder="Name"
+            style="flex:1;padding:0.32rem 0.5rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.81rem;box-sizing:border-box;min-width:0;" />
+          <input class="hl-url" type="url" value="${escapeAttr(entry.url)}" placeholder="URL (optional)"
+            style="flex:1.5;padding:0.32rem 0.5rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.81rem;box-sizing:border-box;min-width:0;" />
+          <button type="button" onclick="document.getElementById('${rowId}').remove()"
+            style="background:none;border:none;color:#CC2222;cursor:pointer;font-size:0.95rem;flex-shrink:0;padding:0 0.2rem;line-height:1;">✕</button>
+        </div>`;
+      }).join('');
+    }
+    function readHlCategory(cat: string): {name:string,url:string}[] {
+      const container = document.getElementById(`hl-${cat}`);
+      if (!container) return [];
+      return Array.from(container.querySelectorAll('.hl-row')).map(row => ({
+        name: ((row as HTMLElement).querySelector('.hl-name') as HTMLInputElement)?.value.trim() || '',
+        url:  ((row as HTMLElement).querySelector('.hl-url')  as HTMLInputElement)?.value.trim() || ''
+      })).filter(e => e.name);
+    }
+    function hlLinksHtml(items: {name:string,url:string}[]): string {
+      return items.map(item => item.url
+        ? `<a href="${item.url.replace(/"/g,'')}" target="_blank" rel="noopener"
+            style="display:block;color:#1B3A8F;font-size:0.83rem;padding:0.18rem 0;text-decoration:none;border-bottom:1px solid #F3F4F6;">${item.name} <span style="opacity:0.55;font-size:0.75rem;">↗</span></a>`
+        : `<span style="display:block;color:#374151;font-size:0.83rem;padding:0.18rem 0;border-bottom:1px solid #F3F4F6;">${item.name}</span>`
+      ).join('');
+    }
+
+    window.toggleHlModal = function() {
+      const body = document.getElementById('hl-modal-body')!;
+      const icon = document.getElementById('hl-modal-icon')!;
+      const open = body.style.display === 'none' || !body.style.display;
+      body.style.display = open ? 'flex' : 'none';
+      icon.textContent = open ? '▼' : '▶';
+    };
+    window.hlAddEntry = function(cat: string) {
+      const rowId = `hl-r-${cat}-${hlCounter++}`;
+      const html = `<div id="${rowId}" class="hl-row" style="display:flex;gap:0.35rem;margin-bottom:0.3rem;align-items:center;">
+        <input class="hl-name" type="text" placeholder="Name"
+          style="flex:1;padding:0.32rem 0.5rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.81rem;box-sizing:border-box;min-width:0;" />
+        <input class="hl-url" type="url" placeholder="URL (optional)"
+          style="flex:1.5;padding:0.32rem 0.5rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.81rem;box-sizing:border-box;min-width:0;" />
+        <button type="button" onclick="document.getElementById('${rowId}').remove()"
+          style="background:none;border:none;color:#CC2222;cursor:pointer;font-size:0.95rem;flex-shrink:0;padding:0 0.2rem;line-height:1;">✕</button>
+      </div>`;
+      document.getElementById(`hl-${cat}`)!.insertAdjacentHTML('beforeend', html);
+      (document.getElementById(rowId)!.querySelector('.hl-name') as HTMLInputElement).focus();
+    };
+    window.toggleHelpfulLinks = function(id: string) {
+      const panel = document.getElementById(`hl-panel-${id}`)!;
+      const arrow = document.getElementById(`hl-arrow-${id}`)!;
+      const hidden = panel.style.display === 'none' || !panel.style.display;
+      panel.style.display = hidden ? 'grid' : 'none';
+      arrow.textContent = hidden ? '▼' : '▶';
+    };
 
     function fmtRange(s: Date | null, e: Date | null): string {
       if (!s || !e) return ''; // both required
@@ -321,18 +415,45 @@ import Layout from "../layouts/Layout.astro";
             <button onclick="deleteTournament('${t.id}')"
               style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.35rem 0.75rem;border-radius:5px;font-size:0.78rem;font-weight:600;cursor:pointer;">Delete</button>
           </div>` : '';
+        const hl = t.helpfulLinks || {};
+        const hotels = (hl.hotels     || []).filter((x: any) => x.name);
+        const cars   = (hl.carRentals || []).filter((x: any) => x.name);
+        const eats   = (hl.restaurants|| []).filter((x: any) => x.name);
+        const hasHL  = hotels.length + cars.length + eats.length > 0;
+        const helpfulSection = hasHL ? `
+          <div style="padding:0 1.5rem 1rem 1.5rem;border-top:1px solid #F3F4F6;">
+            <button type="button" onclick="toggleHelpfulLinks('${t.id}')"
+              style="margin-top:0.55rem;background:none;border:none;cursor:pointer;font-size:0.81rem;font-weight:700;color:#F37021;display:inline-flex;align-items:center;gap:0.35rem;padding:0;">
+              <span id="hl-arrow-${t.id}" style="font-size:0.62rem;">▶</span> Helpful Links
+            </button>
+            <div id="hl-panel-${t.id}"
+              style="display:none;margin-top:0.6rem;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));">
+              ${hotels.length ? `<div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🏨 Hotels</div>
+                ${hlLinksHtml(hotels)}</div>` : ''}
+              ${cars.length ? `<div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🚗 Car Rentals</div>
+                ${hlLinksHtml(cars)}</div>` : ''}
+              ${eats.length ? `<div>
+                <div style="font-size:0.68rem;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem;">🍽️ Places to Eat</div>
+                ${hlLinksHtml(eats)}</div>` : ''}
+            </div>
+          </div>` : '';
         return `
           <div class="mbf-card" style="padding:0;overflow:hidden;">
             <div style="display:flex;flex-wrap:wrap;">
               <div style="width:8px;background:${bar};flex-shrink:0;"></div>
-              <div style="padding:1.25rem 1.5rem;flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
-                <div style="flex:1;min-width:200px;">
-                  <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.4rem;">
-                    <h3 style="font-size:1.02rem;font-weight:700;color:#1B3A8F;margin:0;">${t.name}</h3>${badge}
+              <div style="flex:1;overflow:hidden;">
+                <div style="padding:1.25rem 1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
+                  <div style="flex:1;min-width:200px;">
+                    <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.4rem;">
+                      <h3 style="font-size:1.02rem;font-weight:700;color:#1B3A8F;margin:0;">${t.name}</h3>${badge}
+                    </div>
+                    <span style="font-size:0.88rem;color:#6B7280;">📅 ${t.dates}</span>${linkHtml}
                   </div>
-                  <span style="font-size:0.88rem;color:#6B7280;">📅 ${t.dates}</span>${linkHtml}
+                  ${adminBtns}
                 </div>
-                ${adminBtns}
+                ${helpfulSection}
               </div>
             </div>
           </div>`;
@@ -363,6 +484,12 @@ import Layout from "../layouts/Layout.astro";
       pStart = null; pEnd = null;
       document.getElementById('t-error')!.style.display = 'none';
 
+      // Reset Helpful Links panel
+      const hlBody = document.getElementById('hl-modal-body')!;
+      const hlIcon = document.getElementById('hl-modal-icon')!;
+      hlBody.style.display = 'none';
+      hlIcon.textContent = '▶';
+
       const titleEl = document.getElementById('modal-title')!;
       const idEl = document.getElementById('t-id') as HTMLInputElement;
       const nameEl = document.getElementById('t-name') as HTMLInputElement;
@@ -384,6 +511,14 @@ import Layout from "../layouts/Layout.astro";
           pYear = now.getFullYear(); pMonth = now.getMonth();
         }
         updateDateDisplay();
+        // Populate helpful links
+        const hl = t.helpfulLinks || {};
+        renderHlCategory('hotels',     (hl.hotels     || []));
+        renderHlCategory('carRentals', (hl.carRentals || []));
+        renderHlCategory('restaurants',(hl.restaurants || []));
+        // Auto-expand if there are existing links
+        const hasLinks = (hl.hotels||[]).length + (hl.carRentals||[]).length + (hl.restaurants||[]).length > 0;
+        if (hasLinks) { hlBody.style.display = 'flex'; hlIcon.textContent = '▼'; }
       } else {
         titleEl.textContent = 'Add Tournament';
         idEl.value = ''; nameEl.value = '';
@@ -392,6 +527,9 @@ import Layout from "../layouts/Layout.astro";
         const now = new Date();
         pYear = now.getFullYear(); pMonth = now.getMonth();
         updateDateDisplay();
+        renderHlCategory('hotels', []);
+        renderHlCategory('carRentals', []);
+        renderHlCategory('restaurants', []);
       }
 
       document.getElementById('tournament-modal')!.style.display = 'flex';
@@ -420,11 +558,18 @@ import Layout from "../layouts/Layout.astro";
       if (!name || !dates) { errorEl.style.display = 'block'; return; }
       errorEl.style.display = 'none';
 
+      const helpfulLinks = {
+        hotels:      readHlCategory('hotels'),
+        carRentals:  readHlCategory('carRentals'),
+        restaurants: readHlCategory('restaurants'),
+      };
       const token = sessionStorage.getItem('mbf_admin_token');
       const res = await fetch('/api/tournaments', {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token || '' },
-        body: JSON.stringify(id ? { id, name, dates, link, status } : { name, dates, link, status })
+        body: JSON.stringify(id
+          ? { id, name, dates, link, status, helpfulLinks }
+          : { name, dates, link, status, helpfulLinks })
       });
       if (res.ok) { closeTournamentModal(); await loadTournaments(); }
     };
