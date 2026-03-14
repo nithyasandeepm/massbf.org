@@ -180,12 +180,11 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
   const MONTHS = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
-  let token = '';
   let allEvents: any[] = [];
+  const getToken = () => sessionStorage.getItem('mbf_admin_token') || '';
 
   // ── Admin detection ──────────────────────────────────────────────────
   function showAdminControls() {
-    token = localStorage.getItem('mbf_admin_token') || '';
     document.body.classList.add('admin-mode');
     (document.getElementById('add-event-btn') as HTMLElement).style.display = 'inline-block';
     renderEvents(allEvents);
@@ -313,7 +312,7 @@ import Layout from "../layouts/Layout.astro";
     if (editingEventId) body.id = editingEventId;
 
     const res = await fetch('/api/sponsor-events', {
-      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() },
       body: JSON.stringify(body)
     });
     if (!res.ok) { const d = await res.json(); errEl.textContent = d.error || 'Save failed.'; errEl.style.display = 'block'; return; }
@@ -323,7 +322,7 @@ import Layout from "../layouts/Layout.astro";
 
   window.deleteEvent = async function(id: string) {
     if (!confirm('Delete this event and all its sponsors? This cannot be undone.')) return;
-    await fetch(`/api/sponsor-events?type=event&id=${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': token } });
+    await fetch(`/api/sponsor-events?type=event&id=${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': getToken() } });
     await loadEvents();
   };
 
@@ -374,7 +373,7 @@ import Layout from "../layouts/Layout.astro";
       const fd = new FormData();
       fd.append('file', f);
       fd.append('type', 'sponsors');
-      const up = await fetch('/api/upload', { method: 'POST', headers: { 'X-Admin-Token': token }, body: fd });
+      const up = await fetch('/api/upload', { method: 'POST', headers: { 'X-Admin-Token': getToken() }, body: fd });
       if (!up.ok) { errEl.textContent = 'Logo upload failed.'; errEl.style.display = 'block'; return; }
       const ud = await up.json();
       logo = ud.url;
@@ -389,7 +388,7 @@ import Layout from "../layouts/Layout.astro";
     if (editingSponsorId) body.id = editingSponsorId;
 
     const res = await fetch('/api/sponsor-events', {
-      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() },
       body: JSON.stringify(body)
     });
     if (!res.ok) { const d = await res.json(); errEl.textContent = d.error || 'Save failed.'; errEl.style.display = 'block'; return; }
@@ -400,7 +399,7 @@ import Layout from "../layouts/Layout.astro";
   window.deleteSponsor = async function(eventId: string, sponsorId: string) {
     if (!confirm('Remove this sponsor?')) return;
     await fetch(`/api/sponsor-events?type=sponsor&eventId=${eventId}&sponsorId=${sponsorId}`, {
-      method: 'DELETE', headers: { 'X-Admin-Token': token }
+      method: 'DELETE', headers: { 'X-Admin-Token': getToken() }
     });
     await loadEvents();
   };
