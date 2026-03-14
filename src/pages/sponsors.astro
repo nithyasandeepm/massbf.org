@@ -3,32 +3,41 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <style>
-  .mbf-details { border:1px solid #E5E7EB; border-radius:10px; margin-bottom:1.25rem; overflow:hidden; }
+  /* ── Year accordion ── */
+  .mbf-details { border:1px solid #E5E7EB; border-radius:10px; margin-bottom:2rem; overflow:hidden; }
   .mbf-details > summary {
-    list-style:none; cursor:pointer; padding:0.85rem 1.25rem;
-    background:#F1F5F9; font-size:1.1rem; font-weight:700; color:#1B3A8F;
-    display:flex; align-items:center; gap:0.5rem; user-select:none;
+    list-style:none; cursor:pointer; padding:0.9rem 1.4rem;
+    background:#F1F5F9; font-size:1.15rem; font-weight:700; color:#1B3A8F;
+    display:flex; align-items:center; gap:0.6rem; user-select:none;
   }
   .mbf-details > summary::-webkit-details-marker { display:none; }
   .mbf-details > summary::before { content:"▶"; font-size:0.8rem; transition:transform 0.2s; display:inline-block; }
   .mbf-details[open] > summary::before { transform:rotate(90deg); }
-  .mbf-details-body { padding:1.25rem 1.5rem; }
+  .mbf-details-body { padding:1.5rem 1.75rem; display:flex; flex-direction:column; gap:0; }
 
-  .mbf-month-label {
-    font-size:0.78rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase;
-    color:#6B7280; border-bottom:1px solid #E5E7EB; padding-bottom:0.35rem; margin:1.25rem 0 0.9rem;
+  /* ── Month accordion ── */
+  .mbf-month-details { border:1px solid #E5E7EB; border-radius:8px; margin-bottom:1.25rem; overflow:hidden; }
+  .mbf-month-details > summary {
+    list-style:none; cursor:pointer; padding:0.6rem 1rem;
+    background:#F8FAFC; font-size:0.8rem; font-weight:700; letter-spacing:0.07em;
+    text-transform:uppercase; color:#6B7280; display:flex; align-items:center; gap:0.4rem; user-select:none;
   }
-  .mbf-month-label:first-child { margin-top:0; }
+  .mbf-month-details > summary::-webkit-details-marker { display:none; }
+  .mbf-month-details > summary::before { content:"▶"; font-size:0.65rem; transition:transform 0.2s; display:inline-block; }
+  .mbf-month-details[open] > summary::before { transform:rotate(90deg); }
+  .mbf-month-body { padding:1.25rem 1.25rem 0.5rem; display:flex; flex-direction:column; gap:1.75rem; }
 
-  .mbf-event-block { margin-bottom:1.5rem; }
-  .mbf-event-header { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.75rem; }
-  .mbf-event-name { font-size:0.98rem; font-weight:700; color:#111827; }
+  /* ── Event block ── */
+  .mbf-event-block { }
+  .mbf-event-header { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.9rem; }
+  .mbf-event-name { font-size:1rem; font-weight:700; color:#111827; }
   .mbf-admin-row { display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-left:auto; }
 
-  .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1rem; }
-  .sp-card { border:1px solid #E5E7EB; border-radius:8px; padding:1rem; text-align:center;
+  /* ── Sponsor cards ── */
+  .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1.25rem; }
+  .sp-card { border:1px solid #E5E7EB; border-radius:8px; padding:1.1rem; text-align:center;
              display:flex; flex-direction:column; align-items:center; gap:0.5rem; background:#FAFAFA; position:relative; }
-  .sp-logo { max-height:64px; max-width:100%; object-fit:contain; }
+  .sp-logo { max-width:5cm; max-height:5cm; width:auto; height:auto; object-fit:contain; }
   .sp-name { font-size:0.8rem; font-weight:600; color:#374151; }
   .sp-website { font-size:0.72rem; color:#1B3A8F; text-decoration:none; }
   .sp-card-actions { display:none; position:absolute; top:0.35rem; right:0.35rem; gap:0.2rem; }
@@ -225,15 +234,18 @@ import Layout from "../layouts/Layout.astro";
 
     let html = '';
     for (const year of sortedYears) {
-      const openAttr = year === mostRecentYear ? 'open' : '';
-      html += `<details class="mbf-details" ${openAttr}><summary>${year}</summary><div class="mbf-details-body">`;
+      const yearOpen = year === mostRecentYear ? 'open' : '';
+      html += `<details class="mbf-details" ${yearOpen}><summary>${year}</summary><div class="mbf-details-body">`;
 
       const sortedMonths = Object.keys(byYear[year]).map(Number).sort((a, b) => b - a);
+      const mostRecentMonth = sortedMonths[0];
       for (const month of sortedMonths) {
-        html += `<div class="mbf-month-label">${MONTHS[month]}</div>`;
+        const monthOpen = (year === mostRecentYear && month === mostRecentMonth) ? 'open' : '';
+        html += `<details class="mbf-month-details" ${monthOpen}><summary>${MONTHS[month]}</summary><div class="mbf-month-body">`;
         for (const ev of byYear[year][month]) {
           html += renderEventBlock(ev, isAdmin);
         }
+        html += `</div></details>`;
       }
       html += `</div></details>`;
     }

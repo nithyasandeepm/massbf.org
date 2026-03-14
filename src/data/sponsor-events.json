@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "id": "1773526072597",
+    "name": "2026 OREGON BADMINTON ACADEMY OLC",
+    "year": 2026,
+    "month": 3,
+    "sponsors": [
+      {
+        "id": "1773526102259",
+        "name": "eCw",
+        "website": "https://www.eclinicalworks.com/",
+        "logo": "/uploads/sponsors/1773526102168.png"
+      }
+    ]
+  },
+  {
+    "id": "1773526132225",
+    "name": "2026 MASS BADMINTON ACADEMY OLC",
+    "year": 2027,
+    "month": 7,
+    "sponsors": [
+      {
+        "id": "1773526149628",
+        "name": "eCw",
+        "website": "https://www.eclinicalworks.com/",
+        "logo": "/uploads/sponsors/1773526149539.png"
+      }
+    ]
+  },
+  {
+    "id": "1773526223914",
+    "name": "2026 MASS BADMINTON ACADEMY OLC",
+    "year": 2026,
+    "month": 7,
+    "sponsors": []
+  }
+]
