@@ -1,28 +1,89 @@
 ---
-import DonateButton from "../components/DonateButton.astro";
-import { Content } from "../content/AboutUs.md";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout title="Home">
 
-      <div class="container mx-10 max-md:px-10 md:px-0">
-    <br>
-        <div class="prose">
-    <Content />
-    <br>
+  <!-- Hero Section with blended background photo -->
+  <section style="position:relative;padding:5rem 1.5rem 4.5rem;overflow:hidden;min-height:420px;display:flex;align-items:center;">
+    <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=80');background-size:cover;background-position:center 20%;z-index:0;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(18,41,112,0.97) 0%,rgba(18,41,112,0.90) 35%,rgba(18,41,112,0.60) 60%,rgba(10,20,60,0.30) 100%);z-index:1;"></div>
+    <div style="max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:2;">
+      <div style="max-width:600px;">
+        <div style="display:inline-block;background:rgba(243,112,33,0.25);border:1px solid rgba(243,112,33,0.5);color:#F37021;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.8rem;border-radius:999px;margin-bottom:1rem;">
+          Promoting Badminton in Massachusetts
+        </div>
+        <h1 style="font-size:2.75rem;font-weight:800;color:#fff;line-height:1.15;margin:0 0 1rem;text-shadow:0 2px 12px rgba(0,0,0,0.3);">
+          Massachusetts<br /><span style="color:#F37021;">Badminton Foundation</span>
+        </h1>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,0.88);line-height:1.75;margin:0 0 2rem;text-shadow:0 1px 6px rgba(0,0,0,0.25);">
+          Promoting the sport of badminton through education, training, events, and community programs that encourage participation, competition, and healthy living.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="/about" style="background:#fff;color:#1B3A8F;font-weight:700;padding:0.75rem 1.75rem;border-radius:6px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.25);">Learn More</a>
+          <a href="/donate" class="mbf-donate-btn" style="padding:0.75rem 1.75rem;">Donate Now</a>
+        </div>
       </div>
-              
     </div>
-<section class="py-12 bg-indigo-200">
-        <div class="container mx-10">
-          <div class="max-md:px-10 flex">
-             <b>Help Fund for Massachusetts Badminton Foundation by donating now!</b>
+  </section>
 
-             <div class="grow" />
-             <DonateButton />
-          </div>  
+  <!-- Stats Bar -->
+  <section style="background:#fff;border-bottom:1px solid #E8EDF5;padding:1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;text-align:center;">
+      <div>
+        <div style="font-size:1.75rem;font-weight:800;color:#1B3A8F;">501(c)(3)</div>
+        <div style="font-size:0.85rem;color:#6B7280;">Tax-Exempt Organization</div>
       </div>
-    </section>
+      <div style="width:1px;background:#E8EDF5;"></div>
+      <div>
+        <div style="font-size:1.75rem;font-weight:800;color:#F37021;">100%</div>
+        <div style="font-size:0.85rem;color:#6B7280;">Funds Go to the Cause</div>
+      </div>
+      <div style="width:1px;background:#E8EDF5;"></div>
+      <div>
+        <div style="font-size:1.75rem;font-weight:800;color:#CC2222;">All Volunteers</div>
+        <div style="font-size:0.85rem;color:#6B7280;">Personnel are Volunteers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs Section -->
+  <section style="padding:4rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 class="mbf-section-title">What We Do</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:2rem;">
+        <div class="mbf-card mbf-card-orange" style="padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🏆</div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Scholarship Program</h3>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0;line-height:1.6;">Supporting MA State Teams nominated for national and international tournaments including Junior National Championship and Pan America Championship.</p>
+        </div>
+        <div class="mbf-card mbf-card-red" style="padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🏸</div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Tournament Sponsorship</h3>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0;line-height:1.6;">Sponsoring local badminton tournaments and competitions, including college-organized events at MIT, Harvard, and other institutions.</p>
+        </div>
+        <div class="mbf-card" style="padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🎓</div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Badminton Workshops</h3>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0;line-height:1.6;">Bringing nationally and internationally renowned coaches and professional players to Massachusetts clubs for learning and interaction.</p>
+        </div>
+        <div class="mbf-card mbf-card-orange" style="padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🌱</div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Community Outreach</h3>
+          <p style="font-size:0.9rem;color:#4B5563;margin:0;line-height:1.6;">Sponsoring badminton events in local high schools, colleges, and communities to cultivate badminton at the grassroots level.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donate CTA -->
+  <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:4rem 1.5rem;text-align:center;">
+    <div style="max-width:700px;margin:0 auto;">
+      <h2 style="font-size:2rem;font-weight:800;color:#fff;margin:0 0 1rem;">Support Massachusetts Badminton</h2>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.85);margin:0 0 2rem;line-height:1.7;">MBF is a 501(c)(3) tax-exempt organization. All donations go directly to the cause — 100% for badminton programs in Massachusetts.</p>
+      <a href="/donate" class="mbf-donate-btn" style="font-size:1.05rem;padding:0.85rem 2.5rem;">Donate via Zeffy →</a>
+      <p style="font-size:0.8rem;color:rgba(255,255,255,0.55);margin-top:1rem;">EIN: 39-4717851 | Contributions are tax-deductible</p>
+    </div>
+  </section>
 
 </Layout>

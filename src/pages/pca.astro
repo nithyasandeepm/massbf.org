@@ -1,0 +1,68 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="PCA">
+  <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:3rem 1.5rem 2.5rem;color:white;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem;">Player Community Activities</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.8);margin:0;">Celebrating our community — birthdays, potlucks, and special moments.</p>
+    </div>
+  </section>
+
+  <section style="padding:3.5rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div style="margin-bottom:3rem;">
+        <h2 class="mbf-section-title">🎂 Birthday Celebrations</h2>
+        <p style="font-size:0.95rem;color:#4B5563;margin-bottom:1.5rem;">We love celebrating our players' birthdays as a community!</p>
+        <div class="placeholder-box" style="padding:3.5rem;">
+          <div style="font-size:3rem;margin-bottom:1rem;">🎂</div>
+          <p style="font-size:1rem;font-weight:600;color:#64748B;margin:0 0 0.5rem;">Birthday Celebrations</p>
+          <p style="font-size:0.88rem;color:#94A3B8;margin:0;max-width:320px;">Photos and highlights from our player birthday celebrations will appear here.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:3rem;">
+        <h2 class="mbf-section-title">🍽️ Potlucks & Gatherings</h2>
+        <p style="font-size:0.95rem;color:#4B5563;margin-bottom:1.5rem;">Our community potlucks and social gatherings bring players and families together.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;">
+          <div class="mbf-card mbf-card-orange" style="padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+            <div style="font-size:1.75rem;flex-shrink:0;">🍱</div>
+            <div>
+              <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.4rem;">Annual Potluck Dinner</h3>
+              <p style="font-size:0.85rem;color:#6B7280;margin:0;line-height:1.55;">A beloved tradition where players and their families share home-cooked dishes and celebrate the badminton season.</p>
+            </div>
+          </div>
+          <div class="mbf-card mbf-card-red" style="padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+            <div style="font-size:1.75rem;flex-shrink:0;">🎉</div>
+            <div>
+              <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.4rem;">Seasonal Celebrations</h3>
+              <p style="font-size:0.85rem;color:#6B7280;margin:0;line-height:1.55;">Holiday gatherings and end-of-season celebrations that bring the MBF community together off the court.</p>
+            </div>
+          </div>
+          <div class="mbf-card" style="padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+            <div style="font-size:1.75rem;flex-shrink:0;">👥</div>
+            <div>
+              <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.4rem;">Community Meetups</h3>
+              <p style="font-size:0.85rem;color:#6B7280;margin:0;line-height:1.55;">Casual get-togethers for players of all levels to connect, share experiences, and grow as a community.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="mbf-section-title">📸 Photo Gallery</h2>
+        <p style="font-size:0.95rem;color:#4B5563;margin-bottom:1.5rem;">Highlights and memories from our community events.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
+          {[1,2,3,4,5,6].map(() => (
+            <div class="placeholder-box" style="aspect-ratio:4/3;padding:1rem;">
+              <div style="font-size:2rem;">📷</div>
+              <div style="font-size:0.75rem;margin-top:0.5rem;">Photo coming soon</div>
+            </div>
+          ))}
+        </div>
+        <p style="font-size:0.88rem;color:#94A3B8;text-align:center;margin-top:1.5rem;">Community photos will be added here. Contact us to submit your event photos!</p>
+      </div>
+    </div>
+  </section>
+</Layout>
