@@ -56,46 +56,23 @@ import Layout from "../layouts/Layout.astro";
         </div>
       </div>
 
-      <!-- ── Photo Uploads ────────────────────────────────────────── -->
+      <!-- ── Event Gallery ───────────────────────────────────────── -->
       <div>
-        <h2 class="mbf-section-title" style="margin-bottom:1.5rem;">📸 Photos</h2>
-
-        <!-- Birthday Photos -->
-        <div style="margin-bottom:2.5rem;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.75rem;">
-            <h3 style="font-size:1rem;font-weight:700;color:#1B3A8F;margin:0;">🎂 Birthday Photos</h3>
-            <label id="birthday-upload-label" style="display:none;background:#1B3A8F;color:white;padding:0.45rem 1.1rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.82rem;">
-              ⬆ Upload Photos
-              <input type="file" id="birthday-file" accept="image/*" multiple style="display:none;" onchange="uploadPhotos('birthday',this)" />
-            </label>
-          </div>
-          <div id="birthday-upload-status" style="display:none;font-size:0.85rem;color:#1B3A8F;margin-bottom:0.75rem;font-weight:600;padding:0.6rem 0.9rem;background:#EFF6FF;border-radius:6px;border:1px solid #BFDBFE;"></div>
-          <div id="birthday-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.85rem;">
-            <div class="placeholder-box" style="aspect-ratio:4/3;padding:1rem;">
-              <div style="font-size:2rem;">🎂</div>
-              <div style="font-size:0.75rem;margin-top:0.5rem;">Photos coming soon</div>
-            </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+          <h2 class="mbf-section-title" style="margin:0;">📸 Event Gallery</h2>
+          <label id="gallery-upload-label" style="display:none;background:#1B3A8F;color:white;padding:0.45rem 1.1rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.82rem;">
+            ⬆ Upload Photos
+            <input type="file" id="gallery-file" accept="image/*" multiple style="display:none;" onchange="uploadPhotos('gallery',this)" />
+          </label>
+        </div>
+        <p style="font-size:0.95rem;color:#4B5563;margin-bottom:1.25rem;">Highlights and memories from our community events.</p>
+        <div id="gallery-upload-status" style="display:none;font-size:0.85rem;color:#1B3A8F;margin-bottom:0.75rem;font-weight:600;padding:0.6rem 0.9rem;background:#EFF6FF;border-radius:6px;border:1px solid #BFDBFE;"></div>
+        <div id="gallery-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.85rem;">
+          <div class="placeholder-box" style="aspect-ratio:4/3;padding:1rem;">
+            <div style="font-size:2rem;">📷</div>
+            <div style="font-size:0.75rem;margin-top:0.5rem;">Photos coming soon</div>
           </div>
         </div>
-
-        <!-- Gallery Photos -->
-        <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.75rem;">
-            <h3 style="font-size:1rem;font-weight:700;color:#1B3A8F;margin:0;">🎉 Event Gallery</h3>
-            <label id="gallery-upload-label" style="display:none;background:#1B3A8F;color:white;padding:0.45rem 1.1rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.82rem;">
-              ⬆ Upload Photos
-              <input type="file" id="gallery-file" accept="image/*" multiple style="display:none;" onchange="uploadPhotos('gallery',this)" />
-            </label>
-          </div>
-          <div id="gallery-upload-status" style="display:none;font-size:0.85rem;color:#1B3A8F;margin-bottom:0.75rem;font-weight:600;padding:0.6rem 0.9rem;background:#EFF6FF;border-radius:6px;border:1px solid #BFDBFE;"></div>
-          <div id="gallery-photos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.85rem;">
-            <div class="placeholder-box" style="aspect-ratio:4/3;padding:1rem;">
-              <div style="font-size:2rem;">📷</div>
-              <div style="font-size:0.75rem;margin-top:0.5rem;">Photos coming soon</div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -105,11 +82,8 @@ import Layout from "../layouts/Layout.astro";
 
     function showAdminControls() {
       isAdmin = true;
-      ['birthday','gallery'].forEach(t => {
-        const lbl = document.getElementById(`${t}-upload-label`)!;
-        if (lbl) lbl.style.display = 'inline-block';
-      });
-      loadPhotos('birthday');
+      const lbl = document.getElementById('gallery-upload-label')!;
+      if (lbl) lbl.style.display = 'inline-block';
       loadPhotos('gallery');
     }
     document.addEventListener('mbf:admin-ready', showAdminControls);
@@ -180,7 +154,6 @@ import Layout from "../layouts/Layout.astro";
       if (res.ok) await loadPhotos(type);
     };
 
-    loadPhotos('birthday');
     loadPhotos('gallery');
   </script>
 </Layout>
