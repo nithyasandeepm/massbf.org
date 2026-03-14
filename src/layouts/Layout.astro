@@ -115,6 +115,19 @@ function isActive(href: string) {
       </div>
     </div>
 
+    <!-- Confirm Dialog Modal -->
+    <div id="mbf-confirm-modal" style="display:none;position:fixed;inset:0;z-index:10001;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);">
+      <div style="background:white;border-radius:14px;padding:2rem 2rem 1.75rem;max-width:380px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.3);margin:1rem;box-sizing:border-box;text-align:center;">
+        <div id="mbf-confirm-icon" style="font-size:2.5rem;margin-bottom:0.75rem;">🗑️</div>
+        <h3 id="mbf-confirm-title" style="font-size:1.1rem;font-weight:700;color:#1B3A8F;margin:0 0 0.6rem;"></h3>
+        <p id="mbf-confirm-msg" style="font-size:0.88rem;color:#4B5563;margin:0 0 1.5rem;line-height:1.6;"></p>
+        <div style="display:flex;gap:0.75rem;">
+          <button id="mbf-confirm-cancel" style="flex:1;padding:0.65rem;border:1px solid #D1D5DB;background:white;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:600;color:#374151;">Cancel</button>
+          <button id="mbf-confirm-ok" style="flex:1;background:#CC2222;color:white;border:none;padding:0.65rem;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">Delete</button>
+        </div>
+      </div>
+    </div>
+
     <main style="flex:1;">
       <slot />
     </main>
@@ -212,6 +225,27 @@ function isActive(href: string) {
       });
 
       checkAdminStatus();
+
+      // Shared confirm dialog
+      window.mbfConfirm = function(message: string, title?: string, confirmText?: string, icon?: string): Promise<boolean> {
+        return new Promise(resolve => {
+          const modal = document.getElementById('mbf-confirm-modal')!;
+          (document.getElementById('mbf-confirm-title')! as HTMLElement).textContent = title || 'Are you sure?';
+          (document.getElementById('mbf-confirm-msg')! as HTMLElement).textContent = message;
+          (document.getElementById('mbf-confirm-icon')! as HTMLElement).textContent = icon || '🗑️';
+          const okBtn = document.getElementById('mbf-confirm-ok')!;
+          okBtn.textContent = confirmText || 'Delete';
+          modal.style.display = 'flex';
+
+          function cleanup() { modal.style.display = 'none'; }
+
+          okBtn.addEventListener('click', () => { cleanup(); resolve(true); }, { once: true });
+          document.getElementById('mbf-confirm-cancel')!.addEventListener('click', () => { cleanup(); resolve(false); }, { once: true });
+          modal.addEventListener('click', function handler(e) {
+            if (e.target === modal) { modal.removeEventListener('click', handler); cleanup(); resolve(false); }
+          });
+        });
+      };
     </script>
 
   </body>

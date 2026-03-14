@@ -11,7 +11,6 @@ import Layout from "../layouts/Layout.astro";
 
   <section style="padding:3.5rem 1.5rem;">
     <div style="max-width:1200px;margin:0 auto;">
-
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;">
         <h2 class="mbf-section-title" style="margin:0;">Tournaments</h2>
         <button
@@ -20,35 +19,47 @@ import Layout from "../layouts/Layout.astro";
           onclick="openTournamentModal(null)"
         >+ Add</button>
       </div>
-
       <div id="tournaments-list" style="display:flex;flex-direction:column;gap:1.25rem;">
         <div style="text-align:center;padding:3rem;color:#94A3B8;font-size:0.9rem;">Loading tournaments…</div>
       </div>
-
     </div>
   </section>
 
   <!-- Add / Edit Tournament Modal -->
-  <div id="tournament-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);">
-    <div style="background:white;border-radius:12px;padding:2rem;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);margin:1rem;box-sizing:border-box;">
+  <div id="tournament-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+    <div style="background:white;border-radius:12px;padding:2rem;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;">
       <h2 id="modal-title" style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Add Tournament</h2>
       <input type="hidden" id="t-id" />
       <div style="display:flex;flex-direction:column;gap:1rem;">
+
         <div>
           <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Tournament Name *</label>
           <input type="text" id="t-name" placeholder="e.g., Massachusetts Open 2027"
             style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
         </div>
+
+        <!-- Custom date range picker -->
         <div>
           <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Date *</label>
-          <input type="text" id="t-dates" placeholder="e.g., June 15–16, 2027"
-            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+          <div
+            id="date-display"
+            onclick="openDatePicker()"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;cursor:pointer;background:white;display:flex;align-items:center;justify-content:space-between;user-select:none;"
+          >
+            <span id="date-display-text" style="color:#9CA3AF;">Select tournament date(s)</span>
+            <span style="color:#9CA3AF;font-size:0.85rem;">📅</span>
+          </div>
+          <input type="hidden" id="t-dates" />
+          <!-- Calendar popup — positioned with JS -->
+          <div id="date-picker-popup" style="display:none;position:fixed;z-index:10002;background:white;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.18);padding:1rem;width:300px;box-sizing:border-box;"></div>
         </div>
+
         <div>
           <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Link (optional)</label>
           <input type="url" id="t-link" placeholder="https://..."
             style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
         </div>
+
         <div>
           <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Status</label>
           <select id="t-status" style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;background:white;">
@@ -56,27 +67,184 @@ import Layout from "../layouts/Layout.astro";
             <option value="past">Past</option>
           </select>
         </div>
-        <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name and date.</div>
+
+        <div id="t-error" style="color:#CC2222;font-size:0.82rem;display:none;">Please fill in the tournament name and select a date.</div>
       </div>
+
       <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
-        <button
-          onclick="saveTournament()"
-          style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;"
-        >Save Tournament</button>
-        <button
-          onclick="closeTournamentModal()"
-          style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;"
-        >Cancel</button>
+        <button onclick="saveTournament()" style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;">Save Tournament</button>
+        <button onclick="closeTournamentModal()" style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;">Cancel</button>
       </div>
     </div>
   </div>
 
   <script>
+    // ── State ──────────────────────────────────────────────────────────
     let isAdmin = false;
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAY_HDRS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+    let pOpen = false;
+    let pYear = new Date().getFullYear();
+    let pMonth = new Date().getMonth();
+    let pStart: Date | null = null;
+    let pEnd: Date | null = null;
 
+    // ── Helpers ────────────────────────────────────────────────────────
+    function sameDay(a: Date, b: Date) {
+      return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+    }
+    function isBetween(d: Date, s: Date, e: Date) { return d > s && d < e; }
+
+    function fmtRange(s: Date | null, e: Date | null): string {
+      if (!s) return '';
+      if (!e || sameDay(s, e)) return `${MONTHS[s.getMonth()]} ${s.getDate()}, ${s.getFullYear()}`;
+      if (s.getFullYear()===e.getFullYear() && s.getMonth()===e.getMonth())
+        return `${MONTHS[s.getMonth()]} ${s.getDate()}–${e.getDate()}, ${s.getFullYear()}`;
+      if (s.getFullYear()===e.getFullYear())
+        return `${MONTHS[s.getMonth()]} ${s.getDate()} – ${MONTHS[e.getMonth()]} ${e.getDate()}, ${s.getFullYear()}`;
+      return `${MONTHS[s.getMonth()]} ${s.getDate()}, ${s.getFullYear()} – ${MONTHS[e.getMonth()]} ${e.getDate()}, ${e.getFullYear()}`;
+    }
+
+    function parseDateRange(str: string): { start: Date | null; end: Date | null } {
+      // "Month D–D, YYYY"
+      let m = str.match(/^(\w+)\s+(\d+)[–\-](\d+),\s*(\d+)$/);
+      if (m) {
+        const mi = MONTHS.indexOf(m[1]);
+        if (mi >= 0) return { start: new Date(+m[4], mi, +m[2]), end: new Date(+m[4], mi, +m[3]) };
+      }
+      // "Month D, YYYY"
+      m = str.match(/^(\w+)\s+(\d+),\s*(\d+)$/);
+      if (m) {
+        const mi = MONTHS.indexOf(m[1]);
+        if (mi >= 0) return { start: new Date(+m[3], mi, +m[2]), end: null };
+      }
+      // "Month D – Month D, YYYY"
+      m = str.match(/^(\w+)\s+(\d+)\s*[–\-]\s*(\w+)\s+(\d+),\s*(\d+)$/);
+      if (m) {
+        const mi1 = MONTHS.indexOf(m[1]), mi2 = MONTHS.indexOf(m[3]);
+        if (mi1 >= 0 && mi2 >= 0) return { start: new Date(+m[5], mi1, +m[2]), end: new Date(+m[5], mi2, +m[4]) };
+      }
+      return { start: null, end: null };
+    }
+
+    function updateDateDisplay() {
+      const txt = document.getElementById('date-display-text')!;
+      const inp = document.getElementById('t-dates') as HTMLInputElement;
+      const fmt = fmtRange(pStart, pEnd);
+      if (fmt) {
+        txt.textContent = fmt; txt.style.color = '#374151';
+        inp.value = fmt;
+      } else {
+        txt.textContent = 'Select tournament date(s)'; txt.style.color = '#9CA3AF';
+        inp.value = '';
+      }
+    }
+
+    // ── Calendar render ────────────────────────────────────────────────
+    function renderCalendar() {
+      const popup = document.getElementById('date-picker-popup')!;
+      const firstDay = new Date(pYear, pMonth, 1).getDay();
+      const daysInMonth = new Date(pYear, pMonth + 1, 0).getDate();
+      const today = new Date();
+      const hint = pStart && !pEnd ? 'Now click an end date (optional)' : 'Click to set start date';
+
+      let html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+          <button onclick="pickerNav(-1)" style="border:1px solid #E5E7EB;background:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.9rem;line-height:1;color:#374151;">‹</button>
+          <span style="font-weight:700;font-size:0.88rem;color:#1B3A8F;">${MONTHS[pMonth]} ${pYear}</span>
+          <button onclick="pickerNav(1)" style="border:1px solid #E5E7EB;background:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.9rem;line-height:1;color:#374151;">›</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:3px;">
+          ${DAY_HDRS.map(d=>`<div style="text-align:center;font-size:0.65rem;font-weight:600;color:#9CA3AF;padding:2px 0;">${d}</div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+          ${'<div></div>'.repeat(firstDay)}`;
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(pYear, pMonth, day);
+        const isStart = pStart && sameDay(d, pStart);
+        const isEnd = pEnd && sameDay(d, pEnd);
+        const inRange = pStart && pEnd && isBetween(d, pStart, pEnd);
+        const isToday = sameDay(d, today);
+        const isPast = pStart && !pEnd && d < pStart;
+
+        let bg = 'transparent', color = '#374151', fw = '400', opacity = '1';
+        if (isStart || isEnd) { bg = '#1B3A8F'; color = 'white'; fw = '700'; }
+        else if (inRange) { bg = '#DBEAFE'; color = '#1B3A8F'; }
+        else if (isPast) { opacity = '0.35'; }
+
+        const todayRing = isToday && !isStart && !isEnd ? 'box-shadow:inset 0 0 0 1.5px #F37021;' : '';
+
+        html += `<button onclick="pickerDay(${pYear},${pMonth},${day})"
+          style="text-align:center;font-size:0.8rem;padding:5px 2px;border:none;cursor:pointer;background:${bg};color:${color};font-weight:${fw};border-radius:5px;opacity:${opacity};${todayRing}">
+          ${day}</button>`;
+      }
+
+      html += `</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.65rem;padding-top:0.55rem;border-top:1px solid #F3F4F6;">
+          <span style="font-size:0.72rem;color:#9CA3AF;">${hint}</span>
+          <button onclick="pickerClear()" style="font-size:0.72rem;color:#CC2222;border:none;background:none;cursor:pointer;">Clear</button>
+        </div>`;
+
+      popup.innerHTML = html;
+    }
+
+    window.openDatePicker = function() {
+      const display = document.getElementById('date-display')!;
+      const popup = document.getElementById('date-picker-popup')!;
+      if (pOpen) { popup.style.display = 'none'; pOpen = false; return; }
+      const rect = display.getBoundingClientRect();
+      popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+      popup.style.left = rect.left + 'px';
+      popup.style.position = 'fixed';
+      popup.style.top = (rect.bottom + 6) + 'px';
+      popup.style.display = 'block';
+      pOpen = true;
+      renderCalendar();
+    };
+
+    window.pickerNav = function(dir: number) {
+      pMonth += dir;
+      if (pMonth < 0) { pMonth = 11; pYear--; }
+      if (pMonth > 11) { pMonth = 0; pYear++; }
+      renderCalendar();
+    };
+
+    window.pickerDay = function(y: number, m: number, d: number) {
+      const clicked = new Date(y, m, d);
+      if (!pStart || (pStart && pEnd)) {
+        pStart = clicked; pEnd = null;
+      } else {
+        if (clicked >= pStart) {
+          pEnd = clicked;
+          document.getElementById('date-picker-popup')!.style.display = 'none';
+          pOpen = false;
+        } else {
+          pStart = clicked; pEnd = null;
+        }
+      }
+      renderCalendar();
+      updateDateDisplay();
+    };
+
+    window.pickerClear = function() {
+      pStart = null; pEnd = null;
+      updateDateDisplay(); renderCalendar();
+    };
+
+    // Close picker on outside click
+    document.addEventListener('click', function(e: MouseEvent) {
+      const popup = document.getElementById('date-picker-popup');
+      const display = document.getElementById('date-display');
+      if (pOpen && popup && display && !display.contains(e.target as Node) && !popup.contains(e.target as Node)) {
+        popup.style.display = 'none'; pOpen = false;
+      }
+    });
+
+    // ── Tournament list ────────────────────────────────────────────────
     function renderTournaments(tournaments: any[]) {
       const list = document.getElementById('tournaments-list')!;
-      if (tournaments.length === 0) {
+      if (!tournaments.length) {
         list.innerHTML = '<p style="color:#94A3B8;font-size:0.9rem;text-align:center;padding:2rem;">No tournaments yet.</p>';
         return;
       }
@@ -92,18 +260,11 @@ import Layout from "../layouts/Layout.astro";
           : '';
         const adminBtns = isAdmin ? `
           <div style="display:flex;gap:0.5rem;flex-shrink:0;align-items:center;">
-            <button
-              onclick="openTournamentModal(${JSON.stringify(t).replace(/"/g, '&quot;')})"
-              style="background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.35rem 0.75rem;border-radius:5px;font-size:0.78rem;font-weight:600;cursor:pointer;">
-              Edit
-            </button>
-            <button
-              onclick="deleteTournament('${t.id}')"
-              style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.35rem 0.75rem;border-radius:5px;font-size:0.78rem;font-weight:600;cursor:pointer;">
-              Delete
-            </button>
+            <button onclick='openTournamentModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'
+              style="background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.35rem 0.75rem;border-radius:5px;font-size:0.78rem;font-weight:600;cursor:pointer;">Edit</button>
+            <button onclick="deleteTournament('${t.id}')"
+              style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.35rem 0.75rem;border-radius:5px;font-size:0.78rem;font-weight:600;cursor:pointer;">Delete</button>
           </div>` : '';
-
         return `
           <div class="mbf-card" style="padding:0;overflow:hidden;">
             <div style="display:flex;flex-wrap:wrap;">
@@ -111,11 +272,9 @@ import Layout from "../layouts/Layout.astro";
               <div style="padding:1.25rem 1.5rem;flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
                 <div style="flex:1;min-width:200px;">
                   <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.4rem;">
-                    <h3 style="font-size:1.02rem;font-weight:700;color:#1B3A8F;margin:0;">${t.name}</h3>
-                    ${badge}
+                    <h3 style="font-size:1.02rem;font-weight:700;color:#1B3A8F;margin:0;">${t.name}</h3>${badge}
                   </div>
-                  <span style="font-size:0.88rem;color:#6B7280;">📅 ${t.dates}</span>
-                  ${linkHtml}
+                  <span style="font-size:0.88rem;color:#6B7280;">📅 ${t.dates}</span>${linkHtml}
                 </div>
                 ${adminBtns}
               </div>
@@ -128,8 +287,7 @@ import Layout from "../layouts/Layout.astro";
       const list = document.getElementById('tournaments-list')!;
       try {
         const res = await fetch('/api/tournaments');
-        const tournaments = await res.json();
-        renderTournaments(tournaments);
+        renderTournaments(await res.json());
       } catch {
         list.innerHTML = '<p style="color:#94A3B8;font-size:0.9rem;text-align:center;padding:2rem;">Could not load tournaments.</p>';
       }
@@ -137,50 +295,57 @@ import Layout from "../layouts/Layout.astro";
 
     function showAdminControls() {
       isAdmin = true;
-      const btn = document.getElementById('add-tournament-btn')!;
-      btn.style.display = 'block';
+      document.getElementById('add-tournament-btn')!.style.display = 'block';
       loadTournaments();
     }
-
     document.addEventListener('mbf:admin-ready', showAdminControls);
     if (document.body.dataset.admin === 'true') showAdminControls();
 
+    // ── Modal open/close ───────────────────────────────────────────────
     window.openTournamentModal = function(t: any) {
-      const modal = document.getElementById('tournament-modal')!;
+      // Reset picker
+      pStart = null; pEnd = null;
+      document.getElementById('t-error')!.style.display = 'none';
+
       const titleEl = document.getElementById('modal-title')!;
       const idEl = document.getElementById('t-id') as HTMLInputElement;
       const nameEl = document.getElementById('t-name') as HTMLInputElement;
-      const datesEl = document.getElementById('t-dates') as HTMLInputElement;
       const linkEl = document.getElementById('t-link') as HTMLInputElement;
       const statusEl = document.getElementById('t-status') as HTMLSelectElement;
-      const errorEl = document.getElementById('t-error')!;
-
-      errorEl.style.display = 'none';
 
       if (t) {
         titleEl.textContent = 'Edit Tournament';
-        idEl.value = t.id;
-        nameEl.value = t.name;
-        datesEl.value = t.dates;
-        linkEl.value = t.link || '';
-        statusEl.value = t.status;
+        idEl.value = t.id; nameEl.value = t.name;
+        linkEl.value = t.link || ''; statusEl.value = t.status;
+        // Try to parse existing date string into picker
+        const parsed = parseDateRange(t.dates || '');
+        if (parsed.start) { pStart = parsed.start; pEnd = parsed.end; }
+        updateDateDisplay();
       } else {
         titleEl.textContent = 'Add Tournament';
-        idEl.value = '';
-        nameEl.value = '';
-        datesEl.value = '';
-        linkEl.value = '';
-        statusEl.value = 'upcoming';
+        idEl.value = ''; nameEl.value = '';
+        linkEl.value = ''; statusEl.value = 'upcoming';
+        // Set picker view to current month
+        const now = new Date();
+        pYear = now.getFullYear(); pMonth = now.getMonth();
+        updateDateDisplay();
       }
 
-      modal.style.display = 'flex';
+      document.getElementById('tournament-modal')!.style.display = 'flex';
       nameEl.focus();
     };
 
     window.closeTournamentModal = function() {
       document.getElementById('tournament-modal')!.style.display = 'none';
+      document.getElementById('date-picker-popup')!.style.display = 'none';
+      pOpen = false;
     };
 
+    document.getElementById('tournament-modal')!.addEventListener('click', function(e) {
+      if (e.target === this) closeTournamentModal();
+    });
+
+    // ── Save / Delete ──────────────────────────────────────────────────
     window.saveTournament = async function() {
       const id = (document.getElementById('t-id') as HTMLInputElement).value;
       const name = (document.getElementById('t-name') as HTMLInputElement).value.trim();
@@ -193,34 +358,26 @@ import Layout from "../layouts/Layout.astro";
       errorEl.style.display = 'none';
 
       const token = sessionStorage.getItem('mbf_admin_token');
-      const method = id ? 'PUT' : 'POST';
-      const body = id ? { id, name, dates, link, status } : { name, dates, link, status };
-
       const res = await fetch('/api/tournaments', {
-        method,
+        method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token || '' },
-        body: JSON.stringify(body)
+        body: JSON.stringify(id ? { id, name, dates, link, status } : { name, dates, link, status })
       });
-
-      if (res.ok) {
-        closeTournamentModal();
-        await loadTournaments();
-      }
+      if (res.ok) { closeTournamentModal(); await loadTournaments(); }
     };
 
     window.deleteTournament = async function(id: string) {
-      if (!confirm('Delete this tournament? This cannot be undone.')) return;
+      const confirmed = await window.mbfConfirm(
+        'This tournament will be permanently removed and cannot be recovered.',
+        'Delete Tournament?', 'Delete', '🏸'
+      );
+      if (!confirmed) return;
       const token = sessionStorage.getItem('mbf_admin_token');
       const res = await fetch(`/api/tournaments?id=${id}`, {
-        method: 'DELETE',
-        headers: { 'X-Admin-Token': token || '' }
+        method: 'DELETE', headers: { 'X-Admin-Token': token || '' }
       });
       if (res.ok) await loadTournaments();
     };
-
-    document.getElementById('tournament-modal')!.addEventListener('click', function(e) {
-      if (e.target === this) closeTournamentModal();
-    });
 
     loadTournaments();
   </script>
