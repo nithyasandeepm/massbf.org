@@ -1,156 +1,29 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-html, body {
+html,
+body {
+  width: 100%;
+  height: 100%;
+
   margin: 0;
   padding: 0;
-  width: 100%;
-  min-height: 100%;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: #F4F7FB;
-  color: #1a1a1a;
+
+  font-family: sans-serif;
 }
 
-.mbf-header {
-  background: linear-gradient(135deg, #122970 0%, #1B3A8F 60%, #1e4499 100%);
-  color: white;
+.sticky-header {
   position: sticky;
   top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #474747;
+  color: white;
+  padding: 10px 0;
   z-index: 1000;
-  box-shadow: 0 2px 12px rgba(18,41,112,0.4);
 }
 
-.mbf-nav-link {
-  color: rgba(255,255,255,0.85);
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  white-space: nowrap;
-  position: relative;
-}
-
-.mbf-nav-link:hover {
-  color: #ffffff;
-  background: rgba(255,255,255,0.1);
-}
-
-.mbf-nav-link.active {
-  color: #ffffff;
-  background: rgba(255,255,255,0.15);
-}
-
-.mbf-nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #F37021;
-  border-radius: 2px 2px 0 0;
-}
-
-.mbf-hero {
-  background: linear-gradient(160deg, #1B3A8F 0%, #122970 50%, #0e1f55 100%);
-  color: white;
-}
-
-.mbf-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(27,58,143,0.08);
-  border-left: 4px solid #1B3A8F;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.mbf-card:hover {
-  box-shadow: 0 4px 24px rgba(27,58,143,0.15);
-  transform: translateY(-2px);
-}
-
-.mbf-card-orange {
-  border-left-color: #F37021;
-}
-
-.mbf-card-red {
-  border-left-color: #CC2222;
-}
-
-.mbf-section-title {
-  color: #1B3A8F;
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  position: relative;
-  padding-bottom: 0.75rem;
-}
-
-.mbf-section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 48px;
-  height: 4px;
-  background: linear-gradient(90deg, #F37021, #CC2222);
-  border-radius: 2px;
-}
-
-.mbf-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.mbf-badge-upcoming {
-  background: #FEF3C7;
-  color: #92400E;
-}
-
-.mbf-badge-past {
-  background: #DBEAFE;
-  color: #1e40af;
-}
-
-.mbf-donate-btn {
-  background: linear-gradient(135deg, #F37021, #e05a10);
-  color: white;
-  font-weight: 700;
-  padding: 0.6rem 1.5rem;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(243,112,33,0.35);
-  white-space: nowrap;
-}
-
-.mbf-donate-btn:hover {
-  background: linear-gradient(135deg, #e05a10, #cc4a00);
-  box-shadow: 0 4px 12px rgba(243,112,33,0.45);
-  transform: translateY(-1px);
-}
-
-.mbf-footer {
-  background: #122970;
-  color: rgba(255,255,255,0.8);
-}
-
-.placeholder-box {
-  border: 2px dashed #CBD5E1;
-  border-radius: 12px;
-  background: #F8FAFC;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #94A3B8;
-  text-align: center;
+.box {
+    background-color: rgb(255, 0, 195);
+    width: 100%;
 }
