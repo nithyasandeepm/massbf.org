@@ -5,7 +5,7 @@ import Layout from "../layouts/Layout.astro";
 <style>
   /* ── Year accordion ── */
   .mbf-details {
-    border:1px solid #D1D8E8; border-radius:12px; margin-bottom:2.5rem;
+    border:1px solid #D1D8E8; border-radius:12px; margin-bottom:10rem;
     box-shadow:0 1px 4px rgba(0,0,0,0.05);
   }
   .mbf-details > summary {
@@ -20,23 +20,34 @@ import Layout from "../layouts/Layout.astro";
   .mbf-details > summary::before { content:"▶"; font-size:0.8rem; transition:transform 0.2s; display:inline-block; color:#1B3A8F; }
   .mbf-details[open] > summary::before { transform:rotate(90deg); }
 
-  /* Year body — this is where months live, indented */
-  .mbf-details-body { padding:1.5rem 1.5rem 1.5rem 2.5rem; display:flex; flex-direction:column; gap:1rem; border-top:1px solid #D1D8E8; }
+  /* Year body — months live here, indented from the left */
+  .mbf-details-body {
+    padding:2rem 1.5rem 2rem 3rem;
+    display:flex; flex-direction:column; gap:5rem;
+    border-top:1px solid #D1D8E8;
+  }
 
   /* ── Month accordion (nested inside year) ── */
   .mbf-month-details {
+    display:block; width:100%;
     border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;
     border-left:3px solid #93C5FD;
   }
   .mbf-month-details > summary {
+    display:flex; align-items:center; gap:0.5rem;
     list-style:none; cursor:pointer; padding:0.65rem 1rem;
     background:#F8FAFC; font-size:0.82rem; font-weight:700; letter-spacing:0.07em;
-    text-transform:uppercase; color:#3B5EC6; display:flex; align-items:center; gap:0.5rem; user-select:none;
+    text-transform:uppercase; color:#3B5EC6; user-select:none;
+    width:100%; box-sizing:border-box;
   }
   .mbf-month-details > summary::-webkit-details-marker { display:none; }
-  .mbf-month-details > summary::before { content:"▶"; font-size:0.62rem; transition:transform 0.2s; display:inline-block; }
+  .mbf-month-details > summary::before { content:"▶"; font-size:0.62rem; transition:transform 0.2s; display:inline-block; flex-shrink:0; }
   .mbf-month-details[open] > summary::before { transform:rotate(90deg); }
-  .mbf-month-body { padding:1.5rem 1.5rem 1rem 1.5rem; display:flex; flex-direction:column; gap:2rem; background:white; }
+  .mbf-month-body {
+    display:flex; flex-direction:column; gap:2rem;
+    padding:1.75rem 1.5rem 1.25rem 1.5rem;
+    background:white;
+  }
 
   /* ── Event block ── */
   .mbf-event-block { }
