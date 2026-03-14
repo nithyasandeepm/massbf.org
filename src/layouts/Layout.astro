@@ -176,6 +176,80 @@ function isActive(href: string) {
             <p style="margin:0.25rem 0;font-weight:600;color:rgba(255,255,255,0.95);">Contact</p>
             <p style="margin:0.25rem 0;opacity:0.8;">80 Broadmeadow Street, Marlborough, MA 01752</p>
             <p style="margin:0.25rem 0;opacity:0.8;">larryzhang07@gmail.com</p>
+
+            <!-- Social icons -->
+            <div id="social-row" style="display:flex;gap:0.65rem;margin-top:0.9rem;align-items:center;">
+              <!-- Facebook -->
+              <a id="social-fb" href="#" target="_blank" rel="noopener" title="Facebook"
+                style="display:none;width:36px;height:36px;border-radius:50%;background:#1877F2;color:white;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+              <!-- Instagram -->
+              <a id="social-ig" href="#" target="_blank" rel="noopener" title="Instagram"
+                style="display:none;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 110%,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);color:white;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+              <!-- YouTube -->
+              <a id="social-yt" href="#" target="_blank" rel="noopener" title="YouTube"
+                style="display:none;width:36px;height:36px;border-radius:50%;background:#FF0000;color:white;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+                  <polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Admin: Edit Social Links button (hidden until admin logged in) -->
+            <button id="social-edit-btn" onclick="openSocialEditor()"
+              style="display:none;margin-top:0.65rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);font-size:0.72rem;font-weight:600;padding:0.3rem 0.75rem;border-radius:5px;cursor:pointer;letter-spacing:0.03em;">
+              ✎ Edit Social Links
+            </button>
+          </div>
+
+          <!-- Social Links Editor (admin only, inline) -->
+          <div id="social-editor" style="display:none;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:1rem 1.25rem;font-size:0.83rem;min-width:240px;">
+            <p style="margin:0 0 0.75rem;font-weight:700;color:rgba(255,255,255,0.95);font-size:0.85rem;">Social Media Links</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.55rem;">
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span style="width:28px;height:28px;border-radius:50%;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </span>
+                <input id="se-facebook" type="url" placeholder="Facebook page URL"
+                  style="flex:1;padding:0.35rem 0.55rem;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:white;font-size:0.8rem;min-width:0;"
+                  oninput="this.style.borderColor=this.value?'#4ADE80':'rgba(255,255,255,0.25)'" />
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span style="width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 30% 110%,#f09433,#dc2743 50%,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </span>
+                <input id="se-instagram" type="url" placeholder="Instagram profile URL"
+                  style="flex:1;padding:0.35rem 0.55rem;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:white;font-size:0.8rem;min-width:0;"
+                  oninput="this.style.borderColor=this.value?'#4ADE80':'rgba(255,255,255,0.25)'" />
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span style="width:28px;height:28px;border-radius:50%;background:#FF0000;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+                </span>
+                <input id="se-youtube" type="url" placeholder="YouTube channel URL"
+                  style="flex:1;padding:0.35rem 0.55rem;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:white;font-size:0.8rem;min-width:0;"
+                  oninput="this.style.borderColor=this.value?'#4ADE80':'rgba(255,255,255,0.25)'" />
+              </div>
+            </div>
+
+            <div id="se-status" style="font-size:0.75rem;margin-top:0.5rem;min-height:1rem;"></div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
+              <button onclick="saveSocialLinks()"
+                style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.4rem;border-radius:5px;font-size:0.8rem;font-weight:700;cursor:pointer;">Save</button>
+              <button onclick="closeSocialEditor()"
+                style="padding:0.4rem 0.75rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:5px;font-size:0.8rem;cursor:pointer;">Cancel</button>
+            </div>
           </div>
           <div style="font-size:0.85rem;">
             <p style="margin:0.25rem 0;font-weight:600;color:rgba(255,255,255,0.95);">Quick Links</p>
@@ -265,6 +339,72 @@ function isActive(href: string) {
       });
 
       checkAdminStatus();
+
+      // ── Social Links ───────────────────────────────────────────────
+      async function loadSocialLinks() {
+        try {
+          const data = await (await fetch('/api/settings')).json();
+          const s = data.social || {};
+          const fb = document.getElementById('social-fb') as HTMLAnchorElement;
+          const ig = document.getElementById('social-ig') as HTMLAnchorElement;
+          const yt = document.getElementById('social-yt') as HTMLAnchorElement;
+          if (fb) { if (s.facebook) { fb.href = s.facebook; fb.style.display = 'flex'; } else fb.style.display = 'none'; }
+          if (ig) { if (s.instagram) { ig.href = s.instagram; ig.style.display = 'flex'; } else ig.style.display = 'none'; }
+          if (yt) { if (s.youtube)   { yt.href = s.youtube;   yt.style.display = 'flex'; } else yt.style.display = 'none'; }
+          // Pre-fill editor inputs
+          const seFb = document.getElementById('se-facebook') as HTMLInputElement;
+          const seIg = document.getElementById('se-instagram') as HTMLInputElement;
+          const seYt = document.getElementById('se-youtube')  as HTMLInputElement;
+          if (seFb) { seFb.value = s.facebook || ''; seFb.style.borderColor = s.facebook ? '#4ADE80' : 'rgba(255,255,255,0.25)'; }
+          if (seIg) { seIg.value = s.instagram || ''; seIg.style.borderColor = s.instagram ? '#4ADE80' : 'rgba(255,255,255,0.25)'; }
+          if (seYt) { seYt.value = s.youtube || '';   seYt.style.borderColor = s.youtube   ? '#4ADE80' : 'rgba(255,255,255,0.25)'; }
+        } catch {}
+      }
+      loadSocialLinks();
+
+      window.openSocialEditor = function() {
+        document.getElementById('social-editor')!.style.display = 'block';
+        document.getElementById('social-edit-btn')!.style.display = 'none';
+        document.getElementById('se-status')!.textContent = '';
+      };
+      window.closeSocialEditor = function() {
+        document.getElementById('social-editor')!.style.display = 'none';
+        document.getElementById('social-edit-btn')!.style.display = 'block';
+      };
+      window.saveSocialLinks = async function() {
+        const fb = (document.getElementById('se-facebook') as HTMLInputElement).value.trim();
+        const ig = (document.getElementById('se-instagram') as HTMLInputElement).value.trim();
+        const yt = (document.getElementById('se-youtube')  as HTMLInputElement).value.trim();
+        const status = document.getElementById('se-status')!;
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        status.textContent = 'Saving…'; status.style.color = 'rgba(255,255,255,0.6)';
+        try {
+          const res = await fetch('/api/settings', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+            body: JSON.stringify({ social: { facebook: fb, instagram: ig, youtube: yt } })
+          });
+          if (res.ok) {
+            status.textContent = '✓ Saved!'; status.style.color = '#4ADE80';
+            await loadSocialLinks();
+            setTimeout(() => { closeSocialEditor(); }, 900);
+          } else {
+            status.textContent = 'Save failed.'; status.style.color = '#F87171';
+          }
+        } catch {
+          status.textContent = 'Save failed.'; status.style.color = '#F87171';
+        }
+      };
+
+      // Show admin social button on login
+      document.addEventListener('mbf:admin-ready', () => {
+        const btn = document.getElementById('social-edit-btn');
+        if (btn) btn.style.display = 'block';
+      });
+      if (document.body.dataset.admin === 'true') {
+        const btn = document.getElementById('social-edit-btn');
+        if (btn) btn.style.display = 'block';
+      }
 
       // Password show/hide toggle
       window.toggleAdminPw = function() {

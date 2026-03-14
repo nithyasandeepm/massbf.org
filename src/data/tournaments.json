@@ -1,36 +1,5 @@
 [
   {
-    "id": "1773521542780",
-    "name": "test",
-    "dates": "March 24–28, 2026",
-    "link": "https://usabadminton.org/2026-oregon-badminton-acadamy-olc-prospectus-released/",
-    "status": "upcoming",
-    "helpfulLinks": {
-      "hotels": [
-        {
-          "name": "IHG",
-          "url": "https://www.hotelplanner.com/Hotels/283812/Reservations-Holiday-Inn-Express-Hudson-Hudson-121-Coolidge-St-01749#content"
-        },
-        {
-          "name": "HOTEL 2",
-          "url": "https://www.hotelplanner.com/Hotels/283812/Reservations-Holiday-Inn-Express-Hudson-Hudson-121-Coolidge-St-01749#content"
-        }
-      ],
-      "carRentals": [
-        {
-          "name": "ENTERPRISE",
-          "url": "https://www.enterprise.com/en/car-rental-locations/us/ma/boston-logan-international-airport-10y1.html?mcid=yext:245709"
-        }
-      ],
-      "restaurants": [
-        {
-          "name": "SAFFRON",
-          "url": "https://saffronmarlborough.com/"
-        }
-      ]
-    }
-  },
-  {
     "id": "1",
     "name": "2026 YONEX U.S. SELECTION EVENT for Pan Am Junior Championships & World Junior Championships (PAJC & WJC)",
     "status": "upcoming",
