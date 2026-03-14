@@ -35,6 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
     name: body.name || "",
     website: body.website || "",
     logo: body.logo || "",
+    event: body.event || "",
   };
   sponsors.push(newSponsor);
   await writeFile(DATA_FILE, JSON.stringify(sponsors, null, 2));
@@ -66,6 +67,7 @@ export const PUT: APIRoute = async ({ request }) => {
     name: body.name ?? sponsors[idx].name,
     website: body.website ?? sponsors[idx].website,
     logo: body.logo ?? sponsors[idx].logo,
+    event: body.event ?? (sponsors[idx].event || ""),
   };
   await writeFile(DATA_FILE, JSON.stringify(sponsors, null, 2));
   return new Response(JSON.stringify(sponsors[idx]), {

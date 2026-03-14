@@ -133,8 +133,38 @@ function isActive(href: string) {
           <p style="font-size:0.9rem;color:#4B5563;margin:0 0 1rem;">You are logged in as administrator.</p>
           <button
             onclick="document.getElementById('admin-modal').style.display='none'; openPagesManager();"
-            style="width:100%;background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.75rem;text-align:left;"
+            style="width:100%;background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.5rem;text-align:left;"
           >📄 Manage Custom Pages</button>
+          <button
+            onclick="toggleChangePwForm()"
+            style="width:100%;background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.75rem;text-align:left;"
+          >🔐 Change Password</button>
+
+          <!-- Change Password form (hidden by default) -->
+          <div id="change-pw-form" style="display:none;background:#F8FAFF;border:1px solid #E0E7FF;border-radius:8px;padding:1rem;margin-bottom:0.75rem;">
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+              <div>
+                <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Current Password</label>
+                <input type="password" id="cp-current" placeholder="Current password"
+                  style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.85rem;box-sizing:border-box;" />
+              </div>
+              <div>
+                <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">New Password</label>
+                <input type="password" id="cp-new" placeholder="Min 8 characters"
+                  style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.85rem;box-sizing:border-box;" />
+              </div>
+              <div>
+                <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Confirm New Password</label>
+                <input type="password" id="cp-confirm" placeholder="Repeat new password"
+                  style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.85rem;box-sizing:border-box;" />
+              </div>
+              <div id="cp-error" style="font-size:0.78rem;color:#CC2222;display:none;"></div>
+              <div id="cp-success" style="font-size:0.78rem;color:#065F46;display:none;">✓ Password changed! Logging you out…</div>
+              <button onclick="submitChangePassword()"
+                style="background:#065F46;color:white;border:none;padding:0.5rem;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.85rem;">Save New Password</button>
+            </div>
+          </div>
+
           <div style="display:flex;gap:0.75rem;">
             <button
               onclick="window.adminLogout()"
@@ -417,6 +447,45 @@ function isActive(href: string) {
       });
 
       checkAdminStatus();
+
+      // ── Change Password ────────────────────────────────────────────
+      window.toggleChangePwForm = function() {
+        const form = document.getElementById('change-pw-form')!;
+        const isVisible = form.style.display !== 'none';
+        form.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible) {
+          (document.getElementById('cp-current') as HTMLInputElement).value = '';
+          (document.getElementById('cp-new') as HTMLInputElement).value = '';
+          (document.getElementById('cp-confirm') as HTMLInputElement).value = '';
+          document.getElementById('cp-error')!.style.display = 'none';
+          document.getElementById('cp-success')!.style.display = 'none';
+        }
+      };
+      window.submitChangePassword = async function() {
+        const current = (document.getElementById('cp-current') as HTMLInputElement).value;
+        const newPw   = (document.getElementById('cp-new') as HTMLInputElement).value;
+        const confirm = (document.getElementById('cp-confirm') as HTMLInputElement).value;
+        const errEl   = document.getElementById('cp-error')!;
+        const sucEl   = document.getElementById('cp-success')!;
+        errEl.style.display = 'none';
+        sucEl.style.display = 'none';
+        if (!current || !newPw || !confirm) { errEl.textContent = 'All fields are required.'; errEl.style.display = 'block'; return; }
+        if (newPw !== confirm) { errEl.textContent = 'New passwords do not match.'; errEl.style.display = 'block'; return; }
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const res = await fetch('/api/auth', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+          body: JSON.stringify({ currentPassword: current, newPassword: newPw }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          sucEl.style.display = 'block';
+          setTimeout(() => { sessionStorage.removeItem('mbf_admin_token'); location.reload(); }, 2000);
+        } else {
+          errEl.textContent = data.error || 'Failed to change password.';
+          errEl.style.display = 'block';
+        }
+      };
 
       // ── Pages Manager ──────────────────────────────────────────────
       let pmSlugLocked = false; // stop auto-slug once user manually edits it

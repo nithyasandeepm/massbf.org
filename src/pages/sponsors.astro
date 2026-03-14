@@ -56,6 +56,13 @@ import Layout from "../layouts/Layout.astro";
         </div>
 
         <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Sponsored Event / Tournament <span style="font-weight:400;color:#9CA3AF;">(optional)</span></label>
+          <input type="text" id="sp-event" placeholder="e.g., 2025 MA Open Championship"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+          <div style="font-size:0.73rem;color:#9CA3AF;margin-top:0.25rem;">Leave blank for a general/ongoing sponsor.</div>
+        </div>
+
+        <div>
           <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Logo Image</label>
           <!-- Current logo preview (shown when editing) -->
           <div id="sp-logo-preview" style="display:none;margin-bottom:0.6rem;text-align:center;">
@@ -120,10 +127,14 @@ import Layout from "../layouts/Layout.astro";
           ? `<a href="${s.website}" target="_blank" rel="noopener"
                style="font-size:0.9rem;font-weight:700;color:#1B3A8F;text-decoration:none;">${s.name} <span style="font-size:0.7rem;opacity:0.6;">↗</span></a>`
           : `<span style="font-size:0.9rem;font-weight:700;color:#374151;">${s.name}</span>`;
+        const eventTag = s.event
+          ? `<div style="font-size:0.72rem;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:0.2rem 0.5rem;margin-top:0.4rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${s.event}">🏆 ${s.event}</div>`
+          : '';
         return `
           <div class="mbf-card" style="padding:1.25rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
             ${logoHtml}
             ${nameEl}
+            ${eventTag}
             ${adminBtns}
           </div>`;
       }).join('');
@@ -170,6 +181,7 @@ import Layout from "../layouts/Layout.astro";
       const idEl     = document.getElementById('sp-id') as HTMLInputElement;
       const nameEl   = document.getElementById('sp-name') as HTMLInputElement;
       const websiteEl= document.getElementById('sp-website') as HTMLInputElement;
+      const eventEl  = document.getElementById('sp-event') as HTMLInputElement;
       const preview  = document.getElementById('sp-logo-preview')!;
       const logoImg  = document.getElementById('sp-logo-img') as HTMLImageElement;
       const fileEl   = document.getElementById('sp-logo-file') as HTMLInputElement;
@@ -184,12 +196,12 @@ import Layout from "../layouts/Layout.astro";
 
       if (s) {
         titleEl.textContent = 'Edit Sponsor';
-        idEl.value = s.id; nameEl.value = s.name; websiteEl.value = s.website || '';
+        idEl.value = s.id; nameEl.value = s.name; websiteEl.value = s.website || ''; eventEl.value = s.event || '';
         if (s.logo) { logoImg.src = s.logo; preview.style.display = 'block'; }
         else preview.style.display = 'none';
       } else {
         titleEl.textContent = 'Add Sponsor';
-        idEl.value = ''; nameEl.value = ''; websiteEl.value = '';
+        idEl.value = ''; nameEl.value = ''; websiteEl.value = ''; eventEl.value = '';
         preview.style.display = 'none';
       }
       document.getElementById('sponsor-modal')!.style.display = 'flex';
@@ -208,6 +220,7 @@ import Layout from "../layouts/Layout.astro";
       const id      = (document.getElementById('sp-id')      as HTMLInputElement).value;
       const name    = (document.getElementById('sp-name')    as HTMLInputElement).value.trim();
       const website = (document.getElementById('sp-website') as HTMLInputElement).value.trim();
+      const event   = (document.getElementById('sp-event')   as HTMLInputElement).value.trim();
       const fileEl  = document.getElementById('sp-logo-file') as HTMLInputElement;
       const errEl   = document.getElementById('sp-error')!;
       const progEl  = document.getElementById('sp-progress')!;
@@ -245,7 +258,7 @@ import Layout from "../layouts/Layout.astro";
       }
 
       // Build payload — only include logo if a new one was uploaded
-      const payload: any = { name, website };
+      const payload: any = { name, website, event };
       if (id) payload.id = id;
       if (logoUrl) payload.logo = logoUrl;
       // Keep existing logo if no new file and editing
