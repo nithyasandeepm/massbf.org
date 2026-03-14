@@ -70,14 +70,16 @@ import Layout from "../layouts/Layout.astro";
               style="max-height:80px;max-width:100%;object-fit:contain;border:1px solid #E5E7EB;border-radius:6px;padding:0.5rem;background:#F9FAFB;" />
             <div style="font-size:0.75rem;color:#9CA3AF;margin-top:0.3rem;">Current logo — upload a new file to replace</div>
           </div>
-          <!-- File input -->
-          <label id="sp-logo-drop"
-            style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;border:2px dashed #D1D5DB;border-radius:8px;padding:1.25rem;cursor:pointer;background:#F9FAFB;transition:border-color 0.15s;"
-            onmouseover="this.style.borderColor='#1B3A8F'" onmouseout="this.style.borderColor='#D1D5DB'">
+          <!-- Drop zone -->
+          <div id="sp-logo-drop"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;border:2px dashed #D1D5DB;border-radius:8px;padding:1.25rem;cursor:pointer;background:#F9FAFB;transition:border-color 0.15s,background 0.15s;">
             <span style="font-size:1.5rem;">🖼️</span>
-            <span style="font-size:0.83rem;color:#6B7280;text-align:center;">Click to choose a logo image<br><span style="font-size:0.75rem;color:#9CA3AF;">PNG, JPG, SVG, WebP — max 5 MB</span></span>
-            <input type="file" id="sp-logo-file" accept="image/*" style="display:none;" onchange="previewLogoFile(this)" />
-          </label>
+            <span style="font-size:0.83rem;color:#6B7280;text-align:center;">
+              Click, drag &amp; drop, or paste a logo<br>
+              <span style="font-size:0.75rem;color:#9CA3AF;">PNG, JPG, SVG, WebP — max 5 MB</span>
+            </span>
+            <input type="file" id="sp-logo-file" accept="image/*" style="display:none;" onchange="handleLogoFile(this.files[0])" />
+          </div>
           <!-- New file preview -->
           <div id="sp-new-preview" style="display:none;margin-top:0.5rem;text-align:center;">
             <img id="sp-new-img" src="" alt="New logo preview"
@@ -158,21 +160,78 @@ import Layout from "../layouts/Layout.astro";
     document.addEventListener('mbf:admin-ready', showAdminControls);
     if (document.body.dataset.admin === 'true') showAdminControls();
 
-    // ── Logo file preview ──────────────────────────────────────────────
-    window.previewLogoFile = function(input: HTMLInputElement) {
-      const file = input.files?.[0];
+    // ── Logo handling (click / drag-drop / paste) ──────────────────────
+    function handleLogoFile(file: File | null | undefined) {
       if (!file) return;
-      const newPreview = document.getElementById('sp-new-preview')!;
-      const newImg    = document.getElementById('sp-new-img') as HTMLImageElement;
-      const newName   = document.getElementById('sp-new-filename')!;
-      newImg.src = URL.createObjectURL(file);
-      newName.textContent = file.name;
-      newPreview.style.display = 'block';
-    };
+      if (!file.type.startsWith('image/')) {
+        const errEl = document.getElementById('sp-error')!;
+        errEl.textContent = 'Please provide an image file (PNG, JPG, SVG, WebP).';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        const errEl = document.getElementById('sp-error')!;
+        errEl.textContent = 'Logo file is too large (max 5 MB).';
+        errEl.style.display = 'block';
+        return;
+      }
+      // Put the file into the hidden input so saveSponsor() can access it
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      (document.getElementById('sp-logo-file') as HTMLInputElement).files = dt.files;
 
-    // Make the drop zone label clickable
-    document.getElementById('sp-logo-drop')!.addEventListener('click', () => {
+      const newPreview = document.getElementById('sp-new-preview')!;
+      const newImg     = document.getElementById('sp-new-img') as HTMLImageElement;
+      const newName    = document.getElementById('sp-new-filename')!;
+      newImg.src = URL.createObjectURL(file);
+      newName.textContent = file.name || 'pasted image';
+      newPreview.style.display = 'block';
+      document.getElementById('sp-error')!.style.display = 'none';
+    }
+    window.handleLogoFile = handleLogoFile;
+
+    const dropZone = document.getElementById('sp-logo-drop')!;
+
+    // Click → open file picker
+    dropZone.addEventListener('click', () => {
       document.getElementById('sp-logo-file')!.click();
+    });
+
+    // Drag visual feedback
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#1B3A8F';
+      dropZone.style.background  = '#EEF2FF';
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = '#D1D5DB';
+      dropZone.style.background  = '#F9FAFB';
+    });
+
+    // Drop
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#D1D5DB';
+      dropZone.style.background  = '#F9FAFB';
+      const file = e.dataTransfer?.files?.[0] ?? null;
+      handleLogoFile(file);
+    });
+
+    // Paste (Ctrl+V / Cmd+V anywhere while modal is open)
+    document.addEventListener('paste', (e) => {
+      const modal = document.getElementById('sponsor-modal')!;
+      if (modal.style.display === 'none') return;
+      // Don't intercept paste in text inputs
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) { handleLogoFile(file); break; }
+        }
+      }
     });
 
     // ── Modal open/close ───────────────────────────────────────────────
