@@ -127,6 +127,10 @@ import Layout from "../layouts/Layout.astro";
       return { start: null, end: null };
     }
 
+    function fmtShort(d: Date): string {
+      return `${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+
     function updateDateDisplay() {
       const txt = document.getElementById('date-display-text')!;
       const inp = document.getElementById('t-dates') as HTMLInputElement;
@@ -146,44 +150,74 @@ import Layout from "../layouts/Layout.astro";
       const firstDay = new Date(pYear, pMonth, 1).getDay();
       const daysInMonth = new Date(pYear, pMonth + 1, 0).getDate();
       const today = new Date();
-      const hint = pStart && !pEnd ? 'Now click an end date (optional)' : 'Click to set start date';
+
+      // Which slot is actively being filled?
+      const selectingTo = !!(pStart && !pEnd);
+      const bothSet = !!(pStart && pEnd);
+
+      const fromLabel = selectingTo ? 'FROM ✓' : bothSet ? 'FROM ✓' : 'FROM';
+      const toLabel   = selectingTo ? 'TO  ← selecting' : bothSet ? 'TO ✓' : 'TO';
+      const fromColor = pStart ? '#1B3A8F' : '#9CA3AF';
+      const toColor   = pEnd   ? '#1B3A8F' : '#9CA3AF';
+      const fromLabelColor = pStart ? '#059669' : selectingTo ? '#9CA3AF' : '#F37021';
+      const toLabelColor   = selectingTo ? '#F37021' : pEnd ? '#059669' : '#9CA3AF';
+
+      const hint = !pStart ? 'Click a day to set From date'
+        : !pEnd ? 'Now click an end date — or skip to save single day'
+        : 'Both dates set. Click any day to restart.';
 
       let html = `
+        <!-- From / To summary strip -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:#F0F4FF;border-radius:8px;overflow:hidden;border:1px solid #E0E7FF;margin-bottom:0.7rem;">
+          <div style="padding:0.45rem 0.65rem;border-right:1px solid #E0E7FF;">
+            <div style="font-size:0.58rem;font-weight:700;color:${fromLabelColor};text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">${fromLabel}</div>
+            <div style="font-size:0.78rem;font-weight:700;color:${fromColor};">${pStart ? fmtShort(pStart) : '—'}</div>
+          </div>
+          <div style="padding:0.45rem 0.65rem;">
+            <div style="font-size:0.58rem;font-weight:700;color:${toLabelColor};text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">${toLabel}</div>
+            <div style="font-size:0.78rem;font-weight:700;color:${toColor};">${pEnd ? fmtShort(pEnd) : '—'}</div>
+          </div>
+        </div>
+        <!-- Month nav -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
           <button onclick="pickerNav(-1)" style="border:1px solid #E5E7EB;background:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.9rem;line-height:1;color:#374151;">‹</button>
           <span style="font-weight:700;font-size:0.88rem;color:#1B3A8F;">${MONTHS[pMonth]} ${pYear}</span>
           <button onclick="pickerNav(1)" style="border:1px solid #E5E7EB;background:white;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.9rem;line-height:1;color:#374151;">›</button>
         </div>
+        <!-- Day headers -->
         <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:3px;">
           ${DAY_HDRS.map(d=>`<div style="text-align:center;font-size:0.65rem;font-weight:600;color:#9CA3AF;padding:2px 0;">${d}</div>`).join('')}
         </div>
+        <!-- Days -->
         <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
           ${'<div></div>'.repeat(firstDay)}`;
 
       for (let day = 1; day <= daysInMonth; day++) {
         const d = new Date(pYear, pMonth, day);
-        const isStart = pStart && sameDay(d, pStart);
-        const isEnd = pEnd && sameDay(d, pEnd);
-        const inRange = pStart && pEnd && isBetween(d, pStart, pEnd);
+        const isStart = !!(pStart && sameDay(d, pStart));
+        const isEnd   = !!(pEnd   && sameDay(d, pEnd));
+        const inRange = !!(pStart && pEnd && isBetween(d, pStart, pEnd));
         const isToday = sameDay(d, today);
-        const isPast = pStart && !pEnd && d < pStart;
+        const dimmed  = !!(pStart && !pEnd && d < pStart);
 
         let bg = 'transparent', color = '#374151', fw = '400', opacity = '1';
-        if (isStart || isEnd) { bg = '#1B3A8F'; color = 'white'; fw = '700'; }
+        if (isStart) { bg = '#1B3A8F'; color = 'white'; fw = '700'; }
+        else if (isEnd) { bg = '#1B3A8F'; color = 'white'; fw = '700'; }
         else if (inRange) { bg = '#DBEAFE'; color = '#1B3A8F'; }
-        else if (isPast) { opacity = '0.35'; }
+        if (dimmed) opacity = '0.3';
 
         const todayRing = isToday && !isStart && !isEnd ? 'box-shadow:inset 0 0 0 1.5px #F37021;' : '';
 
         html += `<button onclick="pickerDay(${pYear},${pMonth},${day})"
-          style="text-align:center;font-size:0.8rem;padding:5px 2px;border:none;cursor:pointer;background:${bg};color:${color};font-weight:${fw};border-radius:5px;opacity:${opacity};${todayRing}">
+          style="text-align:center;font-size:0.8rem;padding:5px 2px;border:none;cursor:pointer;background:${bg};color:${color};font-weight:${fw};border-radius:5px;opacity:${opacity};${todayRing}line-height:1.4;">
           ${day}</button>`;
       }
 
       html += `</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.65rem;padding-top:0.55rem;border-top:1px solid #F3F4F6;">
-          <span style="font-size:0.72rem;color:#9CA3AF;">${hint}</span>
-          <button onclick="pickerClear()" style="font-size:0.72rem;color:#CC2222;border:none;background:none;cursor:pointer;">Clear</button>
+        <!-- Footer hint + clear -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid #F3F4F6;">
+          <span style="font-size:0.68rem;color:#9CA3AF;line-height:1.4;">${hint}</span>
+          <button onclick="pickerClear()" style="font-size:0.72rem;color:#CC2222;border:none;background:none;cursor:pointer;flex-shrink:0;margin-left:0.5rem;">Clear</button>
         </div>`;
 
       popup.innerHTML = html;
@@ -324,15 +358,24 @@ import Layout from "../layouts/Layout.astro";
         idEl.value = t.id; nameEl.value = t.name;
         linkEl.value = t.link || ''; statusEl.value = t.status;
         // Try to parse existing date string into picker
+        pStart = null; pEnd = null;
         const parsed = parseDateRange(t.dates || '');
-        if (parsed.start) { pStart = parsed.start; pEnd = parsed.end; }
+        if (parsed.start) {
+          pStart = parsed.start; pEnd = parsed.end;
+          pYear = pStart.getFullYear(); pMonth = pStart.getMonth();
+        } else {
+          const now = new Date();
+          pYear = now.getFullYear(); pMonth = now.getMonth();
+        }
         updateDateDisplay();
       } else {
         titleEl.textContent = 'Add Tournament';
         idEl.value = ''; nameEl.value = '';
         linkEl.value = ''; statusEl.value = 'upcoming';
-        // Set picker view to current month
+        // Default From = today
         const now = new Date();
+        pStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        pEnd = null;
         pYear = now.getFullYear(); pMonth = now.getMonth();
         updateDateDisplay();
       }

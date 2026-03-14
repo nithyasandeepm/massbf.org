@@ -76,13 +76,22 @@ function isActive(href: string) {
           <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Admin Login</h2>
           <div style="margin-bottom:1rem;">
             <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Password</label>
-            <input
-              type="password"
-              id="admin-password"
-              placeholder="Enter admin password"
-              style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;outline:none;"
-              onkeydown="if(event.key==='Enter')window.adminLogin();"
-            />
+            <div style="position:relative;">
+              <input
+                type="password"
+                id="admin-password"
+                placeholder="Enter admin password"
+                style="width:100%;padding:0.6rem 3rem 0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;outline:none;"
+                onkeydown="if(event.key==='Enter')window.adminLogin();"
+              />
+              <button
+                type="button"
+                id="pw-toggle"
+                onclick="window.toggleAdminPw()"
+                aria-label="Show or hide password"
+                style="position:absolute;right:0;top:0;bottom:0;width:2.75rem;background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:0.72rem;font-weight:600;letter-spacing:0.03em;padding:0;display:flex;align-items:center;justify-content:center;"
+              >Show</button>
+            </div>
           </div>
           <div id="admin-login-error" style="color:#CC2222;font-size:0.82rem;margin-bottom:0.75rem;display:none;">
             Incorrect password. Please try again.
@@ -233,11 +242,37 @@ function isActive(href: string) {
         location.reload();
       };
 
-      document.getElementById('admin-modal')!.addEventListener('click', function(e) {
-        if (e.target === this) this.style.display = 'none';
+      const _adminModal = document.getElementById('admin-modal')!;
+      _adminModal.addEventListener('click', function(e) {
+        if (e.target === this) { this.style.display = 'none'; resetAdminModal(); }
+      });
+      // Also reset when Cancel buttons are clicked
+      _adminModal.querySelectorAll('button').forEach(btn => {
+        if (btn.textContent?.trim() === 'Cancel') {
+          btn.addEventListener('click', resetAdminModal);
+        }
       });
 
       checkAdminStatus();
+
+      // Password show/hide toggle
+      window.toggleAdminPw = function() {
+        const input = document.getElementById('admin-password') as HTMLInputElement;
+        const btn = document.getElementById('pw-toggle')!;
+        const showing = input.type === 'text';
+        input.type = showing ? 'password' : 'text';
+        btn.textContent = showing ? 'Show' : 'Hide';
+        btn.style.color = showing ? '#9CA3AF' : '#1B3A8F';
+      };
+      // Reset password field when admin modal closes
+      function resetAdminModal() {
+        const input = document.getElementById('admin-password') as HTMLInputElement;
+        const btn = document.getElementById('pw-toggle')!;
+        if (input) { input.value = ''; input.type = 'password'; }
+        if (btn) { btn.textContent = 'Show'; btn.style.color = '#9CA3AF'; }
+        const err = document.getElementById('admin-login-error');
+        if (err) err.style.display = 'none';
+      }
 
       // Mobile nav toggle
       window.toggleMobileNav = function() {
