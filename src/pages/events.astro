@@ -51,7 +51,7 @@ import Layout from "../layouts/Layout.astro";
           </div>
           <input type="hidden" id="t-dates" />
           <!-- Calendar popup — positioned with JS -->
-          <div id="date-picker-popup" style="display:none;position:fixed;z-index:10002;background:white;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.18);padding:1rem;width:300px;box-sizing:border-box;"></div>
+          <div id="date-picker-popup" onclick="event.stopPropagation()" style="display:none;position:fixed;z-index:10002;background:white;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.18);padding:1rem;width:300px;box-sizing:border-box;"></div>
         </div>
 
         <div>
