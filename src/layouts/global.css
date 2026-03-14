@@ -1,5 +1,4 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
+/* tailwindcss */
 
 html, body {
   margin: 0;
