@@ -252,17 +252,18 @@ import Layout from "../layouts/Layout.astro";
     });
 
     const sortedYears = Object.keys(byYear).map(Number).sort((a, b) => b - a);
-    const mostRecentYear = sortedYears[0];
 
     let html = '';
-    for (const year of sortedYears) {
-      const yearOpen = year === mostRecentYear ? 'open' : '';
+    for (let yi = 0; yi < sortedYears.length; yi++) {
+      const year = sortedYears[yi];
+      const isFirstYear = yi === 0;
+      const yearOpen = isFirstYear ? 'open' : '';
       html += `<details class="mbf-details" ${yearOpen}><summary>${year}</summary><div class="mbf-details-body">`;
 
       const sortedMonths = Object.keys(byYear[year]).map(Number).sort((a, b) => b - a);
-      const mostRecentMonth = sortedMonths[0];
-      for (const month of sortedMonths) {
-        const monthOpen = (year === mostRecentYear && month === mostRecentMonth) ? 'open' : '';
+      for (let mi = 0; mi < sortedMonths.length; mi++) {
+        const month = sortedMonths[mi];
+        const monthOpen = (isFirstYear && mi === 0) ? 'open' : '';
         html += `<details class="mbf-month-details" ${monthOpen}><summary>${MONTHS[month]}</summary><div class="mbf-month-body">`;
         for (const ev of byYear[year][month]) {
           html += renderEventBlock(ev, isAdmin);
