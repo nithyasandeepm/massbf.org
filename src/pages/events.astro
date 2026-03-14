@@ -388,10 +388,8 @@ import Layout from "../layouts/Layout.astro";
         titleEl.textContent = 'Add Tournament';
         idEl.value = ''; nameEl.value = '';
         linkEl.value = ''; statusEl.value = 'upcoming';
-        // Default From = today
+        pStart = null; pEnd = null;
         const now = new Date();
-        pStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        pEnd = null;
         pYear = now.getFullYear(); pMonth = now.getMonth();
         updateDateDisplay();
       }
