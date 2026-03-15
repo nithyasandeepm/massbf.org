@@ -82,6 +82,16 @@ function isActive(href: string) {
         <!-- Login View -->
         <div id="admin-login-view">
           <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Admin Login</h2>
+          <div style="margin-bottom:0.85rem;">
+            <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Username</label>
+            <input
+              type="text"
+              id="admin-username"
+              placeholder="Enter username"
+              style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;outline:none;"
+              onkeydown="if(event.key==='Enter')document.getElementById('admin-password').focus();"
+            />
+          </div>
           <div style="margin-bottom:1rem;">
             <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Password</label>
             <div style="position:relative;">
@@ -129,19 +139,18 @@ function isActive(href: string) {
 
         <!-- Logged-In View -->
         <div id="admin-loggedin-view" style="display:none;">
-          <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 0.5rem;">Admin Panel</h2>
-          <p style="font-size:0.9rem;color:#4B5563;margin:0 0 1rem;">You are logged in as administrator.</p>
+          <h2 style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 0.25rem;">Admin Panel</h2>
+          <p style="font-size:0.85rem;color:#6B7280;margin:0 0 1rem;">Logged in as <strong id="admin-username-display" style="color:#1B3A8F;"></strong></p>
+
           <button
             onclick="document.getElementById('admin-modal').style.display='none'; openPagesManager();"
             style="width:100%;background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.5rem;text-align:left;"
           >📄 Manage Custom Pages</button>
-          <button
-            onclick="toggleChangePwForm()"
-            style="width:100%;background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.75rem;text-align:left;"
-          >🔐 Change Password</button>
 
-          <!-- Change Password form (hidden by default) -->
-          <div id="change-pw-form" style="display:none;background:#F8FAFF;border:1px solid #E0E7FF;border-radius:8px;padding:1rem;margin-bottom:0.75rem;">
+          <button onclick="toggleChangePwForm()"
+            style="width:100%;background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.5rem;text-align:left;"
+          >🔐 Change My Password</button>
+          <div id="change-pw-form" style="display:none;background:#F8FAFF;border:1px solid #E0E7FF;border-radius:8px;padding:1rem;margin-bottom:0.5rem;">
             <div style="display:flex;flex-direction:column;gap:0.6rem;">
               <div>
                 <label style="font-size:0.75rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Current Password</label>
@@ -165,13 +174,28 @@ function isActive(href: string) {
             </div>
           </div>
 
-          <div style="display:flex;gap:0.75rem;">
-            <button
-              onclick="window.adminLogout()"
+          <button onclick="toggleManageUsers()"
+            style="width:100%;background:#FFF7ED;color:#92400E;border:1px solid #FDE68A;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;margin-bottom:0.5rem;text-align:left;"
+          >👥 Manage Admin Users</button>
+          <div id="manage-users-panel" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:1rem;margin-bottom:0.5rem;">
+            <div id="users-list" style="margin-bottom:0.75rem;"></div>
+            <div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.4rem;">Add New Admin</div>
+            <div style="display:flex;flex-direction:column;gap:0.45rem;">
+              <input type="text" id="nu-username" placeholder="Username"
+                style="width:100%;padding:0.4rem 0.6rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.82rem;box-sizing:border-box;" />
+              <input type="password" id="nu-password" placeholder="Password (min 6 chars)"
+                style="width:100%;padding:0.4rem 0.6rem;border:1px solid #D1D5DB;border-radius:5px;font-size:0.82rem;box-sizing:border-box;" />
+              <div id="nu-error" style="font-size:0.75rem;color:#CC2222;display:none;"></div>
+              <button onclick="addAdminUser()"
+                style="background:#92400E;color:white;border:none;padding:0.4rem;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.82rem;">+ Add User</button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.75rem;margin-top:0.25rem;">
+            <button onclick="window.adminLogout()"
               style="flex:1;background:#CC2222;color:white;border:none;padding:0.65rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.9rem;"
             >Log Out</button>
-            <button
-              onclick="document.getElementById('admin-modal').style.display='none'"
+            <button onclick="document.getElementById('admin-modal').style.display='none'"
               style="padding:0.65rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.9rem;"
             >Close</button>
           </div>
@@ -180,11 +204,11 @@ function isActive(href: string) {
       </div>
     </div>
 
-    <!-- Admin corner button -->
+    <!-- Admin corner button (hidden; shown on /admin page or when logged in) -->
     <button
       id="admin-btn"
       onclick="document.getElementById('admin-modal').style.display='flex'"
-      style="position:fixed;top:10px;right:12px;z-index:9998;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:0.2rem 0.55rem;font-size:0.68rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all 0.15s;min-height:28px;"
+      style="display:none;position:fixed;top:10px;right:12px;z-index:9998;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:0.2rem 0.55rem;font-size:0.68rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all 0.15s;min-height:28px;"
       onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.color='white'"
       onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.65)'"
     >Admin</button>
@@ -374,19 +398,20 @@ function isActive(href: string) {
       async function checkAdminStatus() {
         const token = sessionStorage.getItem('mbf_admin_token');
         const adminBtn = document.getElementById('admin-btn');
-        const loginView = document.getElementById('admin-login-view');
-        const loggedinView = document.getElementById('admin-loggedin-view');
 
-        if (!token) {
-          document.body.dataset.admin = 'false';
-          return;
+        // Show button if on /admin page regardless of login state
+        if (window.location.pathname === '/admin') {
+          if (adminBtn) adminBtn.style.display = 'inline-block';
         }
+
+        if (!token) { document.body.dataset.admin = 'false'; return; }
 
         try {
           const res = await fetch('/api/auth', { headers: { 'X-Admin-Token': token } });
           const data = await res.json();
           if (data.valid) {
             if (adminBtn) {
+              adminBtn.style.display = 'inline-block';
               adminBtn.textContent = '⚙ Admin';
               adminBtn.style.background = 'rgba(243,112,33,0.25)';
               adminBtn.style.borderColor = 'rgba(243,112,33,0.6)';
@@ -395,35 +420,44 @@ function isActive(href: string) {
             const manageBtn = document.getElementById('manage-pages-btn');
             if (manageBtn) manageBtn.style.display = 'block';
             document.body.dataset.admin = 'true';
+            const loginView = document.getElementById('admin-login-view');
+            const loggedinView = document.getElementById('admin-loggedin-view');
             if (loginView) loginView.style.display = 'none';
             if (loggedinView) loggedinView.style.display = 'block';
+            // Show stored username
+            const storedUser = sessionStorage.getItem('mbf_admin_user') || data.username || 'admin';
+            const userDisplay = document.getElementById('admin-username-display');
+            if (userDisplay) userDisplay.textContent = storedUser;
             document.dispatchEvent(new CustomEvent('mbf:admin-ready'));
           } else {
             sessionStorage.removeItem('mbf_admin_token');
+            sessionStorage.removeItem('mbf_admin_user');
             document.body.dataset.admin = 'false';
           }
-        } catch {
-          document.body.dataset.admin = 'false';
-        }
+        } catch { document.body.dataset.admin = 'false'; }
       }
 
       window.adminLogin = async function() {
+        const unEl = document.getElementById('admin-username') as HTMLInputElement;
         const pwEl = document.getElementById('admin-password') as HTMLInputElement;
         const errorEl = document.getElementById('admin-login-error');
+        const username = unEl ? unEl.value.trim() : '';
         const password = pwEl ? pwEl.value : '';
+        if (!username) { if (errorEl) { errorEl.textContent = 'Please enter your username.'; errorEl.style.display = 'block'; } return; }
         try {
           const res = await fetch('/api/auth', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ username, password })
           });
           const data = await res.json();
           if (data.success && data.token) {
             sessionStorage.setItem('mbf_admin_token', data.token);
+            sessionStorage.setItem('mbf_admin_user', data.username || username);
             document.getElementById('admin-modal')!.style.display = 'none';
             location.reload();
           } else {
-            if (errorEl) errorEl.style.display = 'block';
+            if (errorEl) { errorEl.textContent = 'Incorrect username or password.'; errorEl.style.display = 'block'; }
           }
         } catch {
           if (errorEl) errorEl.style.display = 'block';
@@ -432,6 +466,7 @@ function isActive(href: string) {
 
       window.adminLogout = async function() {
         sessionStorage.removeItem('mbf_admin_token');
+        sessionStorage.removeItem('mbf_admin_user');
         location.reload();
       };
 
@@ -454,6 +489,7 @@ function isActive(href: string) {
         const isVisible = form.style.display !== 'none';
         form.style.display = isVisible ? 'none' : 'block';
         if (!isVisible) {
+          document.getElementById('manage-users-panel')!.style.display = 'none';
           (document.getElementById('cp-current') as HTMLInputElement).value = '';
           (document.getElementById('cp-new') as HTMLInputElement).value = '';
           (document.getElementById('cp-confirm') as HTMLInputElement).value = '';
@@ -666,6 +702,60 @@ function isActive(href: string) {
         if (btn) btn.style.display = 'block';
       }
 
+      // ── Manage Admin Users ─────────────────────────────────────────
+      window.toggleManageUsers = async function() {
+        const panel = document.getElementById('manage-users-panel')!;
+        const isOpen = panel.style.display !== 'none';
+        panel.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+          document.getElementById('change-pw-form')!.style.display = 'none';
+          await loadAdminUsers();
+        }
+      };
+
+      async function loadAdminUsers() {
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const currentUser = sessionStorage.getItem('mbf_admin_user') || '';
+        const res = await fetch('/api/auth?action=users', { headers: { 'X-Admin-Token': token } });
+        const data = await res.json();
+        const listEl = document.getElementById('users-list')!;
+        if (!data.usernames?.length) { listEl.innerHTML = ''; return; }
+        listEl.innerHTML = data.usernames.map((u: string) => `
+          <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;background:white;border:1px solid #E5E7EB;border-radius:5px;margin-bottom:0.35rem;">
+            <span style="flex:1;font-size:0.82rem;font-weight:600;color:#374151;">${u} ${u === currentUser ? '<span style="font-size:0.68rem;color:#6B7280;">(you)</span>' : ''}</span>
+            ${u === currentUser ? '' : `<button onclick="removeAdminUser('${u}')" style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;border-radius:4px;padding:0.2rem 0.5rem;font-size:0.72rem;font-weight:600;cursor:pointer;">Remove</button>`}
+          </div>`).join('');
+      }
+
+      window.addAdminUser = async function() {
+        const username = (document.getElementById('nu-username') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('nu-password') as HTMLInputElement).value;
+        const errEl = document.getElementById('nu-error')!;
+        errEl.style.display = 'none';
+        if (!username || !password) { errEl.textContent = 'Username and password are required.'; errEl.style.display = 'block'; return; }
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const res = await fetch('/api/auth?action=addUser', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error || 'Failed to add user.'; errEl.style.display = 'block'; return; }
+        (document.getElementById('nu-username') as HTMLInputElement).value = '';
+        (document.getElementById('nu-password') as HTMLInputElement).value = '';
+        await loadAdminUsers();
+      };
+
+      window.removeAdminUser = async function(username: string) {
+        if (!confirm(`Remove admin user "${username}"?`)) return;
+        const token = sessionStorage.getItem('mbf_admin_token') || '';
+        const res = await fetch(`/api/auth?action=removeUser&username=${encodeURIComponent(username)}`, {
+          method: 'DELETE', headers: { 'X-Admin-Token': token }
+        });
+        const data = await res.json();
+        if (!res.ok) { alert(data.error || 'Failed to remove user.'); return; }
+        await loadAdminUsers();
+      };
+
       // Password show/hide toggle
       window.toggleAdminPw = function() {
         const input = document.getElementById('admin-password') as HTMLInputElement;
@@ -680,16 +770,18 @@ function isActive(href: string) {
       };
       // Reset password field when admin modal closes
       function resetAdminModal() {
+        const unInput = document.getElementById('admin-username') as HTMLInputElement;
         const input   = document.getElementById('admin-password') as HTMLInputElement;
         const btn     = document.getElementById('pw-toggle')!;
         const eyeOpen = document.getElementById('pw-eye-open')!;
         const eyeOff  = document.getElementById('pw-eye-off')!;
+        if (unInput) unInput.value = '';
         if (input) { input.value = ''; input.type = 'password'; }
         if (eyeOpen) eyeOpen.style.display = '';
         if (eyeOff)  eyeOff.style.display  = 'none';
         if (btn) btn.style.color = '#9CA3AF';
         const err = document.getElementById('admin-login-error');
-        if (err) err.style.display = 'none';
+        if (err) { err.textContent = 'Incorrect username or password.'; err.style.display = 'none'; }
       }
 
       // Mobile nav toggle
