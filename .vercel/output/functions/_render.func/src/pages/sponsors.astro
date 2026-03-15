@@ -1,0 +1,506 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<style is:global>
+  /* ── Year accordion ── */
+  .mbf-details {
+    border:1px solid #D1D8E8; border-radius:12px; margin-bottom:3rem;
+    box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  }
+  .mbf-details > summary {
+    list-style:none; cursor:pointer; padding:1rem 1.5rem;
+    background:linear-gradient(90deg,#EEF2FF 0%,#F1F5F9 100%);
+    font-size:1.2rem; font-weight:800; color:#1B3A8F;
+    display:flex; align-items:center; gap:0.6rem; user-select:none;
+    border-radius:12px;
+  }
+  .mbf-details[open] > summary { border-radius:12px 12px 0 0; }
+  .mbf-details > summary::-webkit-details-marker { display:none; }
+  .mbf-details > summary::before { content:"▶"; font-size:0.8rem; transition:transform 0.2s; display:inline-block; color:#1B3A8F; }
+  .mbf-details[open] > summary::before { transform:rotate(90deg); }
+
+  /* Year body — months live here, indented from the left */
+  .mbf-details-body {
+    padding:2rem 1.5rem 2rem 3rem;
+    display:flex; flex-direction:column; gap:3rem;
+    border-top:1px solid #D1D8E8;
+  }
+
+  /* ── Month accordion (nested inside year) ── */
+  .mbf-month-details {
+    display:block; width:100%;
+    border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;
+    border-left:3px solid #93C5FD;
+  }
+  .mbf-month-details > summary {
+    display:flex; align-items:center; gap:0.5rem;
+    list-style:none; cursor:pointer; padding:0.65rem 1rem;
+    background:#F8FAFC; font-size:0.82rem; font-weight:700; letter-spacing:0.07em;
+    text-transform:uppercase; color:#3B5EC6; user-select:none;
+    width:100%; box-sizing:border-box;
+  }
+  .mbf-month-details > summary::-webkit-details-marker { display:none; }
+  .mbf-month-details > summary::before { content:"▶"; font-size:0.62rem; transition:transform 0.2s; display:inline-block; flex-shrink:0; }
+  .mbf-month-details[open] > summary::before { transform:rotate(90deg); }
+  .mbf-month-body {
+    display:flex; flex-direction:column; gap:2rem;
+    padding:1.75rem 1.5rem 1.25rem 1.5rem;
+    background:white;
+  }
+
+  /* ── Event block ── */
+  .mbf-event-block { }
+  .mbf-event-header { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.9rem; padding-bottom:0.6rem; border-bottom:1px solid #F3F4F6; }
+  .mbf-event-name { font-size:1rem; font-weight:700; color:#111827; }
+  .mbf-admin-row { display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-left:auto; }
+
+  /* ── Sponsor cards ── */
+  .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1.25rem; }
+  .sp-card { border:1px solid #E5E7EB; border-radius:8px; padding:1.1rem; text-align:center;
+             display:flex; flex-direction:column; align-items:center; gap:0.5rem; background:#FAFAFA; position:relative; }
+  .sp-logo { max-width:5cm; max-height:5cm; width:auto; height:auto; object-fit:contain; }
+  .sp-name { font-size:0.8rem; font-weight:600; color:#374151; }
+  .sp-website { font-size:0.72rem; color:#1B3A8F; text-decoration:none; }
+  .sp-card-actions { display:none; position:absolute; top:0.35rem; right:0.35rem; gap:0.2rem; }
+  body.admin-mode .sp-card-actions { display:flex; }
+
+  .mbf-btn-admin { background:#1B3A8F; color:white; border:none; padding:0.4rem 0.9rem;
+                   border-radius:6px; font-weight:700; cursor:pointer; font-size:0.78rem; }
+  .mbf-btn-admin:hover { background:#142d70; }
+  .mbf-btn-sm { background:white; border:1px solid #D1D5DB; padding:0.25rem 0.55rem;
+                border-radius:5px; cursor:pointer; font-size:0.72rem; }
+  .mbf-btn-sm:hover { border-color:#9CA3AF; }
+  .mbf-btn-danger { background:white; border:1px solid #EF4444; color:#EF4444; }
+  .mbf-btn-danger:hover { background:#FEF2F2; }
+</style>
+
+<Layout title="Sponsors">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:3rem 1.5rem 2.5rem;color:white;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem;">Our Sponsors</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.8);margin:0;">Thank you to all who support Massachusetts badminton.</p>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <section style="padding:3.5rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:0.75rem;">
+        <h2 class="mbf-section-title" style="margin:0;">Supporting Organizations</h2>
+        <button id="add-event-btn" class="mbf-btn-admin"
+          style="display:none;" onclick="openEventModal(null)">+ Add Event</button>
+      </div>
+
+      <div id="events-container">
+        <div style="text-align:center;padding:3rem;color:#94A3B8;font-size:0.9rem;">Loading…</div>
+      </div>
+
+      <div style="margin-top:3rem;text-align:center;">
+        <p style="font-size:0.95rem;color:#4B5563;">
+          Contact us at <a href="mailto:larryzhang07@gmail.com" style="color:#1B3A8F;font-weight:600;">larryzhang07@gmail.com</a> to discuss sponsorship opportunities.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Add / Edit Event Modal ── -->
+  <div id="event-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+    <div style="background:white;border-radius:12px;padding:2rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;">
+      <h2 id="ev-modal-title" style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Add Event</h2>
+      <input type="hidden" id="ev-id" />
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Event Name *</label>
+          <input type="text" id="ev-name" placeholder="e.g., 2025 MA State Open"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div>
+            <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Year *</label>
+            <input type="number" id="ev-year" min="2000" max="2099" placeholder="2025"
+              style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+          </div>
+          <div>
+            <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Month *</label>
+            <select id="ev-month" style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;background:white;">
+              <option value="1">January</option><option value="2">February</option>
+              <option value="3">March</option><option value="4">April</option>
+              <option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option>
+              <option value="9">September</option><option value="10">October</option>
+              <option value="11">November</option><option value="12">December</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="ev-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:0.6rem 0.8rem;font-size:0.82rem;color:#991B1B;"></div>
+
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;padding-top:0.5rem;">
+          <button onclick="closeEventModal()" style="padding:0.55rem 1.2rem;border:1px solid #D1D5DB;border-radius:6px;background:white;cursor:pointer;font-size:0.9rem;">Cancel</button>
+          <button onclick="saveEvent()" class="mbf-btn-admin" style="padding:0.55rem 1.4rem;font-size:0.9rem;">Save Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add / Edit Sponsor Modal ── -->
+  <div id="sponsor-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+    <div style="background:white;border-radius:12px;padding:2rem;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;">
+      <h2 id="sp-modal-title" style="font-size:1.2rem;font-weight:700;color:#1B3A8F;margin:0 0 1.25rem;">Add Sponsor</h2>
+      <input type="hidden" id="sp-id" />
+      <input type="hidden" id="sp-event-id" />
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Sponsor Name *</label>
+          <input type="text" id="sp-name" placeholder="e.g., Acme Corporation"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Website URL</label>
+          <input type="url" id="sp-website" placeholder="https://example.com"
+            style="width:100%;padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+        </div>
+
+        <!-- Current logo (edit only) -->
+        <div id="sp-current-logo-wrap" style="display:none;text-align:center;">
+          <img id="sp-logo-img" src="" alt="Current logo"
+            style="max-height:80px;max-width:100%;object-fit:contain;border:1px solid #E5E7EB;border-radius:6px;padding:0.5rem;background:#F9FAFB;" />
+          <div style="font-size:0.75rem;color:#9CA3AF;margin-top:0.3rem;">Current logo — upload a new file to replace</div>
+        </div>
+
+        <!-- Drop zone -->
+        <div>
+          <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Logo Image</label>
+          <div id="sp-logo-drop"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;border:2px dashed #D1D5DB;border-radius:8px;padding:1.25rem;cursor:pointer;background:#F9FAFB;transition:border-color 0.15s,background 0.15s;">
+            <span style="font-size:1.5rem;">🖼️</span>
+            <span style="font-size:0.83rem;color:#6B7280;text-align:center;">
+              Click, drag &amp; drop, or paste a logo<br>
+              <span style="font-size:0.75rem;color:#9CA3AF;">PNG, JPG, SVG, WebP — max 5 MB</span>
+            </span>
+            <input type="file" id="sp-logo-file" accept="image/*" style="display:none;" onchange="handleLogoFile(this.files[0])" />
+          </div>
+          <!-- New file preview -->
+          <div id="sp-new-preview" style="display:none;margin-top:0.5rem;text-align:center;">
+            <img id="sp-new-img" src="" alt="New logo preview"
+              style="max-height:80px;max-width:100%;object-fit:contain;border:1px solid #C7D2FE;border-radius:6px;padding:0.5rem;background:#EEF2FF;" />
+            <div id="sp-new-filename" style="font-size:0.72rem;color:#6366F1;margin-top:0.25rem;"></div>
+          </div>
+        </div>
+
+        <div id="sp-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:0.6rem 0.8rem;font-size:0.82rem;color:#991B1B;"></div>
+
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;padding-top:0.5rem;">
+          <button onclick="closeSponsorModal()" style="padding:0.55rem 1.2rem;border:1px solid #D1D5DB;border-radius:6px;background:white;cursor:pointer;font-size:0.9rem;">Cancel</button>
+          <button onclick="saveSponsor()" class="mbf-btn-admin" style="padding:0.55rem 1.4rem;font-size:0.9rem;">Save Sponsor</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  const MONTHS = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+  let allEvents: any[] = [];
+  const getToken = () => sessionStorage.getItem('mbf_admin_token') || '';
+
+  // ── Admin detection ──────────────────────────────────────────────────
+  function showAdminControls() {
+    document.body.classList.add('admin-mode');
+    (document.getElementById('add-event-btn') as HTMLElement).style.display = 'inline-block';
+    renderEvents(allEvents);
+  }
+  document.addEventListener('mbf:admin-ready', showAdminControls);
+  if (document.body.dataset.admin === 'true') showAdminControls();
+
+  // ── Load events ──────────────────────────────────────────────────────
+  async function loadEvents() {
+    const res = await fetch('/api/sponsor-events');
+    allEvents = await res.json();
+    renderEvents(allEvents);
+  }
+  loadEvents();
+
+  // ── Render ───────────────────────────────────────────────────────────
+  function renderEvents(events: any[]) {
+    const container = document.getElementById('events-container')!;
+    const isAdmin = document.body.classList.contains('admin-mode');
+
+    if (!events.length) {
+      container.innerHTML = `<div style="text-align:center;padding:3rem;color:#94A3B8;font-size:0.9rem;">
+        ${isAdmin ? 'No events yet. Click <strong>+ Add Event</strong> to get started.' : 'No events yet.'}
+      </div>`;
+      return;
+    }
+
+    // Group by year → month
+    const byYear: Record<number, Record<number, any[]>> = {};
+    events.forEach((ev: any) => {
+      if (!byYear[ev.year]) byYear[ev.year] = {};
+      if (!byYear[ev.year][ev.month]) byYear[ev.year][ev.month] = [];
+      byYear[ev.year][ev.month].push(ev);
+    });
+
+    const sortedYears = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+
+    let html = '';
+    for (let yi = 0; yi < sortedYears.length; yi++) {
+      const year = sortedYears[yi];
+      const isFirstYear = yi === 0;
+      const yearOpen = isFirstYear ? 'open' : '';
+      html += `<details class="mbf-details" ${yearOpen}><summary>${year}</summary><div class="mbf-details-body">`;
+
+      const sortedMonths = Object.keys(byYear[year]).map(Number).sort((a, b) => b - a);
+      for (let mi = 0; mi < sortedMonths.length; mi++) {
+        const month = sortedMonths[mi];
+        const monthOpen = (isFirstYear && mi === 0) ? 'open' : '';
+        html += `<details class="mbf-month-details" ${monthOpen}><summary>${MONTHS[month]}</summary><div class="mbf-month-body">`;
+        for (const ev of byYear[year][month]) {
+          html += renderEventBlock(ev, isAdmin);
+        }
+        html += `</div></details>`;
+      }
+      html += `</div></details>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function renderEventBlock(ev: any, isAdmin: boolean) {
+    const adminBar = isAdmin ? `
+      <div class="mbf-admin-row">
+        <button class="mbf-btn-sm" onclick='openEventModal(${JSON.stringify(ev)})'>✏️ Edit</button>
+        <button class="mbf-btn-sm mbf-btn-danger" onclick="deleteEvent('${ev.id}')">🗑️ Delete</button>
+        <button class="mbf-btn-admin" style="font-size:0.74rem;padding:0.28rem 0.7rem;" onclick="openSponsorModal('${ev.id}', null)">+ Add Sponsor</button>
+      </div>` : '';
+
+    const noSponsors = !ev.sponsors || ev.sponsors.length === 0;
+    const sponsorHtml = noSponsors
+      ? (isAdmin ? `<div style="font-size:0.82rem;color:#9CA3AF;padding:0.5rem 0;">No sponsors yet for this event.</div>` : '')
+      : `<div class="sp-grid">${ev.sponsors.map((sp: any) => renderSponsorCard(sp, ev.id, isAdmin)).join('')}</div>`;
+
+    return `
+      <div class="mbf-event-block">
+        <div class="mbf-event-header">
+          <span class="mbf-event-name">🏆 ${ev.name}</span>
+          ${adminBar}
+        </div>
+        ${sponsorHtml}
+      </div>`;
+  }
+
+  function renderSponsorCard(sp: any, eventId: string, isAdmin: boolean) {
+    const logoHtml = sp.logo
+      ? `<img src="${sp.logo}" alt="${sp.name}" class="sp-logo" onerror="this.style.display='none'" />`
+      : `<div style="width:48px;height:48px;border-radius:50%;background:#E5E7EB;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🏢</div>`;
+    const nameHtml = sp.website
+      ? `<a href="${sp.website}" target="_blank" rel="noopener" class="sp-website">${sp.name} ↗</a>`
+      : `<span class="sp-name">${sp.name}</span>`;
+    const adminBtns = isAdmin ? `
+      <div class="sp-card-actions">
+        <button class="mbf-btn-sm" title="Edit" onclick='openSponsorModal("${eventId}", ${JSON.stringify(sp)})'>✏️</button>
+        <button class="mbf-btn-sm mbf-btn-danger" title="Delete" onclick="deleteSponsor('${eventId}','${sp.id}')">🗑️</button>
+      </div>` : '';
+    return `<div class="sp-card">${adminBtns}${logoHtml}${nameHtml}</div>`;
+  }
+
+  // ── Event modal ──────────────────────────────────────────────────────
+  let editingEventId: string | null = null;
+
+  window.openEventModal = function(ev: any) {
+    editingEventId = ev ? ev.id : null;
+    (document.getElementById('ev-modal-title') as HTMLElement).textContent = ev ? 'Edit Event' : 'Add Event';
+    (document.getElementById('ev-id') as HTMLInputElement).value = ev?.id ?? '';
+    (document.getElementById('ev-name') as HTMLInputElement).value = ev?.name ?? '';
+    (document.getElementById('ev-year') as HTMLInputElement).value = ev?.year ?? new Date().getFullYear().toString();
+    (document.getElementById('ev-month') as HTMLSelectElement).value = ev?.month ?? (new Date().getMonth() + 1).toString();
+    (document.getElementById('ev-error') as HTMLElement).style.display = 'none';
+    const modal = document.getElementById('event-modal')!;
+    modal.style.display = 'flex';
+  };
+
+  window.closeEventModal = function() {
+    document.getElementById('event-modal')!.style.display = 'none';
+  };
+
+  window.saveEvent = async function() {
+    const name  = (document.getElementById('ev-name') as HTMLInputElement).value.trim();
+    const year  = parseInt((document.getElementById('ev-year') as HTMLInputElement).value);
+    const month = parseInt((document.getElementById('ev-month') as HTMLSelectElement).value);
+    const errEl = document.getElementById('ev-error')!;
+    errEl.style.display = 'none';
+
+    if (!name) { errEl.textContent = 'Event name is required.'; errEl.style.display = 'block'; return; }
+    if (!year || year < 2000 || year > 2099) { errEl.textContent = 'Please enter a valid year.'; errEl.style.display = 'block'; return; }
+
+    const method = editingEventId ? 'PUT' : 'POST';
+    const body: any = { type: 'event', name, year, month };
+    if (editingEventId) body.id = editingEventId;
+
+    const res = await fetch('/api/sponsor-events', {
+      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const d = await res.json(); errEl.textContent = d.error || 'Save failed.'; errEl.style.display = 'block'; return; }
+    closeEventModal();
+    await loadEvents();
+  };
+
+  window.deleteEvent = async function(id: string) {
+    if (!confirm('Delete this event and all its sponsors? This cannot be undone.')) return;
+    await fetch(`/api/sponsor-events?type=event&id=${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': getToken() } });
+    await loadEvents();
+  };
+
+  // ── Sponsor modal ────────────────────────────────────────────────────
+  let editingSponsorEventId: string | null = null;
+  let editingSponsorId: string | null = null;
+
+  window.openSponsorModal = function(eventId: string, sp: any) {
+    editingSponsorEventId = eventId;
+    editingSponsorId = sp ? sp.id : null;
+    (document.getElementById('sp-modal-title') as HTMLElement).textContent = sp ? 'Edit Sponsor' : 'Add Sponsor';
+    (document.getElementById('sp-id') as HTMLInputElement).value = sp?.id ?? '';
+    (document.getElementById('sp-event-id') as HTMLInputElement).value = eventId;
+    (document.getElementById('sp-name') as HTMLInputElement).value = sp?.name ?? '';
+    (document.getElementById('sp-website') as HTMLInputElement).value = sp?.website ?? '';
+
+    const curWrap = document.getElementById('sp-current-logo-wrap')!;
+    if (sp?.logo) {
+      (document.getElementById('sp-logo-img') as HTMLImageElement).src = sp.logo;
+      curWrap.style.display = 'block';
+    } else {
+      curWrap.style.display = 'none';
+    }
+    (document.getElementById('sp-logo-file') as HTMLInputElement).value = '';
+    document.getElementById('sp-new-preview')!.style.display = 'none';
+    document.getElementById('sp-error')!.style.display = 'none';
+
+    document.getElementById('sponsor-modal')!.style.display = 'flex';
+  };
+
+  window.closeSponsorModal = function() {
+    document.getElementById('sponsor-modal')!.style.display = 'none';
+  };
+
+  window.saveSponsor = async function() {
+    const name    = (document.getElementById('sp-name') as HTMLInputElement).value.trim();
+    const website = (document.getElementById('sp-website') as HTMLInputElement).value.trim();
+    const fileInput = document.getElementById('sp-logo-file') as HTMLInputElement;
+    const errEl   = document.getElementById('sp-error')!;
+    errEl.style.display = 'none';
+
+    if (!name) { errEl.textContent = 'Sponsor name is required.'; errEl.style.display = 'block'; return; }
+
+    let logo = '';
+    if (fileInput.files?.[0]) {
+      const f = fileInput.files[0];
+      if (f.size > 5 * 1024 * 1024) { errEl.textContent = 'Logo too large (max 5 MB).'; errEl.style.display = 'block'; return; }
+      const fd = new FormData();
+      fd.append('file', f);
+      fd.append('type', 'sponsors');
+      const up = await fetch('/api/upload', { method: 'POST', headers: { 'X-Admin-Token': getToken() }, body: fd });
+      if (!up.ok) { errEl.textContent = 'Logo upload failed.'; errEl.style.display = 'block'; return; }
+      const ud = await up.json();
+      logo = ud.url;
+    } else if (editingSponsorId) {
+      // keep existing logo
+      logo = (document.getElementById('sp-logo-img') as HTMLImageElement).src
+        .replace(window.location.origin, '');
+    }
+
+    const method = editingSponsorId ? 'PUT' : 'POST';
+    const body: any = { type: 'sponsor', eventId: editingSponsorEventId, name, website, logo };
+    if (editingSponsorId) body.id = editingSponsorId;
+
+    const res = await fetch('/api/sponsor-events', {
+      method, headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const d = await res.json(); errEl.textContent = d.error || 'Save failed.'; errEl.style.display = 'block'; return; }
+    closeSponsorModal();
+    await loadEvents();
+  };
+
+  window.deleteSponsor = async function(eventId: string, sponsorId: string) {
+    if (!confirm('Remove this sponsor?')) return;
+    await fetch(`/api/sponsor-events?type=sponsor&eventId=${eventId}&sponsorId=${sponsorId}`, {
+      method: 'DELETE', headers: { 'X-Admin-Token': getToken() }
+    });
+    await loadEvents();
+  };
+
+  // ── Logo drag / drop / paste ─────────────────────────────────────────
+  function handleLogoFile(file: File | null | undefined) {
+    if (!file) return;
+    const errEl = document.getElementById('sp-error')!;
+    if (!file.type.startsWith('image/')) {
+      errEl.textContent = 'Please provide an image file (PNG, JPG, SVG, WebP).';
+      errEl.style.display = 'block'; return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      errEl.textContent = 'Logo file is too large (max 5 MB).';
+      errEl.style.display = 'block'; return;
+    }
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    (document.getElementById('sp-logo-file') as HTMLInputElement).files = dt.files;
+    const newPreview = document.getElementById('sp-new-preview')!;
+    const newImg     = document.getElementById('sp-new-img') as HTMLImageElement;
+    const newName    = document.getElementById('sp-new-filename')!;
+    newImg.src = URL.createObjectURL(file);
+    newName.textContent = file.name || 'pasted image';
+    newPreview.style.display = 'block';
+    errEl.style.display = 'none';
+  }
+  window.handleLogoFile = handleLogoFile;
+
+  const dropZone = document.getElementById('sp-logo-drop')!;
+  dropZone.addEventListener('click', () => document.getElementById('sp-logo-file')!.click());
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#1B3A8F';
+    dropZone.style.background  = '#EEF2FF';
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '#D1D5DB';
+    dropZone.style.background  = '#F9FAFB';
+  });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#D1D5DB';
+    dropZone.style.background  = '#F9FAFB';
+    handleLogoFile(e.dataTransfer?.files?.[0] ?? null);
+  });
+  document.addEventListener('paste', (e) => {
+    const modal = document.getElementById('sponsor-modal')!;
+    if (modal.style.display === 'none') return;
+    const tag = (e.target as HTMLElement).tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) { handleLogoFile(file); break; }
+      }
+    }
+  });
+
+  // Close modals on backdrop click
+  document.getElementById('event-modal')!.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeEventModal();
+  });
+  document.getElementById('sponsor-modal')!.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeSponsorModal();
+  });
+</script>

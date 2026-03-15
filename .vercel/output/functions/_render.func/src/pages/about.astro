@@ -1,0 +1,320 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+let officers: any[] = [];
+try {
+  officers = JSON.parse(await readFile(join(process.cwd(), "src/data/officers.json"), "utf-8"));
+} catch {}
+---
+
+<Layout title="About Us">
+  <section style="background:linear-gradient(135deg,#1B3A8F 0%,#122970 100%);padding:3rem 1.5rem 2.5rem;color:white;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-size:2.2rem;font-weight:800;margin:0 0 0.5rem;">About Us</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.8);margin:0;">Learn about our mission and the people behind MBF.</p>
+    </div>
+  </section>
+
+  <section style="padding:3.5rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2.5rem;">
+
+        <!-- Mission -->
+        <div>
+          <h2 class="mbf-section-title">Our Mission</h2>
+          <div class="mbf-card" style="padding:1.75rem;">
+            <p style="font-size:1rem;color:#374151;line-height:1.8;margin:0 0 1rem;">To promote the sport of badminton in Massachusetts through education, training, events, and community programs that encourage participation, competition, and healthy living styles.</p>
+            <p style="font-size:0.9rem;color:#6B7280;line-height:1.7;margin:0;font-style:italic;border-top:1px solid #E5E7EB;padding-top:1rem;">All personnel of the organization are volunteers. Raised funds will be 100% for the cause.</p>
+          </div>
+        </div>
+
+        <!-- Officers -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+            <h2 class="mbf-section-title" style="margin:0;">Our Officers</h2>
+            <button
+              id="officers-manage-btn"
+              onclick="openOfficersManager()"
+              style="display:none;background:#1B3A8F;color:white;border:none;padding:0.45rem 1.1rem;border-radius:6px;font-size:0.82rem;font-weight:700;cursor:pointer;"
+            >Manage Officers</button>
+          </div>
+
+          <div id="officers-list" style="display:flex;flex-direction:column;gap:1rem;">
+            {officers.length === 0 ? (
+              <div style="font-size:0.9rem;color:#9CA3AF;text-align:center;padding:2rem;background:#F9FAFB;border-radius:8px;">No officers added yet.</div>
+            ) : officers.map((o: any) => (
+              <div class="mbf-card" style="padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+                <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1B3A8F,#3A5FB0);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">👤</div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-weight:700;color:#1B3A8F;font-size:0.95rem;">{o.name}</div>
+                  <div style="font-size:0.82rem;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35rem;">{o.title}</div>
+                  <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    {o.email && (
+                      <a href={`mailto:${o.email}`} title={`Email ${o.name}`}
+                        style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.72rem;color:#1B3A8F;text-decoration:none;background:#EEF2FF;border:1px solid #C7D2FE;padding:0.2rem 0.5rem;border-radius:4px;"
+                        target="_blank">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                        Email
+                      </a>
+                    )}
+                    {o.instagram && (
+                      <a href={o.instagram.startsWith('http') ? o.instagram : `https://instagram.com/${o.instagram.replace('@','')}`} title="Instagram" target="_blank"
+                        style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.72rem;color:#E1306C;text-decoration:none;background:#FFF0F5;border:1px solid #FBCFE8;padding:0.2rem 0.5rem;border-radius:4px;">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                        Instagram
+                      </a>
+                    )}
+                    {o.website && (
+                      <a href={o.website.startsWith('http') ? o.website : `https://${o.website}`} title="Website" target="_blank"
+                        style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.72rem;color:#059669;text-decoration:none;background:#ECFDF5;border:1px solid #A7F3D0;padding:0.2rem 0.5rem;border-radius:4px;">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+                        Website
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- How Your Donation Helps -->
+      <div style="margin-top:3rem;">
+        <h2 class="mbf-section-title">How Your Donation Helps</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:1.5rem;">
+          <div class="mbf-card mbf-card-orange" style="padding:1.5rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.6rem;">🏅 Competition Scholarship</h3>
+            <p style="font-size:0.88rem;color:#4B5563;margin:0;line-height:1.6;">An MA State Team may be nominated for national tournaments (e.g., Junior National Championship, Open Regional Championship) and international tournaments (e.g., Pan America Championship).</p>
+          </div>
+          <div class="mbf-card mbf-card-red" style="padding:1.5rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.6rem;">🏸 Tournament Sponsorship</h3>
+            <p style="font-size:0.88rem;color:#4B5563;margin:0;line-height:1.6;">Funds may be used to sponsor local badminton tournaments or competitions, including college-organized events (e.g., MIT, Harvard).</p>
+          </div>
+          <div class="mbf-card" style="padding:1.5rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.6rem;">🎓 Badminton Workshop</h3>
+            <p style="font-size:0.88rem;color:#4B5563;margin:0;line-height:1.6;">Funds may be used to sponsor nationally or internationally renowned coaches or professional players to visit MA badminton clubs.</p>
+          </div>
+          <div class="mbf-card mbf-card-orange" style="padding:1.5rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 0.6rem;">🌱 Promotional Events</h3>
+            <p style="font-size:0.88rem;color:#4B5563;margin:0;line-height:1.6;">Funds may be used to sponsor badminton events in local high schools, colleges, and communities to cultivate badminton outreach at the grassroots level.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div style="margin-top:2.5rem;background:white;border-radius:12px;padding:1.5rem 2rem;box-shadow:0 2px 12px rgba(27,58,143,0.07);">
+        <div style="display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;">
+          <div style="font-size:2rem;flex-shrink:0;">📋</div>
+          <div style="flex:1;min-width:200px;">
+            <div style="font-weight:700;color:#1B3A8F;margin-bottom:0.25rem;">Legal &amp; Tax Information</div>
+            <div style="font-size:0.88rem;color:#6B7280;line-height:1.6;">Massachusetts Badminton Foundation (MBF) is registered in Massachusetts with <strong>EIN: 39-4717851</strong>. MBF is a 501(c)(3) tax-exempt organization under the Internal Revenue Code, and contributions are deductible to the fullest extent of the law.</div>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;"><a href="/donate" class="mbf-donate-btn">Donate Now</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Officers Manager Modal ──────────────────────────────── -->
+  <div id="officers-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.55);overflow-y:auto;padding:2rem 1rem;">
+    <div style="background:white;border-radius:12px;max-width:600px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);box-sizing:border-box;margin:auto;overflow:hidden;">
+
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#1B3A8F,#122970);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+        <h2 style="font-size:1.1rem;font-weight:700;color:white;margin:0;">👥 Manage Officers</h2>
+        <button onclick="closeOfficersManager()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <div style="padding:1.5rem;">
+
+        <!-- List -->
+        <div id="om-list" style="margin-bottom:1.25rem;"></div>
+
+        <!-- Form -->
+        <div style="background:#F8FAFF;border:1px solid #E0E7FF;border-radius:8px;padding:1.25rem;">
+          <h3 id="om-form-title" style="font-size:0.95rem;font-weight:700;color:#1B3A8F;margin:0 0 1rem;">+ Add New Officer</h3>
+          <input type="hidden" id="om-id" />
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+
+            <div style="grid-column:1/-1;">
+              <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Full Name *</label>
+              <input type="text" id="om-name" placeholder="e.g., Larry Zhang"
+                style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+            </div>
+
+            <div style="grid-column:1/-1;">
+              <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Title / Role *</label>
+              <input type="text" id="om-title" placeholder="e.g., Director, Treasurer, Clerk"
+                style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.9rem;box-sizing:border-box;" />
+            </div>
+
+            <div>
+              <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">
+                <svg style="vertical-align:middle;margin-right:3px;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B3A8F" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                Email Address
+              </label>
+              <input type="email" id="om-email" placeholder="officer@example.com"
+                style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.88rem;box-sizing:border-box;" />
+            </div>
+
+            <div>
+              <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">
+                <svg style="vertical-align:middle;margin-right:3px;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C" stroke="none"/></svg>
+                Instagram
+              </label>
+              <input type="text" id="om-instagram" placeholder="@username or full URL"
+                style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.88rem;box-sizing:border-box;" />
+            </div>
+
+            <div style="grid-column:1/-1;">
+              <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">
+                <svg style="vertical-align:middle;margin-right:3px;" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+                Website URL
+              </label>
+              <input type="url" id="om-website" placeholder="https://example.com"
+                style="width:100%;padding:0.5rem 0.7rem;border:1px solid #D1D5DB;border-radius:6px;font-size:0.88rem;box-sizing:border-box;" />
+            </div>
+
+          </div>
+
+          <div id="om-error" style="color:#CC2222;font-size:0.82rem;margin-top:0.6rem;display:none;"></div>
+          <div style="display:flex;gap:0.65rem;margin-top:0.85rem;">
+            <button onclick="omSave()" style="flex:1;background:#1B3A8F;color:white;border:none;padding:0.6rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.88rem;">Save Officer</button>
+            <button onclick="omResetForm()" style="padding:0.6rem 1rem;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:0.88rem;">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  // Show manage button when admin is logged in
+  document.addEventListener('mbf:admin-ready', () => {
+    const btn = document.getElementById('officers-manage-btn');
+    if (btn) btn.style.display = 'inline-flex';
+  });
+  // Also check immediately if already logged in
+  if (document.body.dataset.admin === 'true') {
+    const btn = document.getElementById('officers-manage-btn');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+
+  // ── Officers Manager ────────────────────────────────────────
+  function omResetForm() {
+    (document.getElementById('om-id') as HTMLInputElement).value = '';
+    (document.getElementById('om-name') as HTMLInputElement).value = '';
+    (document.getElementById('om-title') as HTMLInputElement).value = '';
+    (document.getElementById('om-email') as HTMLInputElement).value = '';
+    (document.getElementById('om-instagram') as HTMLInputElement).value = '';
+    (document.getElementById('om-website') as HTMLInputElement).value = '';
+    document.getElementById('om-form-title')!.textContent = '+ Add New Officer';
+    document.getElementById('om-error')!.style.display = 'none';
+  }
+  (window as any).omResetForm = omResetForm;
+
+  async function omLoadList() {
+    const listEl = document.getElementById('om-list')!;
+    const res = await fetch('/api/officers');
+    const officers: any[] = await res.json();
+    if (!officers.length) {
+      listEl.innerHTML = '<p style="font-size:0.85rem;color:#9CA3AF;text-align:center;padding:0.5rem 0 0.75rem;">No officers yet. Add one below.</p>';
+      return;
+    }
+    const badge = (label: string, color: string, bg: string, border: string) =>
+      `<span style="font-size:0.68rem;font-weight:600;color:${color};background:${bg};border:1px solid ${border};padding:0.15rem 0.4rem;border-radius:3px;">${label}</span>`;
+
+    listEl.innerHTML = `<div style="font-size:0.78rem;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">Current Officers</div>` +
+      officers.map(o => `
+      <div style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.75rem;background:#F8FAFF;border:1px solid #E0E7FF;border-radius:7px;margin-bottom:0.4rem;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.88rem;font-weight:700;color:#1B3A8F;">${o.name}</div>
+          <div style="font-size:0.75rem;color:#6B7280;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.3rem;">${o.title}</div>
+          <div style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+            ${o.email     ? badge('Email', '#1B3A8F', '#EEF2FF', '#C7D2FE') : ''}
+            ${o.instagram ? badge('Instagram', '#E1306C', '#FFF0F5', '#FBCFE8') : ''}
+            ${o.website   ? badge('Website', '#059669', '#ECFDF5', '#A7F3D0') : ''}
+          </div>
+        </div>
+        <button onclick='omEdit(${JSON.stringify(o).replace(/'/g, "&#39;")})'
+          style="background:#EEF2FF;color:#1B3A8F;border:1px solid #C7D2FE;padding:0.25rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;cursor:pointer;flex-shrink:0;">Edit</button>
+        <button onclick="omDelete('${o.id}')"
+          style="background:#FEF2F2;color:#CC2222;border:1px solid #FECACA;padding:0.25rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;cursor:pointer;flex-shrink:0;">Delete</button>
+      </div>`).join('');
+  }
+
+  (window as any).omEdit = function(o: any) {
+    (document.getElementById('om-id') as HTMLInputElement).value = o.id;
+    (document.getElementById('om-name') as HTMLInputElement).value = o.name;
+    (document.getElementById('om-title') as HTMLInputElement).value = o.title;
+    (document.getElementById('om-email') as HTMLInputElement).value = o.email || '';
+    (document.getElementById('om-instagram') as HTMLInputElement).value = o.instagram || '';
+    (document.getElementById('om-website') as HTMLInputElement).value = o.website || '';
+    document.getElementById('om-form-title')!.textContent = `Edit: ${o.name}`;
+    document.getElementById('om-error')!.style.display = 'none';
+    document.getElementById('om-name')!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  (window as any).omSave = async function() {
+    const id        = (document.getElementById('om-id') as HTMLInputElement).value;
+    const name      = (document.getElementById('om-name') as HTMLInputElement).value.trim();
+    const title     = (document.getElementById('om-title') as HTMLInputElement).value.trim();
+    const email     = (document.getElementById('om-email') as HTMLInputElement).value.trim();
+    const instagram = (document.getElementById('om-instagram') as HTMLInputElement).value.trim();
+    const website   = (document.getElementById('om-website') as HTMLInputElement).value.trim();
+    const errEl     = document.getElementById('om-error')!;
+    errEl.style.display = 'none';
+    if (!name || !title) { errEl.textContent = 'Name and title are required.'; errEl.style.display = 'block'; return; }
+    const token = sessionStorage.getItem('mbf_admin_token') || '';
+    const res = await fetch('/api/officers', {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+      body: JSON.stringify(id ? { id, name, title, email, instagram, website } : { name, title, email, instagram, website }),
+    });
+    if (res.ok) {
+      omResetForm();
+      await omLoadList();
+      // Reload page so officer cards update
+      window.location.reload();
+    } else {
+      const err = await res.json();
+      errEl.textContent = err.error || 'Save failed.';
+      errEl.style.display = 'block';
+    }
+  };
+
+  (window as any).omDelete = async function(id: string) {
+    const confirmed = await (window as any).mbfConfirm(
+      'This officer will be permanently removed from the page.',
+      'Delete Officer?', 'Delete', '👤'
+    );
+    if (!confirmed) return;
+    const token = sessionStorage.getItem('mbf_admin_token') || '';
+    const res = await fetch(`/api/officers?id=${id}`, { method: 'DELETE', headers: { 'X-Admin-Token': token } });
+    if (res.ok) { omResetForm(); await omLoadList(); window.location.reload(); }
+  };
+
+  (window as any).openOfficersManager = async function() {
+    omResetForm();
+    document.getElementById('officers-modal')!.style.display = 'flex';
+    await omLoadList();
+  };
+  (window as any).closeOfficersManager = function() {
+    document.getElementById('officers-modal')!.style.display = 'none';
+  };
+  document.getElementById('officers-modal')!.addEventListener('click', function(e) {
+    if (e.target === this) (window as any).closeOfficersManager();
+  });
+
+  // Show button if admin already confirmed before this script ran
+  setTimeout(() => {
+    if (document.body.dataset.admin === 'true') {
+      const btn = document.getElementById('officers-manage-btn');
+      if (btn) btn.style.display = 'inline-flex';
+    }
+  }, 300);
+</script>
