@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Admin Login">
+  <div style="min-height:40vh;"></div>
+</Layout>
+
+<script>
+  // Show the admin button and open login modal if not already logged in
+  function initAdminPage() {
+    const adminBtn = document.getElementById('admin-btn');
+    if (adminBtn) adminBtn.style.display = 'inline-block';
+    if (!sessionStorage.getItem('mbf_admin_token')) {
+      const modal = document.getElementById('admin-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdminPage);
+  } else {
+    initAdminPage();
+  }
+</script>
