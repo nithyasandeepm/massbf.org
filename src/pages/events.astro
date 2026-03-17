@@ -571,7 +571,13 @@ import Layout from "../layouts/Layout.astro";
           ? { id, name, dates, link, status, helpfulLinks }
           : { name, dates, link, status, helpfulLinks })
       });
-      if (res.ok) { closeTournamentModal(); await loadTournaments(); }
+      if (res.ok) {
+        closeTournamentModal();
+        await loadTournaments();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || 'Failed to save. Please try again.');
+      }
     };
 
     window.deleteTournament = async function(id: string) {
@@ -582,7 +588,7 @@ import Layout from "../layouts/Layout.astro";
       if (!confirmed) return;
       const token = sessionStorage.getItem('mbf_admin_token');
       const res = await fetch(`/api/tournaments?id=${id}`, {
-        method: 'DELETE', headers: { 'X-Admin-Token': token || '' }
+        method: 'DELETE', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token || '' }
       });
       if (res.ok) await loadTournaments();
     };
