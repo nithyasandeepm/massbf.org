@@ -1,0 +1,200 @@
+18:51:05.422 Running build in Washington, D.C., USA (East) – iad1
+18:51:05.423 Build machine configuration: 2 cores, 8 GB
+18:51:05.538 Cloning github.com/nithyasandeepm/massbf.org (Branch: master, Commit: bce56ab)
+18:51:05.539 Previous build caches not available.
+18:51:05.830 Cloning completed: 291.000ms
+18:51:06.181 Running "vercel build"
+18:51:06.815 Vercel CLI 50.32.4
+18:51:06.816 
+18:51:07.382 Running "install" command: `bun install`...
+18:51:07.383 
+18:51:07.416 bun install v1.3.6 (d530ed99)
+18:51:07.417 
+18:51:09.305 
+18:51:09.306 + @biomejs/biome@2.3.10
+18:51:09.306 + eslint@9.39.2
+18:51:09.307 + prettier@3.7.4
+18:51:09.307 + prettier-plugin-astro@0.14.1
+18:51:09.307 + @astrojs/vercel@10.0.0
+18:51:09.307 + @tailwindcss/typography@0.5.19
+18:51:09.307 + @tailwindcss/vite@4.1.18
+18:51:09.307 + astro@6.0.4
+18:51:09.307 + tailwindcss@4.1.18
+18:51:09.307 
+18:51:09.312 406 packages installed [1.90s]
+18:51:09.312 
+18:51:09.425 $ astro build
+18:51:09.425 
+18:51:10.734 [2m22:51:10[22m [34m[types][39m Generated [2m152ms[22m
+18:51:10.734 
+18:51:10.736 [2m22:51:10[22m [34m[build][39m output: [34m"server"[39m
+18:51:10.736 
+18:51:10.737 [2m22:51:10[22m [34m[build][39m mode: [34m"server"[39m
+18:51:10.737 
+18:51:10.737 [2m22:51:10[22m [34m[build][39m directory: [34m/vercel/path0/dist/[39m
+18:51:10.737 
+18:51:10.738 [2m22:51:10[22m [34m[build][39m adapter: [32m@astrojs/vercel[39m
+18:51:10.738 
+18:51:10.738 [2m22:51:10[22m [34m[build][39m Collecting build info...
+18:51:10.738 
+18:51:10.740 [2m22:51:10[22m [34m[build][39m [32m✓ Completed in 197ms.[39m
+18:51:10.740 
+18:51:10.743 [2m22:51:10[22m [34m[build][39m Building server entrypoints...
+18:51:10.743 
+18:51:12.849 [2m22:51:12[22m [34m[vite][39m [32m✓ built in 2.03s[39m
+18:51:12.850 
+18:51:13.455 [2m22:51:13[22m [34m[vite][39m [32m✓ built in 602ms[39m
+18:51:13.455 
+18:51:13.600 [2m22:51:13[22m [34m[vite][39m [32m✓ built in 144ms[39m
+18:51:13.601 
+18:51:13.616 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.616 
+18:51:13.617 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.617 
+18:51:13.632 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/routing-utils/dist/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.632 
+18:51:13.640 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/internal-helpers/dist/fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.640 
+18:51:13.641 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs/promises" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/internal-helpers/dist/fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.641 
+18:51:13.641 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/internal-helpers/dist/fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.641 
+18:51:13.642 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/internal-helpers/dist/fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.642 
+18:51:13.646 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/lib/nft.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.646 
+18:51:13.647 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/lib/nft.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.647 
+18:51:13.649 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/lib/redirects.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.649 
+18:51:13.652 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/serverless/middleware.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.652 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:module" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/serverless/middleware.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.652 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/serverless/middleware.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.653 
+18:51:13.700 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/routing-utils/dist/superstatic.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.700 
+18:51:13.749 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/lib/searchRoot.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.750 
+18:51:13.750 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@astrojs/vercel/dist/lib/searchRoot.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.750 
+18:51:13.780 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.780 
+18:51:13.781 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "os" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.781 
+18:51:13.782 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.782 
+18:51:13.782 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "child_process" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.783 
+18:51:13.783 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.783 
+18:51:13.784 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "tty" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.784 
+18:51:13.784 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "worker_threads" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/esbuild/lib/main.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.784 
+18:51:13.834 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/node-file-trace.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.835 
+18:51:13.843 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/resolve-dependency.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.844 
+18:51:13.845 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "module" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/resolve-dependency.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.845 
+18:51:13.899 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/analyze.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.899 
+18:51:13.901 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/analyze.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.901 
+18:51:13.901 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "os" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/analyze.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.901 
+18:51:13.905 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "os" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/utils/sharedlib-emit.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.905 
+18:51:13.905 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/utils/sharedlib-emit.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.905 
+18:51:13.906 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.906 
+18:51:13.913 [2m22:51:13[22m [34m[build][39m Rearranging server assets...
+18:51:13.914 
+18:51:13.939 [33m[1m22:51:13[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@rollup/pluginutils/dist/cjs/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:13.940 
+18:51:14.163 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/utils/special-cases.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.164 
+18:51:14.199 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/resolve-from/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.200 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "module" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/resolve-from/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.200 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/resolve-from/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.200 
+18:51:14.206 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/async-sema/lib/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.206 
+18:51:14.253 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/bindings/bindings.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.254 
+18:51:14.254 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/bindings/bindings.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.254 
+18:51:14.254 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@vercel/nft/out/utils/binary-locators.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.254 
+18:51:14.302 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:events" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.302 
+18:51:14.303 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:stream" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.303 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:string_decoder" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.303 
+18:51:14.303 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.304 
+18:51:14.304 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.304 
+18:51:14.304 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.304 
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "node:fs/promises" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/glob/dist/commonjs/index.min.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.305 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.306 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/graceful-fs/graceful-fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.306 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/graceful-fs/graceful-fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.306 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "assert" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/graceful-fs/graceful-fs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.306 
+18:51:14.496 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/node-gyp-build/node-gyp-build.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.497 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/node-gyp-build/node-gyp-build.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.497 
+18:51:14.497 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "os" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/node-gyp-build/node-gyp-build.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.497 
+18:51:14.507 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/file-uri-to-path/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.507 
+18:51:14.510 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/util/napi.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.510 
+18:51:14.513 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/pre-binding.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.513 
+18:51:14.513 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/pre-binding.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.513 
+18:51:14.518 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/graceful-fs/legacy-streams.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.519 
+18:51:14.534 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/util/versioning.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.535 
+18:51:14.536 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/@mapbox/node-pre-gyp/lib/util/versioning.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.536 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "constants" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/graceful-fs/polyfills.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.536 
+18:51:14.596 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/nopt/lib/type-defs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.597 
+18:51:14.597 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/nopt/lib/type-defs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.597 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/nopt/lib/type-defs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.597 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "os" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/nopt/lib/type-defs.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.597 
+18:51:14.606 [2m22:51:14[22m [34m[build][39m [32m✓ Completed in 3.86s.[39m
+18:51:14.606 
+18:51:14.613 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "child_process" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/detect-libc/lib/detect-libc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.614 
+18:51:14.622 [2m22:51:14[22m [34m[@astrojs/vercel][39m Bundling function ../../../../dist/server/entry.mjs
+18:51:14.622 
+18:51:14.717 [33m[1m22:51:14[22m [WARN] [vite][39m [33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/vercel/path0/node_modules/detect-libc/lib/filesystem.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+18:51:14.717 
+18:51:17.619 [2m22:51:17[22m [34m[build][39m Waiting for integration [1m"@astrojs/vercel"[22m, hook [1m"astro:build:done"[22m...
+18:51:17.619 
+18:51:18.207 [2m22:51:18[22m [34m[@astrojs/vercel][39m Copying static files to .vercel/output/static
+18:51:18.208 
+18:51:18.212 [2m22:51:18[22m [34m[build][39m Server built in [1m7.67s[22m
+18:51:18.212 
+18:51:18.212 [2m22:51:18[22m [34m[build][39m [1mComplete![22m
+18:51:18.212 
+18:51:19.376 Build Completed in /vercel/output [12s]
+18:51:19.376 
+18:51:19.665 Deploying outputs...
+18:51:25.638 Deployment completed
+18:51:26.673 Creating build cache...
+18:51:35.885 Created build cache: 9s
+18:51:35.885 Uploading build cache [90.03 MB]
+18:51:37.716 Build cache uploaded: 1.831s
