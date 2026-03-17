@@ -1,7 +1,6 @@
 ---
 import "./global.css";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readDataFile } from "../lib/storage";
 
 interface Props {
   title?: string;
@@ -10,10 +9,7 @@ interface Props {
 const { title = "Massachusetts Badminton Foundation" } = Astro.props;
 const path = Astro.url.pathname;
 
-let customPages: { label: string; slug: string }[] = [];
-try {
-  customPages = JSON.parse(await readFile(join(process.cwd(), "src/data/pages.json"), "utf-8"));
-} catch {}
+const customPages: { label: string; slug: string }[] = await readDataFile("pages", []);
 
 const navLinks = [
   { label: "Home", href: "/" },

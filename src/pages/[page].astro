@@ -1,14 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readDataFile } from "../lib/storage";
 
 const { page } = Astro.params;
 
-let pages: any[] = [];
-try {
-  pages = JSON.parse(await readFile(join(process.cwd(), "src/data/pages.json"), "utf-8"));
-} catch {}
+const pages: any[] = await readDataFile("pages", []);
 
 const customPage = pages.find((p: any) => p.slug === page);
 if (!customPage) return Astro.redirect("/");

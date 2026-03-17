@@ -1,12 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readDataFile } from "../lib/storage";
 
-let officers: any[] = [];
-try {
-  officers = JSON.parse(await readFile(join(process.cwd(), "src/data/officers.json"), "utf-8"));
-} catch {}
+const officers: any[] = await readDataFile("officers", []);
 ---
 
 <Layout title="About Us">
