@@ -1,14 +1,11 @@
 import type { APIRoute } from "astro";
 import { isValidToken } from "../../lib/auth";
-import { readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readDataFile, writeDataFile } from "../../lib/storage";
 
-const DATA_FILE = join(process.cwd(), "src/data/pages.json");
 const RESERVED = new Set(["about", "events", "pca", "sponsors", "donate", "api", "uploads"]);
 
 async function readPages(): Promise<any[]> {
-  try { return JSON.parse(await readFile(DATA_FILE, "utf-8")); }
-  catch { return []; }
+  return readDataFile("pages", []);
 }
 
 export const GET: APIRoute = async () => {
@@ -18,12 +15,12 @@ export const GET: APIRoute = async () => {
 };
 
 export const POST: APIRoute = async ({ request }) => {
-  if (!isValidToken(request.headers.get("X-Admin-Token") || ""))
+  if (!await isValidToken(request.headers.get("X-Admin-Token") || ""))
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
 
   const body = await request.json();
   const label = (body.label || "").trim();
-  const slug  = (body.slug  || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/^-+|-+$/g, "");
+  const slug = (body.slug || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/^-+|-+$/g, "");
   const content = (body.content || "").trim();
 
   if (!label || !slug)
@@ -37,12 +34,12 @@ export const POST: APIRoute = async ({ request }) => {
 
   const newPage = { id: Date.now().toString(), label, slug, content };
   pages.push(newPage);
-  await writeFile(DATA_FILE, JSON.stringify(pages, null, 2));
+  await writeDataFile("pages", pages);
   return new Response(JSON.stringify(newPage), { status: 201, headers: { "Content-Type": "application/json" } });
 };
 
 export const PUT: APIRoute = async ({ request }) => {
-  if (!isValidToken(request.headers.get("X-Admin-Token") || ""))
+  if (!await isValidToken(request.headers.get("X-Admin-Token") || ""))
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
 
   const body = await request.json();
@@ -58,18 +55,19 @@ export const PUT: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ error: `Slug "${slug}" already exists` }), { status: 409, headers: { "Content-Type": "application/json" } });
 
   pages[idx] = { ...pages[idx], label: body.label ?? pages[idx].label, slug, content: body.content ?? pages[idx].content };
-  await writeFile(DATA_FILE, JSON.stringify(pages, null, 2));
+  await writeDataFile("pages", pages);
   return new Response(JSON.stringify(pages[idx]), { headers: { "Content-Type": "application/json" } });
 };
 
 export const DELETE: APIRoute = async ({ request, url }) => {
-  if (!isValidToken(request.headers.get("X-Admin-Token") || ""))
+  if (!await isValidToken(request.headers.get("X-Admin-Token") || ""))
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
 
   const id = url.searchParams.get("id");
-  if (!id) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  if (!id)
+    return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: { "Content-Type": "application/json" } });
 
   const pages = await readPages();
-  await writeFile(DATA_FILE, JSON.stringify(pages.filter((p) => p.id !== id), null, 2));
+  await writeDataFile("pages", pages.filter((p) => p.id !== id));
   return new Response(JSON.stringify({ success: true }), { headers: { "Content-Type": "application/json" } });
 };

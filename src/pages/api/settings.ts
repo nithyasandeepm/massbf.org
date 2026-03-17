@@ -1,16 +1,11 @@
 import type { APIRoute } from "astro";
 import { isValidToken } from "../../lib/auth";
-import { readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readDataFile, writeDataFile } from "../../lib/storage";
 
-const DATA_FILE = join(process.cwd(), "src/data/settings.json");
+const DEFAULT_SETTINGS = { social: { facebook: "", instagram: "", youtube: "" } };
 
 async function readSettings(): Promise<any> {
-  try {
-    return JSON.parse(await readFile(DATA_FILE, "utf-8"));
-  } catch {
-    return { social: { facebook: "", instagram: "", youtube: "" } };
-  }
+  return readDataFile("settings", DEFAULT_SETTINGS);
 }
 
 export const GET: APIRoute = async () => {
@@ -22,12 +17,11 @@ export const GET: APIRoute = async () => {
 
 export const PUT: APIRoute = async ({ request }) => {
   const token = request.headers.get("X-Admin-Token") || "";
-  if (!isValidToken(token)) {
+  if (!await isValidToken(token))
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
+      status: 401, headers: { "Content-Type": "application/json" },
     });
-  }
+
   const body = await request.json();
   const current = await readSettings();
   const updated = {
@@ -35,7 +29,7 @@ export const PUT: APIRoute = async ({ request }) => {
     ...body,
     social: { ...current.social, ...(body.social || {}) },
   };
-  await writeFile(DATA_FILE, JSON.stringify(updated, null, 2));
+  await writeDataFile("settings", updated);
   return new Response(JSON.stringify(updated), {
     headers: { "Content-Type": "application/json" },
   });

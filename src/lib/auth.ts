@@ -1,77 +1,81 @@
 import crypto from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { readDataFile, writeDataFile } from "./storage";
 
 const SECRET = "mbf-internal-2026";
-const AUTH_FILE = join(process.cwd(), "src/data/auth.json");
 
 interface User { username: string; password: string; }
 interface AuthData { users: User[]; }
 
-function readAuth(): AuthData {
-  try {
-    const raw = JSON.parse(readFileSync(AUTH_FILE, "utf-8"));
-    if (Array.isArray(raw.users)) return raw as AuthData;
-    // Migrate old single-password format
-    if (raw.password) return { users: [{ username: "admin", password: raw.password }] };
-  } catch {}
-  return { users: [{ username: "admin", password: process.env.ADMIN_PASSWORD || "mbfadmin2026" }] };
+const DEFAULT_AUTH: AuthData = {
+  users: [{ username: "admin", password: process.env.ADMIN_PASSWORD || "mbfadmin2026" }],
+};
+
+async function readAuth(): Promise<AuthData> {
+  const data = await readDataFile("auth", DEFAULT_AUTH);
+  if (Array.isArray(data?.users)) return data as AuthData;
+  if (data?.password) return { users: [{ username: "admin", password: data.password }] };
+  return DEFAULT_AUTH;
 }
 
-function writeAuth(data: AuthData): void {
-  writeFileSync(AUTH_FILE, JSON.stringify(data, null, 2));
+async function writeAuth(data: AuthData): Promise<void> {
+  await writeDataFile("auth", data);
 }
 
 function computeToken(username: string, password: string): string {
   return crypto.createHmac("sha256", SECRET).update(`${username}:${password}`).digest("hex");
 }
 
-export function login(username: string, password: string): string | null {
-  const { users } = readAuth();
+export async function login(username: string, password: string): Promise<string | null> {
+  const { users } = await readAuth();
   const user = users.find(u => u.username === username && u.password === password);
   return user ? computeToken(user.username, user.password) : null;
 }
 
-export function isValidToken(token: string | null | undefined): boolean {
+export async function isValidToken(token: string | null | undefined): Promise<boolean> {
   if (!token) return false;
-  return readAuth().users.some(u => computeToken(u.username, u.password) === token);
+  const { users } = await readAuth();
+  return users.some(u => computeToken(u.username, u.password) === token);
 }
 
-export function getUsernameFromToken(token: string | null | undefined): string | null {
+export async function getUsernameFromToken(token: string | null | undefined): Promise<string | null> {
   if (!token) return null;
-  const user = readAuth().users.find(u => computeToken(u.username, u.password) === token);
-  return user?.username ?? null;
+  const { users } = await readAuth();
+  return users.find(u => computeToken(u.username, u.password) === token)?.username ?? null;
 }
 
-export function listUsernames(): string[] {
-  return readAuth().users.map(u => u.username);
+export async function listUsernames(): Promise<string[]> {
+  return (await readAuth()).users.map(u => u.username);
 }
 
-export function addUser(username: string, password: string): { error?: string } {
+export async function addUser(username: string, password: string): Promise<{ error?: string }> {
   if (!username.trim() || !password.trim()) return { error: "Username and password are required." };
   if (password.length < 6) return { error: "Password must be at least 6 characters." };
-  const auth = readAuth();
+  const auth = await readAuth();
   if (auth.users.find(u => u.username === username.trim())) return { error: "Username already exists." };
   auth.users.push({ username: username.trim(), password });
-  writeAuth(auth);
+  await writeAuth(auth);
   return {};
 }
 
-export function removeUser(username: string): { error?: string } {
-  const auth = readAuth();
+export async function removeUser(username: string): Promise<{ error?: string }> {
+  const auth = await readAuth();
   if (auth.users.length <= 1) return { error: "Cannot remove the last admin user." };
   auth.users = auth.users.filter(u => u.username !== username);
-  writeAuth(auth);
+  await writeAuth(auth);
   return {};
 }
 
-export function changePassword(token: string, currentPassword: string, newPassword: string): { error?: string } {
-  const auth = readAuth();
+export async function changePassword(
+  token: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<{ error?: string }> {
+  const auth = await readAuth();
   const user = auth.users.find(u => computeToken(u.username, u.password) === token);
   if (!user) return { error: "Unauthorized." };
   if (user.password !== currentPassword) return { error: "Current password is incorrect." };
   if (newPassword.length < 8) return { error: "New password must be at least 8 characters." };
   user.password = newPassword;
-  writeAuth(auth);
+  await writeAuth(auth);
   return {};
 }
