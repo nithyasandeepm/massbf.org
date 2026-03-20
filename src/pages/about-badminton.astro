@@ -477,30 +477,44 @@ import Layout from '../layouts/Layout.astro';
       background: #0d6e6d;
       transform: translateY(-2px);
     }
-    .ab-coach-strip {
+    .ab-coach-profiles {
       display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 26px;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 28px;
     }
-    .ab-coach-tag {
+    .ab-coach-profile {
       background: var(--ab-cream);
-      border-radius: 8px;
-      padding: 13px 16px;
-      border-left: 3px solid var(--ab-gold);
-      flex: 1;
-      min-width: 200px;
+      border-radius: 12px;
+      padding: 24px 26px;
+      border-left: 4px solid var(--ab-gold);
     }
-    .ab-coach-tag strong {
-      display: block;
-      font-size: 0.95rem;
+    .ab-coach-profile-name {
+      font-family: Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 700;
       color: var(--ab-navy);
-      margin-bottom: 2px;
+      margin: 0 0 4px;
     }
-    .ab-coach-tag small {
-      font-size: 0.8rem;
-      color: var(--ab-gray);
+    .ab-coach-profile-role {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ab-teal);
+      display: block;
+      margin-bottom: 10px;
     }
+    .ab-coach-profile .ab-player-tags {
+      margin: 0 0 14px;
+    }
+    .ab-coach-profile p {
+      font-size: 0.93rem;
+      line-height: 1.72;
+      color: #2e3e50;
+      margin-bottom: 12px;
+    }
+    .ab-coach-profile p:last-child { margin-bottom: 0; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
@@ -880,14 +894,28 @@ import Layout from '../layouts/Layout.astro';
         <p>
           What makes Wayside exceptional is not just the infrastructure — it is the caliber of the people who run the programs. The badminton program is operated in partnership with HelloBirdie Badminton LLC, and the coaching staff brings genuine world-class credentials to every session. The mission is explicit: to develop elite-level junior and adult players capable of winning national and international tournaments.
         </p>
-        <div class="ab-coach-strip">
-          <div class="ab-coach-tag">
-            <strong>Eva Lee</strong>
-            <small>Two-time U.S. Olympian · Former World No. 17 in Women's Singles · Head Coach</small>
+        <div class="ab-coach-profiles">
+          <div class="ab-coach-profile">
+            <div class="ab-coach-profile-name">Eva Lee</div>
+            <span class="ab-coach-profile-role">Head Coach</span>
+            <div class="ab-player-tags">
+              <span class="ab-player-tag">Two-Time Olympian</span>
+              <span class="ab-player-tag">Former World No. 17</span>
+              <span class="ab-player-tag">USA National Team</span>
+            </div>
+            <p>Eva Lee is one of the most accomplished American badminton players in the history of the sport. She represented the United States at two Olympic Games and achieved a career-high world ranking of No. 17 in women's singles — among the highest ever attained by an American woman in badminton. Her competitive career took her across the global circuit, training and competing in Asia, Europe, and the Americas, giving her a coaching perspective that is genuinely international in scope.</p>
+            <p>At Wayside, Eva brings that accumulated expertise directly to her students. Her coaching methodology draws on the technical and psychological insights she gathered competing at the world's toughest tournaments — and she applies them to players at every level, from those just picking up a racket to those preparing for national competition.</p>
           </div>
-          <div class="ab-coach-tag">
-            <strong>Nicholas Waller</strong>
-            <small>Former U.S. National Team Member · Head Coach</small>
+          <div class="ab-coach-profile">
+            <div class="ab-coach-profile-name">Nicholas Waller</div>
+            <span class="ab-coach-profile-role">Head Coach</span>
+            <div class="ab-player-tags">
+              <span class="ab-player-tag">U.S. National Team</span>
+              <span class="ab-player-tag">Elite Competitor</span>
+              <span class="ab-player-tag">Certified Coach</span>
+            </div>
+            <p>Nicholas Waller is a former member of the U.S. National Badminton Team, with competitive experience at the highest levels of American badminton. His playing career provided him with firsthand knowledge of what elite-level training, competition preparation, and performance under pressure actually look like — and he now channels that knowledge into the development of the next generation of American players.</p>
+            <p>Nick's coaching approach complements Eva's, offering players a training environment that is both technically rigorous and deeply attuned to the mental and physical demands of competitive badminton. Together, they form a coaching duo that is exceptional by any standard — and genuinely rare to find at a single facility.</p>
           </div>
         </div>
         <p style="margin-top:22px;">
