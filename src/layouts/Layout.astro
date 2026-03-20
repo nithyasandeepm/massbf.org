@@ -6,7 +6,7 @@ interface Props {
   title?: string;
 }
 
-const { title = "Massachusetts Badminton Foundation" } = Astro.props;
+const { title = "Massachusetts Badminton Foundation, Inc." } = Astro.props;
 const path = Astro.url.pathname;
 
 const customPages: { label: string; slug: string }[] = await readDataFile("pages", []);
@@ -44,7 +44,7 @@ function isActive(href: string) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/logo.png" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Massachusetts Badminton Foundation</title>
+    <title>{title} | Massachusetts Badminton Foundation, Inc.</title>
   </head>
   <body style="display:flex;flex-direction:column;min-height:100vh;">
 
@@ -55,7 +55,7 @@ function isActive(href: string) {
             <img src="/logo.png" alt="MBF Logo" class="mbf-logo" />
             <div class="mbf-logo-text">
               <div class="mbf-logo-text-main">Massachusetts</div>
-              <div class="mbf-logo-text-sub">Badminton Foundation</div>
+              <div class="mbf-logo-text-sub">Badminton Foundation, Inc.</div>
             </div>
           </a>
           <div style="flex:1;"></div>
@@ -313,7 +313,7 @@ function isActive(href: string) {
         <div style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start;">
           <div>
             <img src="/logo.png" alt="MBF Logo" style="height:44px;width:auto;margin-bottom:0.75rem;opacity:0.9;" />
-            <p style="font-size:0.85rem;margin:0.25rem 0;">Massachusetts Badminton Foundation (MBF)</p>
+            <p style="font-size:0.85rem;margin:0.25rem 0;">Massachusetts Badminton Foundation, Inc. (MBF)</p>
             <p style="font-size:0.8rem;margin:0.25rem 0;opacity:0.7;">EIN: 39-4717851 | 501(c)(3) Tax-Exempt Organization</p>
           </div>
           <div style="font-size:0.85rem;">
@@ -403,7 +403,7 @@ function isActive(href: string) {
           </div>
         </div>
         <div style="border-top:1px solid rgba(255,255,255,0.15);margin-top:1.5rem;padding-top:1rem;font-size:0.78rem;opacity:0.6;text-align:center;">
-          &copy; {new Date().getFullYear()} Massachusetts Badminton Foundation. All rights reserved.
+          &copy; {new Date().getFullYear()} Massachusetts Badminton Foundation, Inc. All rights reserved.
         </div>
       </div>
     </footer>
