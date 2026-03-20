@@ -56,10 +56,10 @@ import Layout from "../layouts/Layout.astro";
   .mbf-admin-row { display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-left:auto; }
 
   /* ── Sponsor cards ── */
-  .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1.25rem; }
+  .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:2.5rem; }
   .sp-card { border:1px solid #E5E7EB; border-radius:8px; padding:1.1rem; text-align:center;
-             display:flex; flex-direction:column; align-items:center; gap:0.5rem; background:#FAFAFA; position:relative; }
-  .sp-logo { max-width:5cm; max-height:5cm; width:auto; height:auto; object-fit:contain; }
+             display:flex; flex-direction:column; align-items:center; gap:0.5rem; background:#FAFAFA; position:relative; overflow:hidden; }
+  .sp-logo { max-width:100%; max-height:120px; width:auto; height:auto; object-fit:contain; }
   .sp-name { font-size:0.8rem; font-weight:600; color:#374151; }
   .sp-website { font-size:0.72rem; color:#1B3A8F; text-decoration:none; }
   .sp-card-actions { display:none; position:absolute; top:0.35rem; right:0.35rem; gap:0.2rem; }
