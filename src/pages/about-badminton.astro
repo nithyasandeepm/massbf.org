@@ -350,6 +350,23 @@ import Layout from '../layouts/Layout.astro';
       box-shadow: 0 12px 36px rgba(27,58,143,0.13);
       transform: translateY(-3px);
     }
+    .ab-player-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0 12px;
+    }
+    .ab-player-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(14,124,123,0.1);
+      border: 1px solid rgba(14,124,123,0.3);
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--ab-teal);
+      letter-spacing: 0.04em;
+    }
     .ab-player-flag { font-size: 1.5rem; margin-bottom: 8px; }
     .ab-player-name {
       font-family: Georgia, serif;
@@ -756,8 +773,14 @@ import Layout from '../layouts/Layout.astro';
         <div class="ab-player-card">
           <div class="ab-player-flag">🇺🇸</div>
           <div class="ab-player-name">Eva Lee</div>
-          <span class="ab-player-role">Two-Time U.S. Olympian · Former World No. 17</span>
-          <p class="ab-player-bio">One of the most accomplished American badminton players in history, Eva Lee represented the United States at two Olympic Games and achieved a career-high ranking of No. 17 in the world in women's singles. Today she is shaping the next generation of American players as a coach.</p>
+          <span class="ab-player-role">Head Coach · Wayside Athletic Club</span>
+          <div class="ab-player-tags">
+            <span class="ab-player-tag">Two-Time Olympian</span>
+            <span class="ab-player-tag">Former World No. 17</span>
+            <span class="ab-player-tag">USA National Team</span>
+          </div>
+          <p class="ab-player-bio">Eva Lee is one of the most accomplished American badminton players in the history of the sport. She represented the United States at two Olympic Games and achieved a career-high world ranking of No. 17 in women's singles — among the highest ever attained by an American woman in badminton. Her competitive career took her across the global circuit, training and competing in Asia, Europe, and the Americas, giving her a coaching perspective that is genuinely international in scope.</p>
+          <p class="ab-player-bio">At Wayside, Eva brings that accumulated expertise directly to her students. Her coaching methodology draws on the technical and psychological insights she gathered competing at the world's toughest tournaments — and she applies them to players at every level, from those just picking up a racket to those preparing for national competition.</p>
         </div>
         <div class="ab-player-card">
           <div class="ab-player-flag">🇺🇸</div>
