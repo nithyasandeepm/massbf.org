@@ -485,40 +485,6 @@ import Layout from '../layouts/Layout.astro';
       color: var(--ab-gray);
     }
 
-    /* ── CLOSING CTA ── */
-    .ab-closing {
-      background: linear-gradient(135deg, var(--ab-teal) 0%, #0d1e4a 100%);
-      color: #fff;
-      text-align: center;
-      padding: 90px 40px;
-    }
-    .ab-closing h2 {
-      font-family: Georgia, serif;
-      color: #fff;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      margin: 0 0 18px;
-    }
-    .ab-closing p {
-      color: rgba(255,255,255,0.8);
-      font-size: 1.05rem;
-      max-width: 540px;
-      margin: 0 auto 32px;
-      line-height: 1.72;
-    }
-    .ab-closing a {
-      display: inline-block;
-      background: var(--ab-gold);
-      color: #0d1e4a;
-      padding: 14px 34px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.96rem;
-      letter-spacing: 0.04em;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    .ab-closing a:hover { opacity: 0.88; transform: translateY(-2px); }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .ab-hero { padding: 56px 22px 44px; min-height: 60vh; }
@@ -892,7 +858,7 @@ import Layout from '../layouts/Layout.astro';
           </div>
           <div class="ab-coach-tag">
             <strong>Nicholas Waller</strong>
-            <small>Former U.S. National Team Member · Coach</small>
+            <small>Former U.S. National Team Member · Head Coach</small>
           </div>
         </div>
         <p style="margin-top:22px;">
@@ -905,12 +871,4 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- ── CLOSING CTA ── -->
-  <div class="ab-closing">
-    <h2>Your Badminton Journey Starts Here</h2>
-    <p>
-      Whether you picked up a racket for the first time last week or you are a seasoned player chasing a national ranking — the Massachusetts Badminton Foundation is here to support you every step of the way.
-    </p>
-    <a href="/about">Learn More About MBF</a>
-  </div>
 </Layout>
