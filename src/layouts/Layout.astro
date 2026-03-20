@@ -14,10 +14,21 @@ const customPages: { label: string; slug: string }[] = await readDataFile("pages
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
+  { label: "About Badminton", href: "/about-badminton" },
   { label: "Events", href: "/events" },
   { label: "PCA", href: "/pca" },
   { label: "Sponsors", href: "/sponsors" },
   ...customPages.map((p) => ({ label: p.label, href: `/${p.slug}` })),
+];
+
+const abSubnav = [
+  { label: "Origins", href: "#origin" },
+  { label: "Olympics", href: "#olympic" },
+  { label: "The Sport", href: "#competitive" },
+  { label: "World Stage", href: "#international" },
+  { label: "USA & Players", href: "#usa" },
+  { label: "Pan Am", href: "#panam" },
+  { label: "Massachusetts", href: "#massachusetts" },
 ];
 
 function isActive(href: string) {
@@ -69,6 +80,13 @@ function isActive(href: string) {
           </nav>
         </div>
       </div>
+      {isActive("/about-badminton") && (
+        <nav class="ab-subnav" aria-label="About Badminton sections">
+          {abSubnav.map(link => (
+            <a href={link.href} class="ab-subnav-link">{link.label}</a>
+          ))}
+        </nav>
+      )}
     </header>
 
     <!-- Admin Modal -->

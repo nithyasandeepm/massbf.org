@@ -161,6 +161,37 @@ img, video {
   border-radius: 2px;
 }
 
+/* ── About Badminton sub-nav ─────────────────────────────────────── */
+.ab-subnav {
+  background: #0e7c7b;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding: 0 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  scrollbar-width: none;
+}
+.ab-subnav::-webkit-scrollbar { display: none; }
+
+.ab-subnav-link {
+  display: inline-block;
+  padding: 11px 16px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.ab-subnav-link:hover {
+  color: #fff;
+  border-bottom-color: #d4a840;
+}
+
 /* ── Badge ───────────────────────────────────────────────────────── */
 .mbf-badge {
   display: inline-block;

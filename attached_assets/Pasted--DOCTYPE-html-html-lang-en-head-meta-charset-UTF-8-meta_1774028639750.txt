@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Badminton – Massachusetts Badminton Foundation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0d1b2a;
+      --ink:     #1a2d42;
+      --teal:    #0e7c7b;
+      --teal-lt: #13a8a7;
+      --gold:    #d4a840;
+      --cream:   #f8f4ee;
+      --white:   #ffffff;
+      --gray:    #6b7a8d;
+      --light:   #eef2f7;
+      --ff-head: 'Playfair Display', Georgia, serif;
+      --ff-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 40px 60px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(14,124,123,0.22) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 10% 80%, rgba(212,168,64,0.10) 0%, transparent 60%);
+    }
+
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--ff-body);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 22px;
+      border-left: 3px solid var(--gold);
+      padding-left: 12px;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.8rem, 7vw, 5.4rem);
+      line-height: 1.08;
+      font-weight: 900;
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--teal-lt);
+    }
+
+    .hero-lead {
+      font-size: 1.18rem;
+      color: rgba(255,255,255,0.78);
+      max-width: 640px;
+      line-height: 1.72;
+      margin-bottom: 44px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item strong {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-item span {
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-top: 4px;
+      display: block;
+    }
+
+    .shuttlecock-bg {
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 340px;
+      opacity: 0.035;
+      user-select: none;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    /* ── SCROLL NAV ── */
+    .scroll-nav {
+      background: var(--teal);
+      padding: 0 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+    }
+
+    .scroll-nav a {
+      display: inline-block;
+      padding: 15px 18px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .scroll-nav a:hover {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 90px 40px;
+    }
+
+    .section-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.12;
+      margin-bottom: 28px;
+    }
+
+    h3 {
+      font-family: var(--ff-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+      margin-top: 36px;
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: #2e3e50;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      border-radius: 2px;
+      margin-bottom: 36px;
+    }
+
+    /* ── ORIGIN SECTION ── */
+    #origin { background: var(--cream); }
+
+    .origin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .origin-timeline {
+      border-left: 3px solid var(--light);
+      padding-left: 28px;
+      margin-top: 8px;
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -34px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 0 2px var(--teal);
+    }
+
+    .tl-year {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .tl-text {
+      font-size: 0.94rem;
+      line-height: 1.6;
+      color: #3a4d60;
+      margin: 0;
+    }
+
+    /* ── OLYMPIC SECTION ── */
+    #olympic {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    #olympic h2 { color: var(--white); }
+    #olympic p { color: rgba(255,255,255,0.78); }
+    #olympic .section-label { color: var(--gold); }
+
+    .discipline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .disc-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 26px 22px;
+      text-align: center;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .disc-card:hover {
+      background: rgba(14,124,123,0.25);
+      transform: translateY(-4px);
+    }
+
+    .disc-icon { font-size: 2rem; margin-bottom: 10px; }
+
+    .disc-card h4 {
+      font-family: var(--ff-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .disc-card p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      margin: 0;
+    }
+
+    /* ── COMPETITIVE SECTION ── */
+    #competitive { background: var(--white); }
+
+    .fact-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      border: 1px solid var(--light);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 44px 0;
+    }
+
+    .fact-cell {
+      padding: 30px 24px;
+      border-right: 1px solid var(--light);
+      text-align: center;
+    }
+
+    .fact-cell:last-child { border-right: none; }
+
+    .fact-num {
+      font-family: var(--ff-head);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+      display: block;
+    }
+
+    .fact-lbl {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* ── INTERNATIONAL SECTION ── */
+    #international { background: var(--cream); }
+
+    .tournament-list {
+      margin: 24px 0 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tournament-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 22px;
+      background: var(--white);
+      border-radius: 10px;
+      border-left: 4px solid var(--teal);
+    }
+
+    .t-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+
+    .t-name {
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--navy);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .t-desc {
+      font-size: 0.87rem;
+      color: var(--gray);
+      margin: 0;
+    }
+
+    /* ── USA SECTION ── */
+    #usa { background: var(--white); }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      margin-top: 40px;
+    }
+
+    .player-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 28px 24px;
+      border-top: 4px solid var(--gold);
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .player-card:hover {
+      box-shadow: 0 12px 36px rgba(13,27,42,0.12);
+      transform: translateY(-3px);
+    }
+
+    .player-flag { font-size: 1.6rem; margin-bottom: 10px; }
+
+    .player-name {
+      font-family: var(--ff-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .player-role {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .player-bio {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #4a5a6a;
+      margin: 0;
+    }
+
+    /* ── PANAM / WORLD SECTION ── */
+    #panam { background: var(--navy); color: var(--white); }
+    #panam h2 { color: var(--white); }
+    #panam p { color: rgba(255,255,255,0.78); }
+    #panam .section-label { color: var(--gold); }
+    #panam h3 { color: rgba(255,255,255,0.92); }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(14,124,123,0.25);
+      border: 1px solid rgba(19,168,167,0.4);
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--teal-lt);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── MASSACHUSETTS SECTION ── */
+    #massachusetts { background: var(--cream); }
+
+    .wayside-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 44px 40px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 28px rgba(13,27,42,0.07);
+      margin-top: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wayside-box::before {
+      content: '🏸';
+      position: absolute;
+      right: 30px;
+      top: 30px;
+      font-size: 72px;
+      opacity: 0.06;
+    }
+
+    .wayside-box h3 {
+      font-family: var(--ff-head);
+      font-size: 1.7rem;
+      color: var(--navy);
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
+
+    .wayside-box .tagline {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .wayside-box p { margin-bottom: 18px; }
+
+    .wayside-box a.cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+
+    .wayside-box a.cta-link:hover {
+      background: #0d6e6d;
+      transform: translateY(-2px);
+    }
+
+    .coach-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .coach-tag {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 14px 18px;
+      border-left: 3px solid var(--gold);
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .coach-tag strong {
+      display: block;
+      font-size: 0.97rem;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+
+    .coach-tag small {
+      font-size: 0.82rem;
+      color: var(--gray);
+    }
+
+    /* ── CLOSING CTA ── */
+    .closing {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 100px 40px;
+    }
+
+    .closing h2 {
+      color: var(--white);
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 18px;
+    }
+
+    .closing p {
+      color: rgba(255,255,255,0.78);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+
+    .closing a {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 16px 36px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .closing a:hover {
+      opacity: 0.88;
+      transform: translateY(-2px);
+    }
+
+    /* ── BLOCKQUOTE ── */
+    blockquote {
+      border-left: 4px solid var(--gold);
+      margin: 32px 0;
+      padding: 16px 24px;
+      background: rgba(212,168,64,0.06);
+      border-radius: 0 8px 8px 0;
+    }
+
+    blockquote p {
+      font-family: var(--ff-head);
+      font-style: italic;
+      font-size: 1.13rem;
+      color: var(--navy);
+      margin: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .origin-grid { grid-template-columns: 1fr; gap: 36px; }
+      .hero { padding: 60px 22px 50px; }
+      section { padding: 64px 22px; }
+      .hero-stats { gap: 28px; }
+      .wayside-box { padding: 28px 22px; }
+      .scroll-nav { padding: 0 16px; }
+      .fact-cell { border-right: none; border-bottom: 1px solid var(--light); }
+      .fact-cell:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="shuttlecock-bg">🏸</div>
+  <div class="hero-inner">
+    <span class="eyebrow">Massachusetts Badminton Foundation</span>
+    <h1>The Sport<br>the World <em>Already</em><br>Loves — and<br>America is<br>Discovering</h1>
+    <p class="hero-lead">
+      From a British army officer's garden party to the center stage of the Olympic Games — badminton is one of the fastest, most athletic, and most watched sports on the planet. Here is everything you need to know.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <strong>220+</strong>
+        <span>Member nations<br>in the BWF</span>
+      </div>
+      <div class="stat-item">
+        <strong>1992</strong>
+        <span>Olympic debut<br>Barcelona</span>
+      </div>
+      <div class="stat-item">
+        <strong>300 mph</strong>
+        <span>Top shuttlecock<br>recorded speed</span>
+      </div>
+      <div class="stat-item">
+        <strong>5</strong>
+        <span>Olympic gold<br>disciplines</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STICKY NAV ── -->
+<nav class="scroll-nav" aria-label="Page sections">
+  <a href="#origin">Origins</a>
+  <a href="#olympic">Olympics</a>
+  <a href="#competitive">The Sport</a>
+  <a href="#international">World Stage</a>
+  <a href="#usa">USA & Players</a>
+  <a href="#panam">Pan Am</a>
+  <a href="#massachusetts">Massachusetts</a>
+</nav>
+
+<!-- ── ORIGIN ── -->
+<section id="origin">
+  <div class="section-inner">
+    <div class="origin-grid">
+      <div>
+        <p class="section-label">Where It All Began</p>
+        <h2>A 2,000-Year Journey to the Olympic Stage</h2>
+        <div class="divider"></div>
+        <p>
+          Long before there were carbon-fiber rackets and dedicated training academies, children across ancient Greece, India, China, and Japan were hitting a shuttlecock — a small cork base threaded with feathers — back and forth with wooden paddles. That simple, joyful act is the seed from which the modern sport of badminton grew.
+        </p>
+        <p>
+          The game we recognize today took formal shape in the mid-19th century in England. British Army officers stationed in British India encountered a game called <em>Poona</em> — named after the city of Pune — in which players batted a feathered cork across a makeshift net. They brought it home, and in 1873, the Duke of Beaufort introduced it at his country estate called Badminton House in Gloucestershire. The name stuck.
+        </p>
+        <p>
+          The newly named sport spread rapidly. The Badminton Association of England published the first official set of rules in 1893, and competitive play quickly grew beyond British borders, traveling along trade and colonial routes to Southeast Asia — where it would find its greatest devotees and eventually its most dominant champions.
+        </p>
+      </div>
+
+      <div>
+        <p class="section-label">Timeline</p>
+        <div class="origin-timeline">
+          <div class="tl-item">
+            <p class="tl-year">~200 BC</p>
+            <p class="tl-text">Shuttlecock games documented in ancient China, Greece, and India — forerunners of modern badminton.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1860s</p>
+            <p class="tl-text">British officers in India encounter Poona, a net-based shuttlecock game, and bring it to England.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1873</p>
+            <p class="tl-text">The Duke of Beaufort introduces the game at Badminton House — and the sport gets its enduring name.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1893</p>
+            <p class="tl-text">Badminton Association of England formalizes the rules. Competitive play begins.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1934</p>
+            <p class="tl-text">The Badminton World Federation (BWF) — originally the IBF — is founded with 9 member nations.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1948</p>
+            <p class="tl-text">The prestigious Thomas Cup — the "Badminton World Cup" — is played for the first time.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1992</p>
+            <p class="tl-text">Badminton makes its Olympic debut at the Barcelona Games with four events.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">1996</p>
+            <p class="tl-text">Mixed doubles added at Atlanta, completing the five Olympic disciplines still contested today.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-year">Today</p>
+            <p class="tl-text">The BWF has over 220 member nations — more than FIFA. Badminton is the world's second most participated racket sport.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OLYMPIC ── -->
+<section id="olympic">
+  <div class="section-inner">
+    <p class="section-label">The Biggest Stage</p>
+    <h2>An Olympic Sport Since 1992 — and a Fiercely Contested One</h2>
+    <div class="divider" style="background: linear-gradient(90deg, var(--gold), var(--teal-lt));"></div>
+    <p>
+      Many people are surprised to learn that badminton has been a full Olympic medal sport for over three decades. Since its debut at the Barcelona 1992 Summer Games, it has grown into one of the most watched events at every Olympiad — particularly across Asia, where television audiences rival those of soccer and basketball.
+    </p>
+    <p>
+      Five separate disciplines are contested at every Summer Olympics, meaning ten sets of Olympic medals are awarded in badminton alone. That breadth reflects the sport's versatility — it rewards explosive power, delicate touch, tactical intelligence, physical stamina, and lightning-fast reflexes, often within the same rally.
+    </p>
+
+    <div class="discipline-grid">
+      <div class="disc-card">
+        <div class="disc-icon">🏸</div>
+        <h4>Men's Singles</h4>
+        <p>One-on-one combat at its most intense — raw speed and tactical mastery.</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-icon">🏸</div>
+        <h4>Women's Singles</h4>
+        <p>Widely regarded as some of the most technically refined matches in the sport.</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-icon">🏸</div>
+        <h4>Men's Doubles</h4>
+        <p>Partnership, coordination, and the fastest exchanges in badminton.</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-icon">🏸</div>
+        <h4>Women's Doubles</h4>
+        <p>A discipline that showcases extraordinary court coverage and teamwork.</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-icon">🏸</div>
+        <h4>Mixed Doubles</h4>
+        <p>Added in Atlanta 1996 — dynamic, strategic, and endlessly unpredictable.</p>
+      </div>
+    </div>
+
+    <blockquote style="margin-top: 44px;">
+      <p>"No other sport combines the aerobic demand of distance running with the explosive power of sprinting, the hand-eye precision of table tennis, and the court intelligence of chess — all at the same time." — Often cited by sports scientists studying badminton athletes.</p>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ── COMPETITIVE ── -->
+<section id="competitive">
+  <div class="section-inner">
+    <p class="section-label">Understanding the Game</p>
+    <h2>Not a Backyard Game. One of the Most Demanding Sports on Earth.</h2>
+    <div class="divider"></div>
+
+    <p>
+      Here is a fact that stops most people cold: the shuttlecock in professional badminton has been recorded traveling over 300 miles per hour off a smash — making it the fastest-moving object in any racket sport, faster than a tennis serve, faster than a squash ball, faster than a golf drive off the tee. A player has roughly 130 milliseconds to react. That is less than the time it takes to blink.
+    </p>
+
+    <div class="fact-strip">
+      <div class="fact-cell">
+        <span class="fact-num">300+</span>
+        <span class="fact-lbl">mph smash speed</span>
+      </div>
+      <div class="fact-cell">
+        <span class="fact-num">6 km</span>
+        <span class="fact-lbl">average distance<br>covered per match</span>
+      </div>
+      <div class="fact-cell">
+        <span class="fact-num">1000+</span>
+        <span class="fact-lbl">direction changes<br>per match</span>
+      </div>
+      <div class="fact-cell">
+        <span class="fact-num">21</span>
+        <span class="fact-lbl">points to win<br>a game (best of 3)</span>
+      </div>
+    </div>
+
+    <p>
+      A professional badminton player covers an average of 6 kilometers per match, changes direction over 1,000 times, and performs explosive lunges to all corners of the court — a discipline so physically punishing that top players train alongside sprinters, gymnasts, and martial artists to develop the right blend of fitness.
+    </p>
+
+    <h3>How a Match Works</h3>
+    <p>
+      Matches are best-of-three games. Each game is played to 21 points, with a two-point lead required to win. At 20-all, play continues until one player or pair leads by two. If the score reaches 29-all, the next point wins. Serves alternate sides, and a rally — not just the server — wins the point under the modern rally-point scoring system introduced in 2006.
+    </p>
+
+    <h3>Strategy and Skill</h3>
+    <p>
+      Badminton is as much a mental game as a physical one. Players use an array of shots — clears, drops, net shots, lifts, drives, and the devastating smash — to maneuver opponents out of position. At the elite level, deception is as valuable as power: a slight flick of the wrist can send the shuttle in an entirely different direction from where the opponent expects it, creating openings in a fraction of a second.
+    </p>
+    <p>
+      Doubles play adds a layer of tactical complexity. Pairs must communicate constantly, rotating between a front-and-back formation for attacking play and a side-by-side defensive structure, seamlessly shifting in real time. The synchronized movement of a well-trained doubles pair is something to behold — equal parts athletic performance and choreographed precision.
+    </p>
+  </div>
+</section>
+
+<!-- ── INTERNATIONAL ── -->
+<section id="international">
+  <div class="section-inner">
+    <p class="section-label">The World Stage</p>
+    <h2>A Global Sport with a Fiercely Competitive Circuit</h2>
+    <div class="divider"></div>
+
+    <p>
+      Beyond the Olympics, badminton is governed by the Badminton World Federation (BWF), which oversees a full-season international circuit and several historic team competitions that rival any championship in sport for prestige and passion.
+    </p>
+
+    <ul class="tournament-list">
+      <li>
+        <span class="t-icon">🌍</span>
+        <div>
+          <span class="t-name">BWF World Championships</span>
+          <p class="t-desc">The sport's individual world title, held annually. Nations compete to crown the world's best in all five disciplines. A BWF World Championship gold is considered second only to an Olympic gold in prestige.</p>
+        </div>
+      </li>
+      <li>
+        <span class="t-icon">🏆</span>
+        <div>
+          <span class="t-name">Thomas Cup (Men's Team) &amp; Uber Cup (Women's Team)</span>
+          <p class="t-desc">The oldest and most storied team competitions in the sport. First held in 1948 and 1957 respectively, they bring nations together every two years in a format that blends individual excellence with national pride.</p>
+        </div>
+      </li>
+      <li>
+        <span class="t-icon">🎯</span>
+        <div>
+          <span class="t-name">Sudirman Cup (Mixed Team)</span>
+          <p class="t-desc">Launched in 1989, this biennial mixed-team event contests all five disciplines under one roof. Only a nation with well-rounded strength across every category can win.</p>
+        </div>
+      </li>
+      <li>
+        <span class="t-icon">⭐</span>
+        <div>
+          <span class="t-name">BWF World Tour — Super 1000 through Super 100</span>
+          <p class="t-desc">A tiered season-long circuit spanning every continent, culminating in the World Tour Finals. The higher the level, the greater the ranking points and prize money — and the higher the intensity of competition.</p>
+        </div>
+      </li>
+      <li>
+        <span class="t-icon">🌎</span>
+        <div>
+          <span class="t-name">Pan American Badminton Championships</span>
+          <p class="t-desc">The premier multi-disciplinary championship for the Americas, bringing together nations from North, Central, and South America. For U.S. players, this is the proving ground where continental rankings are earned and Olympic pathways are built.</p>
+        </div>
+      </li>
+      <li>
+        <span class="t-icon">🎖️</span>
+        <div>
+          <span class="t-name">Pan American Games</span>
+          <p class="t-desc">Badminton has been a fixture of the Pan American Games since 1955. These multi-sport games, held every four years between Summer Olympics, are the Western Hemisphere's most prestigious athletic gathering — and badminton earns its rightful place among the flagship events.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── USA ── -->
+<section id="usa">
+  <div class="section-inner">
+    <p class="section-label">The American Story</p>
+    <h2>The United States: A Growing Force in a Global Game</h2>
+    <div class="divider"></div>
+
+    <p>
+      Badminton in the United States has a longer competitive history than most people realize. USA Badminton (USAB), the national governing body, has existed since the 1930s and has been sending athletes to international competitions — including the Olympics — for decades. What is changing now is the scale and ambition of American badminton.
+    </p>
+    <p>
+      For much of the latter 20th century, Asian nations — China, Indonesia, South Korea, Malaysia, Japan — dominated the international circuit to such a degree that it was difficult for other countries to break through. But that era of total dominance has been gradually shifting, and the United States has been among the countries building a genuine competitive pipeline at both the junior and senior levels.
+    </p>
+    <p>
+      The rise of immigrant communities from badminton-loving nations has been one of the most significant drivers of American badminton's growth. Cities with large Southeast Asian, South Asian, East Asian, and South American communities have become hotbeds of grassroots badminton — producing clubs, leagues, and young players who represent a new generation of American talent.
+    </p>
+
+    <h3>American Players Who Represented the USA on the World Stage</h3>
+
+    <div class="player-grid">
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Eva Lee</div>
+        <span class="player-role">Two-Time U.S. Olympian · Former World No. 17</span>
+        <p class="player-bio">One of the most accomplished American badminton players in history, Eva Lee represented the United States at two Olympic Games and achieved a career-high ranking of No. 17 in the world in women's singles — one of the highest ever by an American woman in the sport. Today she is shaping the next generation of American players as a coach.</p>
+      </div>
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Howard Bach</div>
+        <span class="player-role">Olympic Competitor · Pan Am Champion</span>
+        <p class="player-bio">Howard Bach is widely regarded as one of the finest American male doubles players of his era, representing the USA at multiple Olympic Games and earning medals at the Pan American Championships. His career helped bring visibility to American men's doubles on the international stage.</p>
+      </div>
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Bob Malaythong</div>
+        <span class="player-role">National Champion · International Competitor</span>
+        <p class="player-bio">A multiple-time U.S. National Champion and stalwart of American men's singles, Malaythong represented the USA across international competitions and consistently ranked among the top American players in his era of the sport.</p>
+      </div>
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Iris Wang</div>
+        <span class="player-role">Rising Star · U.S. National Team</span>
+        <p class="player-bio">One of the most exciting prospects in current American badminton, Iris Wang has represented the U.S. in women's singles at the international level, competing on the BWF circuit and demonstrating the caliber of young talent that America's growing training infrastructure is now producing.</p>
+      </div>
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Tony Gunawan</div>
+        <span class="player-role">Olympic Gold Medalist (representing USA)</span>
+        <p class="player-bio">A decorated world champion who went on to represent the United States, Tony Gunawan brought world-class experience and an Olympic gold pedigree to American badminton — his career spanning two national jerseys and multiple world championship medals.</p>
+      </div>
+      <div class="player-card">
+        <div class="player-flag">🇺🇸</div>
+        <div class="player-name">Nicholas Waller</div>
+        <span class="player-role">Former U.S. National Team Member</span>
+        <p class="player-bio">A former U.S. National Team athlete, Nicholas Waller competed at the highest levels of American badminton before transitioning into coaching — where his experience of elite international competition now directly benefits the next generation of American players.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 48px;">The Rise of Badminton in America</h3>
+    <p>
+      Over the past decade, participation in badminton across the United States has grown significantly. College clubs at institutions like MIT, Harvard, Stanford, and UC Berkeley have become feeder pipelines for national competition. Youth programs are expanding in cities from Los Angeles to New York to Chicago to Boston — and Massachusetts, in particular, has emerged as one of the more active and organized state-level badminton communities in the country.
+    </p>
+    <p>
+      USA Badminton continues to invest in elite development pathways, coaching certification programs, and international tournament exposure for American players. The ambition is clear: to compete not just at the Pan American level, but to challenge the best in the world on the BWF World Tour and at the Olympic Games.
+    </p>
+  </div>
+</section>
+
+<!-- ── PAN AM ── -->
+<section id="panam">
+  <div class="section-inner">
+    <p class="section-label">Americas &amp; Beyond</p>
+    <h2>Pan America, the BWF Circuit, and America's Role in the Global Game</h2>
+    <div class="divider" style="background: linear-gradient(90deg, var(--gold), var(--teal-lt));"></div>
+
+    <div class="badge-row">
+      <span class="badge">🌎 Pan American Championships</span>
+      <span class="badge">🎖️ Pan American Games</span>
+      <span class="badge">🏆 BWF World Tour</span>
+      <span class="badge">🌍 Thomas &amp; Uber Cup</span>
+      <span class="badge">⚡ Sudirman Cup</span>
+    </div>
+
+    <p>
+      Within the Americas, the Badminton Pan Am Confederation (BPC) governs the sport across 45 member associations. The Pan American Badminton Championships are held annually, serving as both a qualifying pathway toward World Championships and Olympic selection, and as the premier individual title for the continent.
+    </p>
+    <p>
+      The Pan American Games — held every four years in the year preceding the Summer Olympics — provide one of badminton's most competitive and emotionally charged continental stages. The USA has fielded teams in badminton at the Pan American Games repeatedly, and its athletes compete with the ambition of earning automatic qualification berths for the Olympic Games.
+    </p>
+
+    <h3>Why Continental Competitions Matter</h3>
+    <p>
+      For a sport that has historically been dominated by Asian nations, Pan American events represent something important: a proving ground where American athletes can test themselves against fierce continental rivals — Brazil, Canada, Peru, and Guatemala, among others — and build the world ranking points needed to qualify for the Olympic Games. Every point earned in Lima, Cali, or Guadalajara is a step toward Paris, Los Angeles, or Brisbane.
+    </p>
+    <p>
+      The Massachusetts Badminton Foundation is proud to have supported Massachusetts State Team athletes nominated for these very tournaments — including the Junior National Championship and the Pan America Championship — through its scholarship program. When a Massachusetts player steps onto a court at an international competition, the MBF community is behind them.
+    </p>
+
+    <h3>Badminton at a Glance: Why the World Can't Stop Watching</h3>
+    <p>
+      To understand why badminton commands massive television audiences in Asia — and growing ones everywhere else — you need to watch just one high-level rally. The combination of blistering speed, deft deception, and the almost acrobatic athleticism required to retrieve a shuttlecock from a seemingly impossible position produces a level of spectacle that is genuinely hard to match. Major finals at the All England Open, the Indonesia Open, or the Olympic Games draw hundreds of millions of viewers globally. The sport's global governing body, the BWF, counts over 220 member nations — more than FIFA — making it one of the broadest participation sports on Earth.
+    </p>
+  </div>
+</section>
+
+<!-- ── MASSACHUSETTS ── -->
+<section id="massachusetts">
+  <div class="section-inner">
+    <p class="section-label">Train in Massachusetts</p>
+    <h2>World-Class Badminton Training, Right Here in the Commonwealth</h2>
+    <div class="divider"></div>
+
+    <p>
+      Massachusetts has one of the most active badminton communities on the East Coast, supported by a network of clubs, university programs, and dedicated organizations like the Massachusetts Badminton Foundation. For players who want to take their game to the next level — whether that means competing at the state level, earning a national ranking, or ultimately representing the USA — there is now a training home in the heart of the MetroWest region that stands among the finest in the country.
+    </p>
+
+    <div class="wayside-box">
+      <span class="tagline">Premier Training Destination</span>
+      <h3>Wayside Athletic Club — Marlborough, MA</h3>
+      <p>
+        Wayside Athletic Club, located in Marlborough, Massachusetts, is home to one of the most impressive dedicated badminton training facilities on the East Coast. With 12 state-of-the-art badminton courts and a coaching staff that includes athletes who have competed at the highest levels of the sport internationally, Wayside is the destination for serious badminton development in Massachusetts.
+      </p>
+      <p>
+        What makes Wayside exceptional is not just the infrastructure — it is the caliber of the people who run the programs. The badminton program is operated in partnership with HelloBirdie Badminton LLC, and the coaching staff brings genuine world-class credentials to every session. The mission is explicit: to develop elite-level junior and adult players capable of winning national and international tournaments.
+      </p>
+
+      <div class="coach-strip">
+        <div class="coach-tag">
+          <strong>Eva Lee</strong>
+          <small>Two-time U.S. Olympian · Former World No. 17 in Women's Singles · Head Coach</small>
+        </div>
+        <div class="coach-tag">
+          <strong>Nicholas Waller</strong>
+          <small>Former U.S. National Team Member · Coach</small>
+        </div>
+      </div>
+
+      <p style="margin-top: 24px;">
+        Programs at Wayside run 8–12 hours a day, seven days a week, and span beginner through advanced levels for both juniors and adults. Advanced students receive personalized physical, nutritional, and sports psychology programming — the kind of comprehensive support typically reserved for full-time national training centers. For families considering badminton as a serious sport for their child, or for adults who want to genuinely compete, this is not a recreational add-on. This is the real thing.
+      </p>
+
+      <a class="cta-link" href="https://www.waysideathleticclub.com/badminton/" target="_blank" rel="noopener">
+        Explore the Badminton Program at Wayside →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSING CTA ── -->
+<div class="closing">
+  <h2>Your Badminton Journey Starts Here</h2>
+  <p>
+    Whether you picked up a racket for the first time last week or you are a seasoned player chasing a national ranking — the Massachusetts Badminton Foundation is here to support you every step of the way.
+  </p>
+  <a href="https://www.massbf.org/about" target="_blank" rel="noopener">Learn More About MBF</a>
+</div>
+
+</body>
+</html>
