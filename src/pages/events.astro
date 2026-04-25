@@ -470,13 +470,27 @@ import Layout from "../layouts/Layout.astro";
       }
     }
 
+    let adminShown = false;
     function showAdminControls() {
+      if (adminShown) return;
+      adminShown = true;
       isAdmin = true;
-      document.getElementById('add-tournament-btn')!.style.display = 'block';
+      const btn = document.getElementById('add-tournament-btn');
+      if (btn) btn.style.display = 'block';
       loadTournaments();
     }
     document.addEventListener('mbf:admin-ready', showAdminControls);
-    if (document.body.dataset.admin === 'true') showAdminControls();
+
+    // Direct fallback: validate token ourselves, don't rely solely on the Layout event
+    (async () => {
+      const token = sessionStorage.getItem('mbf_admin_token');
+      if (!token) return;
+      try {
+        const res = await fetch('/api/auth', { headers: { 'X-Admin-Token': token } });
+        const data = await res.json();
+        if (data.valid) showAdminControls();
+      } catch {}
+    })();
 
     // ── Modal open/close ───────────────────────────────────────────────
     window.openTournamentModal = function(t: any) {
